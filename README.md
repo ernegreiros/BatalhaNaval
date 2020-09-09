@@ -8,9 +8,9 @@ Projeto de um jogo de Batalha Naval para a matéria de IES-300
 - VS Code (https://code.visualstudio.com/download)
 
 ### Para acessar a api:
-- Abra a pasta ~/BatalhaNaval/Api no VS Code
+- Abra a pasta `~/BatalhaNaval/Api` no VS Code
 
 ### Para acessar o site:
-- Abra o cmd e mude para a pasta: ~/BatalhaNaval/Front/
+- Abra o cmd e mude para a pasta: `~/BatalhaNaval/Front/`
 - Rode o comando: `yarn install`
 - Rode o comando: `yarn start`
