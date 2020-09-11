@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Home from './Pages/Home/Home';
+import BattleField from './Pages/BattleField/BattleField';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Switch>
+      <Route path='/' exact={true} component={Home} />
+      <Route path='/battlefield' component={BattleField}/>
+    </Switch>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

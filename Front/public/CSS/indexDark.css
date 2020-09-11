@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+
+  color: rgb(191, 189, 187) !important;
+  border-color: #635d53;
+  border-top-color: rgb(95, 89, 80) !important;
+  border-right-color: rgb(95, 89, 80) !important;
+  border-bottom-color: rgb(95, 89, 80) !important;
+  border-left-color: rgb(95, 89, 80) !important;
+}
+
+a i {
+  color: rgb(191, 189, 187) !important;
+}
+
+.navColor, nav, footer{
+  background-color: #1e2629 !important;
+}
+
+.darkbg{
+  background-color: #1e2629 !important;
+}
+
+html {
+  background-color: #2e3639 !important;
+}
+
+.divider {
+  background-color: rgb(40, 43, 44) !important;
+}
+
+.active{
+  background-color: #1e2629 !important;
+}
+
+.grey-text.text-darken-4 {
+  color: rgb(176, 174, 170) !important;
+}
+
+.teal.darken-4 {
+  background-color: rgb(10, 55, 47) !important;
+}
+
+.textRed {
+  color: #a7494a !important;
+}
+
+.grey-text.text-lighten-1{
+  color: rgb(159, 156, 149) !important;
+}
+
+
+input, textarea {
+    color: #c2c0be !important;
+}
+
+input:disabled{
+  color: #c2c0be !important;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #212121; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #424242; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #575656; 
+}
