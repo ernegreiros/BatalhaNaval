@@ -5,15 +5,54 @@
  * Descrição: Implementação inicial da classe de negócio de partida
  */
 
+/*
+ * Nome: Pedro Henrique Pires
+ * Data: 23/09/2020
+ * Descrição: Implementação inicial das regras de negócio da interface herdada
+ */
+ 
 #endregion
+
+using BatalhaNavalApi.Jogador.DML;
+using BatalhaNavalApi.Jogador.DML.Interfaces;
+using BatalhaNavalApi.Partida.DML.Interfaces;
+using System;
 
 namespace BatalhaNavalApi.Partida.BLL
 {
     /// <summary>
     /// Classe de negócio para partida
     /// </summary>
-    public class BoPartida
+    public class BoPartida : IBoPartida
     {
+        #region Construtor
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="pIBoJogador">Classe de negócio de jogador</param>
+        /// <param name="pIDispatcherPartida">Classe de conexão com o banco de dados para partida</param>
+        public BoPartida(IBoJogador pIBoJogador, IDispatcherPartida pIDispatcherPartida)
+        {
+            IBoJogador = pIBoJogador;
+            IDispatcherPartida = pIDispatcherPartida;
+        }
+
+        #endregion
+
+        #region Propriedades readonly
+        /// <summary>
+        /// Classe de negócio de jogador
+        /// </summary>
+        private readonly IBoJogador IBoJogador;
+
+        /// <summary>
+        /// Classe de conexão com o banco para partida
+        /// </summary>
+        private readonly IDispatcherPartida IDispatcherPartida;
+        #endregion
+
+        #region Métodos
+
         /// <summary>
         /// Inicia a partida e retorna o número dela
         /// </summary>
@@ -21,10 +60,12 @@ namespace BatalhaNavalApi.Partida.BLL
         /// <returns>Número da partida</returns>
         public int IniciarPartida(DML.Partida pPartida)
         {
-            /*Inicia a partida*/
-            /*Verificar se algum dos jogadores já possui alguma partida em aberto*/
-            /*Inserir no banco*/
-            return 0;
+            if (BuscaPartidaAtual(pPartida.Jogador1) != null)
+                throw new Exception("Jogador 1 já possui uma partida iniciada");
+            if (BuscaPartidaAtual(pPartida.Jogador2) != null)
+                throw new Exception("Jogador 2 já possui uma partida iniciada");
+            
+            return IDispatcherPartida.BuscaPartidaAtual(pPartida.Jogador1).ID;
         }
 
         /// <summary>
@@ -32,9 +73,14 @@ namespace BatalhaNavalApi.Partida.BLL
         /// </summary>
         /// <param name="pIdJogador">Id do jogador</param>
         /// <returns>Partida atual</returns>
-        public DML.Partida BuscaPartidaAtual(int pIdJogador) {
-            /*Buscar no banco*/
-            return new DML.Partida();
+        public DML.Partida BuscaPartidaAtual(int pIdJogador)
+        {
+            if (IBoJogador.JogadorExiste(pIdJogador))
+            {
+                return IDispatcherPartida.BuscaPartidaAtual(pIdJogador);
+            }
+            else
+                throw new Exception("Jogador informado não cadastrado");
         }
 
         /// <summary>
@@ -43,8 +89,13 @@ namespace BatalhaNavalApi.Partida.BLL
         /// <param name="pIdPartida">Id da partida</param>
         public void FinalizarPartida(int pIdPartida)
         {
-            /*Update no banco*/
+            if (pIdPartida <= 0)
+                throw new Exception("Id da partida é obrigatório");
+
+            IDispatcherPartida.FinalizarPartida(pIdPartida);
         }
+        #endregion
+
 
     }
 }

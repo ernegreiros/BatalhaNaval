@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BatalhaNavalApi.Base\BatalhaNavalApi.Base.csproj" />
-    <ProjectReference Include="..\BatalhaNavalApi.Jogador\BatalhaNavalApi.Jogador.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="DataBaseHelper">
       <HintPath>..\..\Referencias\DataBaseHelper.dll</HintPath>
     </Reference>

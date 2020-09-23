@@ -5,11 +5,14 @@
  * Descrição: Implementação inicial dos status de partida
  */
 
+/*
+ * Nome: Pedro Henrique Pires
+ * Data: 23/09/2020
+ * Descrição: Atualizando default value do "NaoDefinido"
+ */
+
 #endregion
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace BatalhaNavalApi.Partida.DML.Enumerados
 {
@@ -21,8 +24,8 @@ namespace BatalhaNavalApi.Partida.DML.Enumerados
         /// <summary>
         /// Não definido
         /// </summary>
-        [Description(""), DefaultValue("")]
-        NaoDefinido,
+        [Description(""), DefaultValue("0")]
+        NaoDefinido = 0,
 
         /// <summary>
         /// Iniciada
