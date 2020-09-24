@@ -10,7 +10,13 @@
  * Data: 23/09/2020
  * Descrição: Implementação inicial das regras de negócio da interface herdada
  */
- 
+
+/*
+ * Nome: Pedro Henrique Pires
+ * Data: 23/09/2020
+ * Descrição: Ajustando para setar a partida como iniciada antes de gravar
+ */
+
 #endregion
 
 using BatalhaNavalApi.Jogador.DML;
@@ -64,7 +70,8 @@ namespace BatalhaNavalApi.Partida.BLL
                 throw new Exception("Jogador 1 já possui uma partida iniciada");
             if (BuscaPartidaAtual(pPartida.Jogador2) != null)
                 throw new Exception("Jogador 2 já possui uma partida iniciada");
-            
+
+            pPartida.StatusDaPartida = DML.Enumerados.StatusPartida.Iniciada;
             return IDispatcherPartida.BuscaPartidaAtual(pPartida.Jogador1).ID;
         }
 
