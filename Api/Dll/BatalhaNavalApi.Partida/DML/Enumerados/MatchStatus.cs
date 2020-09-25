@@ -19,7 +19,7 @@ namespace BatalhaNavalApi.Partida.DML.Enumerados
     /// <summary>
     /// Status da partida
     /// </summary>
-    public enum StatusPartida
+    public enum MatchStatus
     {
         /// <summary>
         /// Não definido

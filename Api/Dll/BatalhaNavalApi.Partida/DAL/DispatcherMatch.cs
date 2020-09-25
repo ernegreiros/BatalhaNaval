@@ -20,13 +20,13 @@ namespace BatalhaNavalApi.Partida.DAL
     /// <summary>
     /// Classe de conexão com o banco de dados para partida
     /// </summary>
-    public class DispatcherPartida : DispatcherBase, IDispatcherPartida
+    public class DispatcherMatch : DispatcherBase, IDispatcherMatch
     {
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="pIUnitOfWork">Objeto de conexão</param>
-        public DispatcherPartida(IUnitOfWork pIUnitOfWork) : base(pIUnitOfWork)
+        public DispatcherMatch(IUnitOfWork pIUnitOfWork) : base(pIUnitOfWork)
         {
         }
 
@@ -36,7 +36,7 @@ namespace BatalhaNavalApi.Partida.DAL
         /// </summary>
         /// <param name="pPartida">Objeto de partida</param>
         /// <returns>Número da partida</returns>
-        public int IniciarPartida(DML.Partida pPartida)
+        public int IniciarPartida(DML.Match pPartida)
         {
             /*Inserindo no banco*/
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(pPartida).ToString());
@@ -49,7 +49,7 @@ namespace BatalhaNavalApi.Partida.DAL
         /// </summary>
         /// <param name="pIdJogador">Id do jogador</param>
         /// <returns>Partida atual</returns>
-        public DML.Partida BuscaPartidaAtual(int pIdJogador)
+        public DML.Match BuscaPartidaAtual(int pIdJogador)
         {
             #region Query
             StringBuilder stringBuilder = new StringBuilder();
@@ -65,7 +65,7 @@ namespace BatalhaNavalApi.Partida.DAL
             #endregion
 
             DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
-            DML.Partida partida = new DML.Partida();
+            DML.Match partida = new DML.Match();
 
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
@@ -79,7 +79,7 @@ namespace BatalhaNavalApi.Partida.DAL
                     partida.Jogador2 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER2"]);
 
                 if (ds.Tables[0].Rows[0]["STATUS"] != DBNull.Value)
-                    partida.StatusDaPartida = (StatusPartida)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);
+                    partida.StatusDaPartida = (MatchStatus)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);
 
                 return partida;
             }
@@ -95,7 +95,7 @@ namespace BatalhaNavalApi.Partida.DAL
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DECLARE @ID");
             stringBuilder.AppendLine($"SET @ID = {pIdPartida}");
-            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(StatusPartida.Encerrada)} WHERE ID = @ID");
+            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Encerrada)} WHERE ID = @ID");
 
             IUnitOfWork.Executar(stringBuilder.ToString());
         }

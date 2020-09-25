@@ -13,7 +13,7 @@ namespace BatalhaNavalApi.Models.Partida.Entrada
     /// <summary>
     /// Objeto de entrada no método de iniciar partida
     /// </summary>
-    public class InIniciarPartidaVM
+    public class InitMatchVM
     {
         /// <summary>
         /// Jogador 1

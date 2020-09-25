@@ -6,19 +6,28 @@
  */
 
 #endregion
+using BatalhaNavalApi.Jogador.DML.Interfaces;
+using System;
 
-namespace BatalhaNavalApi.Jogador.DML.Interfaces
+namespace BatalhaNavalApi.Jogador.BLL
 {
     /// <summary>
-    /// Interface da classe de negócio de jogador
+    /// Classe de negócio de jogador
     /// </summary>
-    public interface IBoJogador
+    public class BoPlayer : IBoPlayer
     {
         /// <summary>
         /// Verifica se o jogador existe
         /// </summary>
         /// <param name="pIdJogador">Id do jogador</param>
         /// <returns>Se o jogador existe ou não</returns>
-        bool JogadorExiste(int pIdJogador);
+        public bool JogadorExiste(int pIdJogador)
+        {
+            if (pIdJogador <= 0)
+                throw new Exception("ID do jogador inválido");
+
+            return true;
+        }
+
     }
 }

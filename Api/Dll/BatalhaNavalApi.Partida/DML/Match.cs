@@ -12,7 +12,7 @@ namespace BatalhaNavalApi.Partida.DML
     /// <summary>
     /// Objeto de partida
     /// </summary>
-    public class Partida
+    public class Match
     {
 
         /// <summary>
@@ -32,6 +32,6 @@ namespace BatalhaNavalApi.Partida.DML
         /// <summary>
         /// Status da partida
         /// </summary>
-        public StatusPartida StatusDaPartida { get; set; }
+        public MatchStatus StatusDaPartida { get; set; }
     }
 }
