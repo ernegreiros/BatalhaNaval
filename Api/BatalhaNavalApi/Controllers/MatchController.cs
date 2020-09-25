@@ -49,7 +49,7 @@ namespace BatalhaNavalApi.Controllers
 
                 try
                 {
-                    outIniciarPartidaVM.ID = IBoMatch.CreateMatch(new Partida.DML.Match()
+                    outIniciarPartidaVM.ID = IBoMatch.CreateMatch(new Match.DML.Match()
                     {
                         Player1 = pModel.Player1,
                         Player2 = pModel.Player2
