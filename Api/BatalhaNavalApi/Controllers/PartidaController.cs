@@ -1,12 +1,4 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial do controlador de partida
- */
-
-#endregion
-using System;
+﻿using System;
 using BatalhaNavalApi.Models.Partida.Entrada;
 using BatalhaNavalApi.Models.Partida.Saida;
 using BatalhaNavalApi.Partida.DML.Interfaces;
@@ -20,14 +12,14 @@ namespace BatalhaNavalApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PartidaController : ControllerBase
+    public class MatchController : ControllerBase
     {
         #region Construtor
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="pIBoPartida">Classe de negócio de partida</param>
-        public PartidaController(IBoPartida pIBoPartida)
+        public MatchController(IBoMatch pIBoPartida)
         {
             IBoPartida = pIBoPartida;
         }
@@ -37,7 +29,7 @@ namespace BatalhaNavalApi.Controllers
         /// <summary>
         /// Interface de negócio de partida
         /// </summary>
-        private readonly IBoPartida IBoPartida;
+        private readonly IBoMatch IBoPartida;
         #endregion
 
         #region Métodos

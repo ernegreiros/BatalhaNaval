@@ -1,12 +1,4 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da interface de negócio para jogador
- */
-
-#endregion
-using BatalhaNavalApi.Jogador.DML.Interfaces;
+﻿using BatalhaNavalApi.Jogador.DML.Interfaces;
 using System;
 
 namespace BatalhaNavalApi.Jogador.BLL

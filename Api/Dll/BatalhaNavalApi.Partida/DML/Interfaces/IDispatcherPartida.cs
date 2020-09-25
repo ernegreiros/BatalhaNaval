@@ -1,13 +1,4 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da classe de conexão com banco de dados para partida
- */
-
-#endregion
-
-namespace BatalhaNavalApi.Partida.DML.Interfaces
+﻿namespace BatalhaNavalApi.Partida.DML.Interfaces
 {
     /// <summary>
     /// Interface da classe de conexão com o banco para assuntos de partida
