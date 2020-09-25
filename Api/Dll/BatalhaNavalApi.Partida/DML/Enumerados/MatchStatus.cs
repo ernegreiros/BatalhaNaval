@@ -1,20 +1,6 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 21/09/2020
- * Descrição: Implementação inicial dos status de partida
- */
+﻿using System.ComponentModel;
 
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Atualizando default value do "NaoDefinido"
- */
-
-#endregion
-using System.ComponentModel;
-
-namespace BatalhaNavalApi.Partida.DML.Enumerados
+namespace BatalhaNavalApi.Match.DML.Enumerados
 {
     /// <summary>
     /// Status da partida
@@ -28,15 +14,15 @@ namespace BatalhaNavalApi.Partida.DML.Enumerados
         NaoDefinido = 0,
 
         /// <summary>
-        /// Iniciada
+        /// Created
         /// </summary>
-        [Description("Iniciada"), DefaultValue("1")]
-        Iniciada = 1,
+        [Description("Created"), DefaultValue("1")]
+        Created = 1,
 
         /// <summary>
-        /// Encerrada
+        /// Closed
         /// </summary>
-        [Description("Encerrada"), DefaultValue("2")]
-        Encerrada = 2
+        [Description("Closed"), DefaultValue("2")]
+        Closed = 2
     }
 }

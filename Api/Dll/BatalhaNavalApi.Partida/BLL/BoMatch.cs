@@ -1,105 +1,83 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 21/09/2020
- * Descrição: Implementação inicial da classe de negócio de partida
- */
-
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial das regras de negócio da interface herdada
- */
-
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Ajustando para setar a partida como iniciada antes de gravar
- */
-
-#endregion
-
-using BatalhaNavalApi.Jogador.DML;
-using BatalhaNavalApi.Jogador.DML.Interfaces;
-using BatalhaNavalApi.Partida.DML.Interfaces;
+﻿using BatalhaNavalApi.Player.DML.Interfaces;
+using BatalhaNavalApi.Match.DML.Interfaces;
 using System;
 
-namespace BatalhaNavalApi.Partida.BLL
+namespace BatalhaNavalApi.Match.BLL
 {
     /// <summary>
-    /// Classe de negócio para partida
+    /// Business object of match
     /// </summary>
     public class BoMatch : IBoMatch
     {
-        #region Construtor
+        #region Constructor
         /// <summary>
-        /// Construtor
+        /// Constructor
         /// </summary>
-        /// <param name="pIBoJogador">Classe de negócio de jogador</param>
-        /// <param name="pIDispatcherPartida">Classe de conexão com o banco de dados para partida</param>
-        public BoMatch(IBoPlayer pIBoJogador, IDispatcherMatch pIDispatcherPartida)
+        /// <param name="pIBOPlayer">Business class of player</param>
+        /// <param name="pIDispatcherMatch">Connection class to the database for match</param>
+        public BoMatch(IBoPlayer pIBOPlayer, IDispatcherMatch pIDispatcherMatch)
         {
-            IBoJogador = pIBoJogador;
-            IDispatcherPartida = pIDispatcherPartida;
+            IBoJogador = pIBOPlayer;
+            IDispatcherPartida = pIDispatcherMatch;
         }
 
         #endregion
 
-        #region Propriedades readonly
+        #region Readonly properties
         /// <summary>
-        /// Classe de negócio de jogador
+        /// Business class of player
         /// </summary>
         private readonly IBoPlayer IBoJogador;
 
         /// <summary>
-        /// Classe de conexão com o banco para partida
+        /// Connection class to the database for match
         /// </summary>
         private readonly IDispatcherMatch IDispatcherPartida;
         #endregion
 
-        #region Métodos
+        #region Methods
 
         /// <summary>
-        /// Inicia a partida e retorna o número dela
+        /// Create a match and returns your id
         /// </summary>
-        /// <param name="pPartida">Objeto de partida</param>
-        /// <returns>Número da partida</returns>
-        public int IniciarPartida(DML.Match pPartida)
+        /// <param name="pMatch">Match object</param>
+        /// <returns>Math id</returns>
+        public int CreateMatch(DML.Match pMatch)
         {
-            if (BuscaPartidaAtual(pPartida.Jogador1) != null)
+            if (CurrentMatch(pMatch.Player1) != null)
                 throw new Exception("Jogador 1 já possui uma partida iniciada");
-            if (BuscaPartidaAtual(pPartida.Jogador2) != null)
+            if (CurrentMatch(pMatch.Player2) != null)
                 throw new Exception("Jogador 2 já possui uma partida iniciada");
 
-            pPartida.StatusDaPartida = DML.Enumerados.MatchStatus.Iniciada;
-            return IDispatcherPartida.BuscaPartidaAtual(pPartida.Jogador1).ID;
+            pMatch.StatusDaPartida = DML.Enumerados.MatchStatus.Created;
+            return IDispatcherPartida.CurrentMatch(pMatch.Player1).ID;
         }
 
         /// <summary>
-        /// Busca a partida atual do jogador (Com status iniciada)
+        /// Search the player's current game (With status started)
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
+        /// <param name="pPlayerID">Player ID</param>
         /// <returns>Partida atual</returns>
-        public DML.Match BuscaPartidaAtual(int pIdJogador)
+        public DML.Match CurrentMatch(int pPlayerID)
         {
-            if (IBoJogador.JogadorExiste(pIdJogador))
+            if (IBoJogador.PlayerExists(pPlayerID))
             {
-                return IDispatcherPartida.BuscaPartidaAtual(pIdJogador);
+                return IDispatcherPartida.CurrentMatch(pPlayerID);
             }
             else
                 throw new Exception("Jogador informado não cadastrado");
         }
 
         /// <summary>
-        /// Finaliza a partida
+        /// Close the match
         /// </summary>
-        /// <param name="pIdPartida">Id da partida</param>
-        public void FinalizarPartida(int pIdPartida)
+        /// <param name="pMatchId">Match ID</param>
+        public void CloseMatch(int pMatchId)
         {
-            if (pIdPartida <= 0)
+            if (pMatchId <= 0)
                 throw new Exception("Id da partida é obrigatório");
 
-            IDispatcherPartida.FinalizarPartida(pIdPartida);
+            IDispatcherPartida.CloseMatch(pMatchId);
         }
         #endregion
 

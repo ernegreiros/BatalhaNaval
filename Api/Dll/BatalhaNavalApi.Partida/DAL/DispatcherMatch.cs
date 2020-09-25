@@ -1,60 +1,51 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da classe de conexão com banco de dados para partida
- */
-
-#endregion
-using BatalhaNavalApi.Base.DAL;
-using BatalhaNavalApi.Partida.DML.Enumerados;
-using BatalhaNavalApi.Partida.DML.Interfaces;
+﻿using BatalhaNavalApi.Base.DAL;
+using BatalhaNavalApi.Match.DML.Enumerados;
+using BatalhaNavalApi.Match.DML.Interfaces;
 using DataBaseHelper.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace BatalhaNavalApi.Partida.DAL
+namespace BatalhaNavalApi.Match.DAL
 {
     /// <summary>
-    /// Classe de conexão com o banco de dados para partida
+    /// Connection object of match
     /// </summary>
     public class DispatcherMatch : DispatcherBase, IDispatcherMatch
     {
         /// <summary>
         /// Construtor
         /// </summary>
-        /// <param name="pIUnitOfWork">Objeto de conexão</param>
+        /// <param name="pIUnitOfWork">Connection object</param>
         public DispatcherMatch(IUnitOfWork pIUnitOfWork) : base(pIUnitOfWork)
         {
         }
 
-        #region Métodos
+        #region Methods
         /// <summary>
-        /// Inicia a partida e retorna o número dela
+        /// Create the match and returns your ID
         /// </summary>
-        /// <param name="pPartida">Objeto de partida</param>
+        /// <param name="pMatch">Match Object</param>
         /// <returns>Número da partida</returns>
-        public int IniciarPartida(DML.Match pPartida)
+        public int CreateMatch(DML.Match pMatch)
         {
             /*Inserindo no banco*/
-            IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(pPartida).ToString());
+            IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(pMatch).ToString());
             /*Retornando ID da partida*/
-            return BuscaPartidaAtual(pPartida.Jogador1).ID;
+            return CurrentMatch(pMatch.Player1).ID;
         }
 
         /// <summary>
-        /// Busca a partida atual do jogador (Com status iniciada)
+        /// Search the player's current game (With status started)
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
+        /// <param name="pPlayerID">Player ID</param>
         /// <returns>Partida atual</returns>
-        public DML.Match BuscaPartidaAtual(int pIdJogador)
+        public DML.Match CurrentMatch(int pPlayerID)
         {
             #region Query
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DECLARE @ID_JOGADOR INT");
-            stringBuilder.AppendLine($"SET @ID_JOGADOR = {pIdJogador}");
+            stringBuilder.AppendLine($"SET @ID_JOGADOR = {pPlayerID}");
             stringBuilder.AppendLine("SELECT");
             stringBuilder.AppendLine("  ID,");
             stringBuilder.AppendLine("  PLAYER1,");
@@ -73,10 +64,10 @@ namespace BatalhaNavalApi.Partida.DAL
                     partida.ID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
 
                 if (ds.Tables[0].Rows[0]["PLAYER1"] != DBNull.Value)
-                    partida.Jogador1 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER1"]);
+                    partida.Player1 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER1"]);
 
                 if (ds.Tables[0].Rows[0]["PLAYER2"] != DBNull.Value)
-                    partida.Jogador2 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER2"]);
+                    partida.Player2 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER2"]);
 
                 if (ds.Tables[0].Rows[0]["STATUS"] != DBNull.Value)
                     partida.StatusDaPartida = (MatchStatus)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);
@@ -87,15 +78,15 @@ namespace BatalhaNavalApi.Partida.DAL
         }
 
         /// <summary>
-        /// Finaliza a partida
+        /// Close the match
         /// </summary>
-        /// <param name="pIdPartida">Id da partida</param>
-        public void FinalizarPartida(int pIdPartida)
+        /// <param name="pMatchId">Match ID</param>
+        public void CloseMatch(int pMatchID)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DECLARE @ID");
-            stringBuilder.AppendLine($"SET @ID = {pIdPartida}");
-            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Encerrada)} WHERE ID = @ID");
+            stringBuilder.AppendLine($"SET @ID = {pMatchID}");
+            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Closed)} WHERE ID = @ID");
 
             IUnitOfWork.Executar(stringBuilder.ToString());
         }

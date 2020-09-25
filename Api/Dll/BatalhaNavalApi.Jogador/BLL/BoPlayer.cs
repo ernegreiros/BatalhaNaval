@@ -1,29 +1,21 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da interface de negócio para jogador
- */
-
-#endregion
-using BatalhaNavalApi.Jogador.DML.Interfaces;
+﻿using BatalhaNavalApi.Player.DML.Interfaces;
 using System;
 
-namespace BatalhaNavalApi.Jogador.BLL
+namespace BatalhaNavalApi.Player.BLL
 {
     /// <summary>
-    /// Classe de negócio de jogador
+    /// Business class of players
     /// </summary>
     public class BoPlayer : IBoPlayer
     {
         /// <summary>
-        /// Verifica se o jogador existe
+        /// Check if player exists
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
+        /// <param name="pPlayerID">Id do jogador</param>
         /// <returns>Se o jogador existe ou não</returns>
-        public bool JogadorExiste(int pIdJogador)
+        public bool PlayerExists(int pPlayerID)
         {
-            if (pIdJogador <= 0)
+            if (pPlayerID <= 0)
                 throw new Exception("ID do jogador inválido");
 
             return true;

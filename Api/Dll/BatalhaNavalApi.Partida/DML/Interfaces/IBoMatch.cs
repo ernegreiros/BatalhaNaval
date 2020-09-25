@@ -1,37 +1,28 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da classe de negócio de partida
- */
-
-#endregion
-
-namespace BatalhaNavalApi.Partida.DML.Interfaces
+﻿namespace BatalhaNavalApi.Match.DML.Interfaces
 {
     /// <summary>
-    /// Interface da classe de negócio de partida
+    /// Business object interface of match
     /// </summary>
     public interface IBoMatch
     {
         /// <summary>
-        /// Inicia a partida e retorna o número dela
+        /// Create a match and returns your id
         /// </summary>
-        /// <param name="pPartida">Objeto de partida</param>
-        /// <returns>Número da partida</returns>
-        int IniciarPartida(DML.Match pPartida);
+        /// <param name="pMatch">Match object</param>
+        /// <returns>Math id</returns>
+        int CreateMatch(DML.Match pMatch);
 
         /// <summary>
-        /// Busca a partida atual do jogador (Com status iniciada)
+        /// Search the player's current game (With status started)
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
+        /// <param name="pPlayerID">Player ID</param>
         /// <returns>Partida atual</returns>
-        DML.Match BuscaPartidaAtual(int pIdJogador);
+        DML.Match CurrentMatch(int pPlayerID);
 
         /// <summary>
-        /// Finaliza a partida
+        /// Close the match
         /// </summary>
-        /// <param name="pIdPartida">Id da partida</param>
-        void FinalizarPartida(int pIdPartida);
+        /// <param name="pMatchId">Match ID</param>
+        void CloseMatch(int pMatchId);
     }
 }

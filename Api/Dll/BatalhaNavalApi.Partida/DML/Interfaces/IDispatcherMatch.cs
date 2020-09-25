@@ -1,37 +1,28 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da classe de conexão com banco de dados para partida
- */
-
-#endregion
-
-namespace BatalhaNavalApi.Partida.DML.Interfaces
+﻿namespace BatalhaNavalApi.Match.DML.Interfaces
 {
     /// <summary>
-    /// Interface da classe de conexão com o banco para assuntos de partida
+    /// Connection object interface of match
     /// </summary>
     public interface IDispatcherMatch
     {
         /// <summary>
-        /// Inicia a partida e retorna o número dela
+        /// Create the match and returns your ID
         /// </summary>
-        /// <param name="pPartida">Objeto de partida</param>
+        /// <param name="pMatch">Match Object</param>
         /// <returns>Número da partida</returns>
-        int IniciarPartida(DML.Match pPartida);
+        int CreateMatch(DML.Match pPartida);
 
         /// <summary>
-        /// Busca a partida atual do jogador (Com status iniciada)
+        /// Search the player's current game (With status started)
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
+        /// <param name="pPlayerID">Player ID</param>
         /// <returns>Partida atual</returns>
-        DML.Match BuscaPartidaAtual(int pIdJogador);
+        DML.Match CurrentMatch(int pIdJogador);
 
         /// <summary>
-        /// Finaliza a partida
+        /// Close the match
         /// </summary>
-        /// <param name="pIdPartida">Id da partida</param>
-        void FinalizarPartida(int pIdPartida);
+        /// <param name="pMatchId">Match ID</param>
+        void CloseMatch(int pIdPartida);
     }
 }

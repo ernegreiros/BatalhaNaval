@@ -1,38 +1,30 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial da classe de conexão com banco de dados para jogador
- */
-
-#endregion
-using BatalhaNavalApi.Base.DAL;
-using BatalhaNavalApi.Jogador.DML.Interfaces;
+﻿using BatalhaNavalApi.Base.DAL;
+using BatalhaNavalApi.Player.DML.Interfaces;
 using DataBaseHelper.Interfaces;
 using System.Data;
 using System.Text;
 
-namespace BatalhaNavalApi.Jogador.DAL
+namespace BatalhaNavalApi.Player.DAL
 {
     /// <summary>
     /// Classe de comunicação com o banco de dados para assunto de jogador
     /// </summary>
-    public class DispatcherJogador : DispatcherBase, IDispatcherPlayer
+    public class DispatcherPlayer : DispatcherBase, IDispatcherPlayer
     {
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="pIUnitOfWork"></param>
-        public DispatcherJogador(IUnitOfWork pIUnitOfWork) : base(pIUnitOfWork)
+        public DispatcherPlayer(IUnitOfWork pIUnitOfWork) : base(pIUnitOfWork)
         {
         }
 
         /// <summary>
-        /// Verifica se o jogador existe
+        /// Check if player exists
         /// </summary>
-        /// <param name="pIdJogador">Id do jogador</param>
-        /// <returns>Se o jogador existe ou não</returns>
-        public bool JogadorExiste(int pIdJogador)
+        /// <param name="pIdJogador">Player ID</param>
+        /// <returns>Return if player exists</returns>
+        public bool PlayerExists(int pIdJogador)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DECLARE @ID INT");

@@ -1,59 +1,46 @@
-﻿#region Histórico de manutenção
-/*
- * Nome: Pedro Henrique Pires
- * Data: 23/09/2020
- * Descrição: Implementação inicial do controlador de partida
- */
-
-/*
- * Nome: Edvandro Negreiros
- * Data: 23/09/2020
- * Descrição: Renomear métodos
- */
-
-#endregion
-using System;
-using BatalhaNavalApi.Models.Partida.Entrada;
-using BatalhaNavalApi.Models.Partida.Saida;
-using BatalhaNavalApi.Partida.DML.Interfaces;
+﻿using System;
+using BatalhaNavalApi.Models.Match.In;
+using BatalhaNavalApi.Models.Match.Out;
+using BatalhaNavalApi.Match.DML.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BatalhaNavalApi.Controllers
 {
     /// <summary>
-    /// Controlador de partida
+    /// Match Controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class MatchController : ControllerBase
     {
-        #region Construtor
+        #region Constructor
         /// <summary>
-        /// Construtor
+        /// Constructor
         /// </summary>
-        /// <param name="pIBoPartida">Classe de negócio de partida</param>
+        /// <param name="pIBoPartida">Business class of match</param>
         public MatchController(IBoMatch pIBoPartida)
         {
-            IBoPartida = pIBoPartida;
+            IBoMatch = pIBoPartida;
         }
         #endregion
 
-        #region Propriedades readonly
+        #region Readonly properties
         /// <summary>
         /// Interface de negócio de partida
         /// </summary>
-        private readonly IBoMatch IBoPartida;
+        private readonly IBoMatch IBoMatch;
         #endregion
 
         #region Métodos
         /// <summary>
-        /// Método que inicia a partida
+        /// Method that creates a match
         /// </summary>
-        /// <param name="pModel">Objeto de entrada</param>
-        /// <returns>Objeto com o ID da partida</returns>
-        /// <remarks>Método que inicia a partida</remarks>
-        public OutInitMatchVM IniciarPartida(InitMatchVM pModel)
+        /// <param name="pModel">In Object</param>
+        /// <returns>Return Object</returns>
+        /// <remarks>Method that creates a match</remarks>
+        [HttpPost]
+        public OutInitMatchVM CreateMatch(InInitMatchVM pModel)
         {
             OutInitMatchVM outIniciarPartidaVM = new OutInitMatchVM();
 
@@ -62,24 +49,24 @@ namespace BatalhaNavalApi.Controllers
 
                 try
                 {
-                    outIniciarPartidaVM.ID = IBoPartida.IniciarPartida(new Partida.DML.Match()
+                    outIniciarPartidaVM.ID = IBoMatch.CreateMatch(new Partida.DML.Match()
                     {
-                        Jogador1 = pModel.Jogador1,
-                        Jogador2 = pModel.Jogador2
+                        Player1 = pModel.Player1,
+                        Player2 = pModel.Player2
                     });
-                    outIniciarPartidaVM.StatusHttp = StatusCodes.Status201Created;
-                    outIniciarPartidaVM.Mensagem = $"Partida {outIniciarPartidaVM.ID} iniciada com sucesso!";
+                    outIniciarPartidaVM.HttpStatus = StatusCodes.Status201Created;
+                    outIniciarPartidaVM.Message = $"Partida {outIniciarPartidaVM.ID} iniciada com sucesso!";
                 }
                 catch (Exception ex)
                 {
-                    outIniciarPartidaVM.StatusHttp = StatusCodes.Status400BadRequest;
-                    outIniciarPartidaVM.Mensagem = $"Erro ao iniciar a partida! {ex.Message}";
+                    outIniciarPartidaVM.HttpStatus = StatusCodes.Status400BadRequest;
+                    outIniciarPartidaVM.Message = $"Erro ao iniciar a partida! {ex.Message}";
                 }
             }
             else
             {
-                outIniciarPartidaVM.Mensagem = "Objeto de entrada não está valido!";
-                outIniciarPartidaVM.StatusHttp = StatusCodes.Status400BadRequest;
+                outIniciarPartidaVM.Message = "Objeto de entrada não está valido!";
+                outIniciarPartidaVM.HttpStatus = StatusCodes.Status400BadRequest;
             }
 
             return outIniciarPartidaVM;

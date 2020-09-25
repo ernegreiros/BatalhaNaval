@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BatalhaNavalApi.Base\BatalhaNavalApi.Base.csproj" />
-    <ProjectReference Include="..\BatalhaNavalApi.Jogador\BatalhaNavalApi.Jogador.csproj" />
+    <ProjectReference Include="..\BatalhaNavalApi.Jogador\BatalhaNavalApi.Player.csproj" />
   </ItemGroup>
 
   <ItemGroup>

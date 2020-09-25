@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatalhaNavalApi", "BatalhaNavalApi\BatalhaNavalApi.csproj", "{CAF7AAE9-5199-4E75-838F-C0EA07684ABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatalhaNavalApi.Partida", "Dll\BatalhaNavalApi.Partida\BatalhaNavalApi.Partida.csproj", "{A0866134-2A09-476E-822B-B268E2F1F777}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatalhaNavalApi.Match", "Dll\BatalhaNavalApi.Partida\BatalhaNavalApi.Match.csproj", "{A0866134-2A09-476E-822B-B268E2F1F777}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatalhaNavalApi.Base", "Dll\BatalhaNavalApi.Base\BatalhaNavalApi.Base.csproj", "{AF71167E-6327-4C79-BC46-3ADE2D418CBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatalhaNavalApi.Base", "Dll\BatalhaNavalApi.Base\BatalhaNavalApi.Base.csproj", "{AF71167E-6327-4C79-BC46-3ADE2D418CBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatalhaNavalApi.Jogador", "Dll\BatalhaNavalApi.Jogador\BatalhaNavalApi.Jogador.csproj", "{FA274A33-CB0A-4ADD-BBD9-CEB5D0F6E9B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatalhaNavalApi.Player", "Dll\BatalhaNavalApi.Jogador\BatalhaNavalApi.Player.csproj", "{FA274A33-CB0A-4ADD-BBD9-CEB5D0F6E9B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
