@@ -29,7 +29,7 @@ namespace BatalhaNavalApi.Partida.BLL
     /// <summary>
     /// Classe de negócio para partida
     /// </summary>
-    public class BoPartida : IBoPartida
+    public class BoMatch : IBoMatch
     {
         #region Construtor
         /// <summary>
@@ -37,7 +37,7 @@ namespace BatalhaNavalApi.Partida.BLL
         /// </summary>
         /// <param name="pIBoJogador">Classe de negócio de jogador</param>
         /// <param name="pIDispatcherPartida">Classe de conexão com o banco de dados para partida</param>
-        public BoPartida(IBoJogador pIBoJogador, IDispatcherPartida pIDispatcherPartida)
+        public BoMatch(IBoPlayer pIBoJogador, IDispatcherMatch pIDispatcherPartida)
         {
             IBoJogador = pIBoJogador;
             IDispatcherPartida = pIDispatcherPartida;
@@ -49,12 +49,12 @@ namespace BatalhaNavalApi.Partida.BLL
         /// <summary>
         /// Classe de negócio de jogador
         /// </summary>
-        private readonly IBoJogador IBoJogador;
+        private readonly IBoPlayer IBoJogador;
 
         /// <summary>
         /// Classe de conexão com o banco para partida
         /// </summary>
-        private readonly IDispatcherPartida IDispatcherPartida;
+        private readonly IDispatcherMatch IDispatcherPartida;
         #endregion
 
         #region Métodos
@@ -64,14 +64,14 @@ namespace BatalhaNavalApi.Partida.BLL
         /// </summary>
         /// <param name="pPartida">Objeto de partida</param>
         /// <returns>Número da partida</returns>
-        public int IniciarPartida(DML.Partida pPartida)
+        public int IniciarPartida(DML.Match pPartida)
         {
             if (BuscaPartidaAtual(pPartida.Jogador1) != null)
                 throw new Exception("Jogador 1 já possui uma partida iniciada");
             if (BuscaPartidaAtual(pPartida.Jogador2) != null)
                 throw new Exception("Jogador 2 já possui uma partida iniciada");
 
-            pPartida.StatusDaPartida = DML.Enumerados.StatusPartida.Iniciada;
+            pPartida.StatusDaPartida = DML.Enumerados.MatchStatus.Iniciada;
             return IDispatcherPartida.BuscaPartidaAtual(pPartida.Jogador1).ID;
         }
 
@@ -80,7 +80,7 @@ namespace BatalhaNavalApi.Partida.BLL
         /// </summary>
         /// <param name="pIdJogador">Id do jogador</param>
         /// <returns>Partida atual</returns>
-        public DML.Partida BuscaPartidaAtual(int pIdJogador)
+        public DML.Match BuscaPartidaAtual(int pIdJogador)
         {
             if (IBoJogador.JogadorExiste(pIdJogador))
             {

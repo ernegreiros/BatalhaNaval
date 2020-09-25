@@ -12,7 +12,7 @@ namespace BatalhaNavalApi.Jogador.DML.Interfaces
     /// <summary>
     /// Interface de conexão com banco de dados para jogador
     /// </summary>
-    public interface IDispatcherJogador
+    public interface IDispatcherPlayer
     {
         /// <summary>
         /// Verifica se o jogador existe

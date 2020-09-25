@@ -5,6 +5,12 @@
  * Descrição: Implementação inicial do controlador de partida
  */
 
+/*
+ * Nome: Edvandro Negreiros
+ * Data: 23/09/2020
+ * Descrição: Renomear métodos
+ */
+
 #endregion
 using System;
 using BatalhaNavalApi.Models.Partida.Entrada;
@@ -20,14 +26,14 @@ namespace BatalhaNavalApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PartidaController : ControllerBase
+    public class MatchController : ControllerBase
     {
         #region Construtor
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="pIBoPartida">Classe de negócio de partida</param>
-        public PartidaController(IBoPartida pIBoPartida)
+        public MatchController(IBoMatch pIBoPartida)
         {
             IBoPartida = pIBoPartida;
         }
@@ -37,7 +43,7 @@ namespace BatalhaNavalApi.Controllers
         /// <summary>
         /// Interface de negócio de partida
         /// </summary>
-        private readonly IBoPartida IBoPartida;
+        private readonly IBoMatch IBoPartida;
         #endregion
 
         #region Métodos
@@ -47,16 +53,16 @@ namespace BatalhaNavalApi.Controllers
         /// <param name="pModel">Objeto de entrada</param>
         /// <returns>Objeto com o ID da partida</returns>
         /// <remarks>Método que inicia a partida</remarks>
-        public OutIniciarPartidaVM IniciarPartida(InIniciarPartidaVM pModel)
+        public OutInitMatchVM IniciarPartida(InitMatchVM pModel)
         {
-            OutIniciarPartidaVM outIniciarPartidaVM = new OutIniciarPartidaVM();
+            OutInitMatchVM outIniciarPartidaVM = new OutInitMatchVM();
 
             if (ModelState.IsValid)
             {
 
                 try
                 {
-                    outIniciarPartidaVM.ID = IBoPartida.IniciarPartida(new Partida.DML.Partida()
+                    outIniciarPartidaVM.ID = IBoPartida.IniciarPartida(new Partida.DML.Match()
                     {
                         Jogador1 = pModel.Jogador1,
                         Jogador2 = pModel.Jogador2

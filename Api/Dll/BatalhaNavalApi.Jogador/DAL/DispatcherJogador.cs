@@ -17,7 +17,7 @@ namespace BatalhaNavalApi.Jogador.DAL
     /// <summary>
     /// Classe de comunicação com o banco de dados para assunto de jogador
     /// </summary>
-    public class DispatcherJogador : DispatcherBase, IDispatcherJogador
+    public class DispatcherJogador : DispatcherBase, IDispatcherPlayer
     {
         /// <summary>
         /// Construtor
