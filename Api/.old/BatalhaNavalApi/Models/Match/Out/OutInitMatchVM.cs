@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BatalhaNavalApi.Models.Partida.Saida
+namespace BatalhaNavalApi.Models.Match.Out
 {
     /// <summary>
     /// Objeto de retorno do método de iniciar partida
