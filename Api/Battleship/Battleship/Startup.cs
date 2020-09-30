@@ -38,6 +38,8 @@ namespace Battleship
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseReactStaticFiles();
+
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
@@ -49,7 +51,7 @@ namespace Battleship
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<WebSocketHandler>("/websocketHandler");
+                endpoints.MapHub<WebSocketHandler>("/api/websocketHandler");
             });
         }
     }
