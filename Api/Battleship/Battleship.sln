@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship", "Battleship\Battleship.csproj", "{0B2D3209-5064-470E-AAA5-F10EB2A88C58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship", "Battleship\Battleship.csproj", "{0B2D3209-5064-470E-AAA5-F10EB2A88C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipApi.Base", "BattleshipApi.Base\BattleshipApi.Base.csproj", "{D32086DB-888E-4918-A7C4-C4A085794ECD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.Base", "BattleshipApi.Base\BattleshipApi.Base.csproj", "{D32086DB-888E-4918-A7C4-C4A085794ECD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipApi.Player", "BattleshipApi.Player\BattleshipApi.Player.csproj", "{06969909-5E74-4E03-9DDB-A37B4A3162F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.Player", "BattleshipApi.Player\BattleshipApi.Player.csproj", "{06969909-5E74-4E03-9DDB-A37B4A3162F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipApi.Match", "BattleshipApi.Match\BattleshipApi.Match.csproj", "{4ACA0E91-67FF-4444-81CF-B38D0AB8DCF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.Match", "BattleshipApi.Match\BattleshipApi.Match.csproj", "{4ACA0E91-67FF-4444-81CF-B38D0AB8DCF7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.SpecialPower", "BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj", "{99EEC4BE-FAE1-4164-B078-1A0D72B65B72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4ACA0E91-67FF-4444-81CF-B38D0AB8DCF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ACA0E91-67FF-4444-81CF-B38D0AB8DCF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ACA0E91-67FF-4444-81CF-B38D0AB8DCF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EEC4BE-FAE1-4164-B078-1A0D72B65B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EEC4BE-FAE1-4164-B078-1A0D72B65B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EEC4BE-FAE1-4164-B078-1A0D72B65B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EEC4BE-FAE1-4164-B078-1A0D72B65B72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,15 +3,15 @@
 namespace BattleshipApi.Match.DML.Enumerados
 {
     /// <summary>
-    /// Status da partida
+    /// Match Status
     /// </summary>
     public enum MatchStatus
     {
         /// <summary>
-        /// Não definido
+        /// Not Defined
         /// </summary>
         [Description(""), DefaultValue("0")]
-        NaoDefinido = 0,
+        NotDefined = 0,
 
         /// <summary>
         /// Created

@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BattleshipApi.SpecialPower.BLL;
+using BattleshipApi.SpecialPower.DAL;
+using BattleshipApi.SpecialPower.DML.Intefaces;
+using DataBaseHelper;
+using DataBaseHelper.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Battleship
 {
@@ -28,6 +26,10 @@ namespace Battleship
             services.AddControllers();
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
+            services.AddSingleton<IUnitOfWork>(new UnitOfWork(Configuration["ConnectionString"]));
+            
+            services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
+            services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
