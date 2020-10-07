@@ -1,3 +1,6 @@
+using BattleshipApi.BattleField.BLL;
+using BattleshipApi.BattleField.DAL;
+using BattleshipApi.BattleField.DML.Interfaces;
 using BattleshipApi.Match.BLL;
 using BattleshipApi.Match.DAL;
 using BattleshipApi.Match.DML.Interfaces;
@@ -39,6 +42,9 @@ namespace Battleship
 
             services.AddSingleton<IDispatcherMatch, DispatcherMatch>();
             services.AddSingleton<IBoMatch, BoMatch>();
+
+            services.AddSingleton<IDispatcherBattleField, DispatcherBattleField>();
+            services.AddSingleton<IBoBattleField, BoBattleField>();
 
             services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
             services.AddSingleton<IBoSpecialPower, BoSpecialPower>();

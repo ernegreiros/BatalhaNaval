@@ -1,9 +1,11 @@
-﻿namespace BattleshipApi.Player.DML.Interfaces
+﻿using BattleshipApi.Base.DAL.Interfaces;
+
+namespace BattleshipApi.Player.DML.Interfaces
 {
     /// <summary>
     /// Player database connection interface
     /// </summary>
-    public interface IDispatcherPlayer
+    public interface IDispatcherPlayer : IDispatcherBase
     {
         /// <summary>
         /// Check if player exists
