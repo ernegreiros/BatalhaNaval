@@ -50,7 +50,8 @@ namespace Battleship.Controllers
                         Cost = pModel.Cost,
                         Name = pModel.Name,
                         Quantifier = Convert.ToInt32(pModel.Quantifier),
-                        Type = (SpecialPowerTypes)pModel.Type
+                        Type = (SpecialPowerTypes)pModel.Type,
+                        Compensation = pModel.Compensation
                     });
 
                     outCreateSpecialPowerVM.HttpStatus = StatusCodes.Status201Created;

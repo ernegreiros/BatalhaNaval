@@ -51,6 +51,7 @@ namespace BattleshipApi.Match.DAL
             stringBuilder.AppendLine("  STATUS");
             stringBuilder.AppendLine("FROM MATCH WITH(NOLOCK)");
             stringBuilder.AppendLine("WHERE PLAYER1 = @ID_JOGADOR OR PLAYER2 = @ID_JOGADOR");
+            stringBuilder.AppendLine($"AND STATUS <> {Convert.ToInt32(MatchStatus.Closed)}");
 
             DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
             DML.Match partida = new DML.Match();
@@ -67,7 +68,7 @@ namespace BattleshipApi.Match.DAL
                     partida.Player2 = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER2"]);
 
                 if (ds.Tables[0].Rows[0]["STATUS"] != DBNull.Value)
-                    partida.StatusDaPartida = (MatchStatus)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);
+                    partida.Status = (MatchStatus)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);
 
                 return partida;
             }

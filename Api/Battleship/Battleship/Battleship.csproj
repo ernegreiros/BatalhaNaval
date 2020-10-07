@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
     <ProjectReference Include="..\BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj" />

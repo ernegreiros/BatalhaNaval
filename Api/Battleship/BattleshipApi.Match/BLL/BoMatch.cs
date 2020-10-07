@@ -41,8 +41,7 @@ namespace BattleshipApi.Match.BLL
                 throw new Exception("Jogador 1 já possui uma partida iniciada");
             if (CurrentMatch(pMatch.Player2) != null)
                 throw new Exception("Jogador 2 já possui uma partida iniciada");
-
-            pMatch.StatusDaPartida = DML.Enumerados.MatchStatus.Created;
+                       
             return IDispatcherPartida.CurrentMatch(pMatch.Player1).ID;
         }
 

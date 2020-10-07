@@ -32,5 +32,11 @@ namespace Battleship.Models.SpecialPower.In
         /// </summary>
         [Required(ErrorMessage ="Special power type is required")]
         public int Type { get; set; }
+
+        /// <summary>
+        /// Compensation for use and victory in the game
+        /// </summary>
+        [Required(ErrorMessage = "Compensation is required")]
+        public double Compensation { get; set; }
     }
 }
