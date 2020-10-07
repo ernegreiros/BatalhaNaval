@@ -22,8 +22,7 @@ namespace BattleshipApi.Controllers
         {
             IBoMatch = pIBoPartida;
         }
-
-        
+                
         /// <summary>
         /// Interface de negócio de partida
         /// </summary>

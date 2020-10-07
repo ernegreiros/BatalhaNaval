@@ -15,6 +15,10 @@ namespace BattleshipApi.SpecialPower.BLL
         private readonly IDispatcherSpecialPower IDispatcherSpecialPower;
         #endregion
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pIDispatcherSpecialPower"></param>
         public BoSpecialPower(IDispatcherSpecialPower pIDispatcherSpecialPower)
         {
             IDispatcherSpecialPower = pIDispatcherSpecialPower;

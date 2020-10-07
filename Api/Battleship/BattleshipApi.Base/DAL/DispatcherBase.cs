@@ -20,5 +20,20 @@ namespace BattleshipApi.Base.DAL
         {
             IUnitOfWork = pIUnitOfWork;
         }
+
+        /// <summary>
+        /// Begin transaction
+        /// </summary>
+        public void BeginTransaction() { IUnitOfWork.BeginTransaction(); }
+
+        /// <summary>
+        /// Commit
+        /// </summary>
+        public void Commit() { IUnitOfWork.Commit(); }
+
+        /// <summary>
+        /// Rollback
+        /// </summary>
+        public void Rollback() { IUnitOfWork.Rollback(); }
     }
 }

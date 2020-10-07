@@ -1,3 +1,12 @@
+using BattleshipApi.BattleField.BLL;
+using BattleshipApi.BattleField.DAL;
+using BattleshipApi.BattleField.DML.Interfaces;
+using BattleshipApi.Match.BLL;
+using BattleshipApi.Match.DAL;
+using BattleshipApi.Match.DML.Interfaces;
+using BattleshipApi.Player.BLL;
+using BattleshipApi.Player.DAL;
+using BattleshipApi.Player.DML.Interfaces;
 using BattleshipApi.SpecialPower.BLL;
 using BattleshipApi.SpecialPower.DAL;
 using BattleshipApi.SpecialPower.DML.Intefaces;
@@ -27,7 +36,16 @@ namespace Battleship
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
             services.AddSingleton<IUnitOfWork>(new UnitOfWork(Configuration["ConnectionString"]));
-            
+
+            services.AddSingleton<IDispatcherPlayer, DispatcherPlayer>();
+            services.AddSingleton<IBoPlayer, BoPlayer>();
+
+            services.AddSingleton<IDispatcherMatch, DispatcherMatch>();
+            services.AddSingleton<IBoMatch, BoMatch>();
+
+            services.AddSingleton<IDispatcherBattleField, DispatcherBattleField>();
+            services.AddSingleton<IBoBattleField, BoBattleField>();
+
             services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
             services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
         }

@@ -20,7 +20,7 @@ namespace BattleshipApi.SpecialPower.DML
         /// <summary>
         /// Name of special power
         /// </summary>
-        [Coluna(pNomeColuna:"Name", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo:30)]
+        [Coluna(pNomeColuna: "Name", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
         public string Name { get; set; }
 
         /// <summary>
@@ -42,6 +42,12 @@ namespace BattleshipApi.SpecialPower.DML
         public SpecialPowerTypes Type { get; set; }
 
         /// <summary>
+        /// Compensation for use and victory in the game
+        /// </summary>
+        [Coluna(pNomeColuna: "Compensation", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Float)]
+        public double Compensation { get; set; }
+
+        /// <summary>
         /// Check the data
         /// </summary>
         public void CheckData()
@@ -49,13 +55,16 @@ namespace BattleshipApi.SpecialPower.DML
             if (string.IsNullOrEmpty(Name))
                 throw new ArgumentNullException("Name of special power cannot be null");
             else if (Name.Length > 30)
-                throw new ArgumentOutOfRangeException(paramName: nameof(Name),message: "Special power name max lenght is 30 positions");
+                throw new ArgumentOutOfRangeException(paramName: nameof(Name), message: "Special power name max lenght is 30 positions");
 
-            if (Cost < 0.001)
+            if (Cost < double.Epsilon)
                 throw new ArgumentOutOfRangeException("Special power Cost cannot be lower than zero");
 
             if (Type == SpecialPowerTypes.NotDefined)
                 throw new ArgumentOutOfRangeException("Special power Type cannot be not defined");
+
+            if (Compensation < double.Epsilon)
+                throw new ArgumentOutOfRangeException("Compensation cannot be lower than zero");
         }
     }
 }

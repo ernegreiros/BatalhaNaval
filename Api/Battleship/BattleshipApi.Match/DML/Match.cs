@@ -1,13 +1,27 @@
 ﻿using BattleshipApi.Match.DML.Enumerados;
+using DataBaseHelper.Atributos;
 
 namespace BattleshipApi.Match.DML
 {
     /// <summary>
     /// Match object
     /// </summary>
+    [Tabela(pNomeTabela:"Match")]
     public class Match
     {
+        #region Constructor
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Match()
+        {
+            Status = MatchStatus.WaitingBattleField;
+            CurrentPlayer = Player1;
+            Winner = null;
+        }
+        #endregion
 
+        #region Properties
         /// <summary>
         /// Id da partida
         /// </summary>
@@ -16,15 +30,25 @@ namespace BattleshipApi.Match.DML
         /// <summary>
         /// Jogador 1
         /// </summary>
+        [Coluna(pNomeColuna: "Player1", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
         public int Player1 { get; set; }
 
         /// <summary>
         /// Jogador 2
         /// </summary>
+        [Coluna(pNomeColuna: "Player2", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
         public int Player2 { get; set; }
+
         /// <summary>
         /// Status da partida
         /// </summary>
-        public MatchStatus StatusDaPartida { get; set; }
+        [Coluna(pNomeColuna: "Status", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Enum)]
+        public MatchStatus Status { get; set; }
+
+        [Coluna(pNomeColuna: "CurrentPlayer", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
+        public int CurrentPlayer { get; set; }
+
+        public int? Winner { get; set; }
+        #endregion
     }
 }

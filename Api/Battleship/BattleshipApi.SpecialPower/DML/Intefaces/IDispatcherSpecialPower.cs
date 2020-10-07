@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BattleshipApi.Base.DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BattleshipApi.SpecialPower.DML.Intefaces
 {
-    public interface IDispatcherSpecialPower
+    public interface IDispatcherSpecialPower : IDispatcherBase
     {
         /// <summary>
         /// Create a special power

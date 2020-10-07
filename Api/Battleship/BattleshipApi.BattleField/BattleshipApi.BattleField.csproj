@@ -1,18 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BattleshipApi.BattleField\BattleshipApi.BattleField.csproj" />
+    <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
     <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
-    <ProjectReference Include="..\BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +18,5 @@
       <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 
 </Project>

@@ -1,9 +1,11 @@
-﻿namespace BattleshipApi.Match.DML.Interfaces
+﻿using BattleshipApi.Base.DAL.Interfaces;
+
+namespace BattleshipApi.Match.DML.Interfaces
 {
     /// <summary>
     /// Connection object interface of match
     /// </summary>
-    public interface IDispatcherMatch
+    public interface IDispatcherMatch : IDispatcherBase
     {
         /// <summary>
         /// Create the match and returns your ID

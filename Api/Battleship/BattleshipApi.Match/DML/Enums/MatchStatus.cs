@@ -14,15 +14,21 @@ namespace BattleshipApi.Match.DML.Enumerados
         NotDefined = 0,
 
         /// <summary>
+        /// Waiting the battlefield positions
+        /// </summary>
+        [Description("Waiting the battlefield positions"), DefaultValue("1")]
+        WaitingBattleField = 1,
+
+        /// <summary>
         /// Created
         /// </summary>
-        [Description("Created"), DefaultValue("1")]
-        Created = 1,
+        [Description("Created"), DefaultValue("2")]
+        Created = 2,
 
         /// <summary>
         /// Closed
         /// </summary>
-        [Description("Closed"), DefaultValue("2")]
-        Closed = 2
+        [Description("Closed"), DefaultValue("3")]
+        Closed = 3
     }
 }
