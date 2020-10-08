@@ -1,28 +1,26 @@
-﻿namespace BattleshipApi.Player.DML
+﻿using DataBaseHelper.Atributos;
+
+namespace BattleshipApi.Player.DML
 {
-    /// <summary>
-    /// Player object
-    /// </summary>
+    [Tabela(pNomeTabela: "Users")]
     public class Player
     {
-        /// <summary>
-        /// ID
-        /// </summary>
         public int ID { get; set; }
 
-        /// <summary>
-        /// Name
-        /// </summary>
+        [Coluna(pNomeColuna: "Name", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Login
-        /// </summary>
+        [Coluna(pNomeColuna: "Login", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
         public string Login { get; set; }
 
-        /// <summary>
-        /// Senha
-        /// </summary>
+        [Coluna(pNomeColuna: "Password", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
         public string Password { get; set; }
+
+        [Coluna(pNomeColuna: "Code", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
+        public string Code { get; set; }
+
+        [Coluna(pNomeColuna: "Money", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Float)]
+        public double Money { get; set; }
+
     }
 }
