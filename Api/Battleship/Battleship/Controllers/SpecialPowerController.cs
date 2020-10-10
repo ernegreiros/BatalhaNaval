@@ -37,6 +37,12 @@ namespace Battleship.Controllers
             return IBoSpecialPower.Get(specialPowerId);
         }
 
+        [HttpGet]
+        public List<SpecialPower> Get()
+        {
+            return IBoSpecialPower.GetAll();
+        }
+
         /// <summary>
         /// Method to register special power
         /// </summary>
