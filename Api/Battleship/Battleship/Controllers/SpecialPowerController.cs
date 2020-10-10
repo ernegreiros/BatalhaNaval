@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Battleship.Models.SpecialPower.In;
 using Battleship.Models.SpecialPower.Out;
+using BattleshipApi.SpecialPower.DML;
 using BattleshipApi.SpecialPower.DML.Enums;
 using BattleshipApi.SpecialPower.DML.Intefaces;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,13 @@ namespace Battleship.Controllers
         public SpecialPowerController(IBoSpecialPower pIBoSpecialPower)
         {
             IBoSpecialPower = pIBoSpecialPower;
+        }
+
+        [HttpGet]
+        [Route("{specialPowerId}")]
+        public SpecialPower Get(int specialPowerId)
+        {
+            return IBoSpecialPower.Get(specialPowerId);
         }
 
         /// <summary>
