@@ -44,5 +44,10 @@ namespace BattleshipApi.SpecialPower.BLL
 
             return IDispatcherSpecialPower.Get(specialPowerId);
         }
+
+        public List<DML.SpecialPower> GetAll()
+        {
+            return IDispatcherSpecialPower.GetAll();
+        }
     }
 }

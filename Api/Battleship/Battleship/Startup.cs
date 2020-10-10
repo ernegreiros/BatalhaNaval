@@ -33,6 +33,12 @@ namespace Battleship
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options => options.AddDefaultPolicy(
+                             builder => builder.AllowAnyOrigin()
+                                               .AllowAnyMethod()
+                                               .AllowAnyHeader()));
+
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
 
@@ -66,6 +72,8 @@ namespace Battleship
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

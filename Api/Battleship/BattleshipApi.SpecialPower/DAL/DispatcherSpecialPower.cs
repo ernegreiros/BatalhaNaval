@@ -2,6 +2,8 @@
 using BattleshipApi.SpecialPower.DML.Intefaces;
 using DataBaseHelper.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace BattleshipApi.SpecialPower.DAL
 {
@@ -37,5 +39,28 @@ namespace BattleshipApi.SpecialPower.DAL
             return specialPower;
         }
 
+        public List<DML.SpecialPower> GetAll()
+        {
+            var specialPowers = new List<DML.SpecialPower>();
+
+            var rows = IUnitOfWork.Consulta($"SELECT * FROM SpecialPowers WITH(NOLOCK)").Tables[0].Rows;
+
+            foreach (DataRow row in rows)
+            {
+                specialPowers.Add(
+                    new DML.SpecialPower
+                    {
+                        ID = Convert.ToInt32(row["ID"]),
+                        Name = row["Name"].ToString(),
+                        Quantifier = Convert.ToInt32(row["Quantifier"]),
+                        Cost = Convert.ToDouble(row["Cost"]),
+                        Type = (DML.Enums.SpecialPowerTypes)row["Type"],
+                        Compensation = Convert.ToDouble(row["Compensation"])
+                    });
+            }
+
+
+            return specialPowers;
+        }
     }
 }
