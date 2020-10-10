@@ -8,11 +8,13 @@ namespace BattleshipApi.Player.BLL
     /// </summary>
     public class BoPlayer : IBoPlayer
     {
-        /// <summary>
-        /// Check if player exists
-        /// </summary>
-        /// <param name="pPlayerID">Id do jogador</param>
-        /// <returns>Se o jogador existe ou não</returns>
+        private readonly IDispatcherPlayer IDispatcherPlayer;
+
+        public BoPlayer(IDispatcherPlayer pIDispatcherPlayer)
+        {
+            IDispatcherPlayer = pIDispatcherPlayer;
+        }
+
         public bool PlayerExists(int pPlayerID)
         {
             if (pPlayerID <= 0)
@@ -21,5 +23,20 @@ namespace BattleshipApi.Player.BLL
             return true;
         }
 
+        public DML.Player GetPlayerInfo(int playerId)
+        {
+            if (playerId <= 0)
+                throw new Exception("ID do jogador inválido");
+
+            return IDispatcherPlayer.GetPlayerInfo(playerId);
+        }
+
+        public void InsertPlayer(DML.Player playerObject)
+        {
+            if (String.IsNullOrEmpty(playerObject.Name))
+                throw new Exception("Nome do jogador necessário");
+
+            IDispatcherPlayer.InsertPlayer(playerObject);
+        }
     }
 }

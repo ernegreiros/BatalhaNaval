@@ -13,5 +13,7 @@ namespace BattleshipApi.Player.DML.Interfaces
         /// <param name="pPlayerID">Player id</param>
         /// <returns>Check if player exists</returns>
         bool PlayerExists(int pPlayerID);
+        Player GetPlayerInfo(int playerId);
+        void InsertPlayer(Player playerObject);
     }
 }

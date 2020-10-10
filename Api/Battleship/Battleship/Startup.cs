@@ -35,7 +35,8 @@ namespace Battleship
             services.AddControllers();
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
-            services.AddSingleton<IUnitOfWork>(new UnitOfWork(Configuration["ConnectionString"]));
+
+            services.AddTransient<IUnitOfWork>(unit => new UnitOfWork(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<IDispatcherPlayer, DispatcherPlayer>();
             services.AddSingleton<IBoPlayer, BoPlayer>();
