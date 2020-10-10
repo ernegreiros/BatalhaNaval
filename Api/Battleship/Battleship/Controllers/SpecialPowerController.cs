@@ -37,12 +37,50 @@ namespace Battleship.Controllers
             return IBoSpecialPower.Get(specialPowerId);
         }
 
-        /// <summary>
-        /// Method to register special power
-        /// </summary>
-        /// <param name="pModel">In Model</param>
-        /// <returns>Created or not</returns>
-        /// <remarks>Register special power</remarks>
+        [HttpGet]
+        public List<SpecialPower> Get()
+        {
+            return IBoSpecialPower.GetAll();
+        }
+
+        [HttpPut]
+        public OutUpdateSpecialPowerVM Put(InUpdateSpecialPowerVM model)
+        {
+            OutUpdateSpecialPowerVM outUpdateSpecialPowerVM = new OutUpdateSpecialPowerVM();
+
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    var specialPower = IBoSpecialPower.Get(model.ID);
+
+                    specialPower.Cost = model.Cost is null ? specialPower.Cost : (double)model.Cost;
+                    specialPower.Name = String.IsNullOrEmpty(model.Name) ? specialPower.Name : model.Name;
+                    specialPower.Quantifier = model.Quantifier is null ? specialPower.Quantifier : Convert.ToInt32(model.Quantifier);
+                    specialPower.Type = model.Type is null ? specialPower.Type : (SpecialPowerTypes)model.Type;
+                    specialPower.Compensation = model.Compensation is null ? specialPower.Compensation : (double)model.Compensation;
+
+                    IBoSpecialPower.Update(specialPower);
+
+                    outUpdateSpecialPowerVM.HttpStatus = StatusCodes.Status201Created;
+                    outUpdateSpecialPowerVM.Message = $"Special Power {model.Name} successfully Updated!";
+                }
+                catch (Exception ex)
+                {
+                    outUpdateSpecialPowerVM.HttpStatus = StatusCodes.Status400BadRequest;
+                    outUpdateSpecialPowerVM.Message = $"Error when Updating special power! {ex.Message}";
+                }
+            }
+            else
+            {
+                outUpdateSpecialPowerVM.Message = "Entry Object not valid!";
+                outUpdateSpecialPowerVM.HttpStatus = StatusCodes.Status400BadRequest;
+            }
+
+            return outUpdateSpecialPowerVM;
+        }
+
         [HttpPost]
         public OutCreateSpecialPowerVM Post(InCreateSpecialPowerVM pModel)
         {
