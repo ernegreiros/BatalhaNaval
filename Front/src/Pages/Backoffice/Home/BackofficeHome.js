@@ -1,38 +1,42 @@
-import React from "react";
-import {Route} from "react-router-dom";
-import {Navbar, NavItem, Icon} from "react-materialize";
-
+import React, { Component, Fragment } from "react";
+import M from "materialize-css";
 import './BackofficeHome.css';
-
 import BackofficeSpecialPowers from "../SpecialPowers/BackofficeSpecialPowers";
+import NavBar from "../../../Components/NavBar/NavBar";
 
-export default function BackofficeHome({ match }) {
-  return (
-    <div>
-      <Navbar
-        alignLinks="right"
-        brand={<a href="/backoffice">Balha Naval - Backoffice</a>}
-        menuIcon={<Icon>menu</Icon>}
-        options={{
-          draggable: true,
-          edge: 'left',
-          inDuration: 250,
-          onCloseEnd: null,
-          onCloseStart: null,
-          onOpenEnd: null,
-          onOpenStart: null,
-          outDuration: 200,
-          preventScrolling: true
-        }}
-      >
-        <NavItem href="/backoffice/special-powers">Poderes especiais</NavItem>
-      </Navbar>
+class BackofficeHome extends Component {
 
-      <Route path={`${match.path}/`} exact={true}>
-        <h1>Batalha Naval - Backoffice Administrativo</h1>
-      </Route>
+  componentDidMount() {
+    M.AutoInit();
+  }
 
-      <Route path={`${match.path}/special-powers`} component={BackofficeSpecialPowers} />
-    </div>
-  )
+  render() {
+    return (
+      <Fragment>
+        <NavBar />
+        <div className="container">
+          <div className="row">
+            <h4>Backoffice Administrativo</h4>
+          </div>
+          <div className="row">
+            <ul className="collapsible">
+              <li className="">
+                <div className="collapsible-header"><i className="material-icons">whatshot</i>Poderes Especiais</div>
+                <div className="collapsible-body">
+                  <BackofficeSpecialPowers />
+                </div>
+              </li>
+              <li className="">
+                <div className="collapsible-header"><i className="material-icons">person</i>Usuários</div>
+                <div className="collapsible-body"><span>Em Breve...</span></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </Fragment>
+
+    )
+  }
 }
+
+export default BackofficeHome;

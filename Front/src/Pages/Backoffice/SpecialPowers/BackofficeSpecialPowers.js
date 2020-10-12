@@ -79,11 +79,13 @@ export default function BackofficeSpecialPowers() {
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Cadastros - Poderes Especiais</h1>
+    <div>
+      <h4>Cadastros - Poderes Especiais</h4>
+      <br />
 
       {(!error && !loading) && <Modal
         fixedFooter={false}
+        actions = {[]}
         header="Edição - Poder Especial"
         open={isEditing}
         options={{
@@ -98,8 +100,9 @@ export default function BackofficeSpecialPowers() {
           startingTop: '4%',
           onCloseEnd: () => handleModalClose()
         }}
-        trigger={<Button node="button">Cadastrar novo poder</Button>}
+        trigger={<div><Button node="button" className="right">Cadastrar novo poder</Button><br /><br /></div>}
       >
+        
         {isEditing && <BackofficeSpecialPowerForm
           currentSpecialPower={editingSpecialPower}
           onSaveSuccess={() => {
