@@ -49,5 +49,13 @@ namespace BattleshipApi.SpecialPower.BLL
         {
             return IDispatcherSpecialPower.GetAll();
         }
+
+        public void Update(DML.SpecialPower specialPower)
+        {
+            if (specialPower.ID <= 0)
+                throw new ArgumentNullException("Invalid Id");
+
+            IDispatcherSpecialPower.Update(specialPower);
+        }
     }
 }

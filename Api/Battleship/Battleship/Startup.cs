@@ -36,11 +36,6 @@ namespace Battleship
                 options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddControllers();
 
-            services.AddCors(options => options.AddDefaultPolicy(
-                             builder => builder.AllowAnyOrigin()
-                                               .AllowAnyMethod()
-                                               .AllowAnyHeader()));
-
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
 

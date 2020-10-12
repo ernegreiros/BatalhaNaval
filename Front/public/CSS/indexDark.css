@@ -91,3 +91,7 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #575656; 
 }
+
+.preloader-wrapper.active {
+  background-color: transparent !important;
+}

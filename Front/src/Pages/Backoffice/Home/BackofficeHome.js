@@ -1,6 +1,6 @@
 import React from "react";
-import {Link, Route} from "react-router-dom";
-import { Nav, Navbar } from "react-bootstrap";
+import {Route} from "react-router-dom";
+import {Navbar, NavItem, Icon} from "react-materialize";
 
 import './BackofficeHome.css';
 
@@ -9,18 +9,27 @@ import BackofficeSpecialPowers from "../SpecialPowers/BackofficeSpecialPowers";
 export default function BackofficeHome({ match }) {
   return (
     <div>
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand>Batalha Naval - Backoffice</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/backoffice/special-powers">Super Poderes</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
+      <Navbar
+        alignLinks="right"
+        brand={<a href="/backoffice">Balha Naval - Backoffice</a>}
+        menuIcon={<Icon>menu</Icon>}
+        options={{
+          draggable: true,
+          edge: 'left',
+          inDuration: 250,
+          onCloseEnd: null,
+          onCloseStart: null,
+          onOpenEnd: null,
+          onOpenStart: null,
+          outDuration: 200,
+          preventScrolling: true
+        }}
+      >
+        <NavItem href="/backoffice/special-powers">Poderes especiais</NavItem>
       </Navbar>
 
       <Route path={`${match.path}/`} exact={true}>
-        <h1>Backoffice Home</h1>
+        <h1>Batalha Naval - Backoffice Administrativo</h1>
       </Route>
 
       <Route path={`${match.path}/special-powers`} component={BackofficeSpecialPowers} />

@@ -1,12 +1,12 @@
-import React, {useState, useRef} from 'react';
-import {Card, Form, Button, Alert} from "react-bootstrap";
+import React, {useState} from 'react';
+import {Card, Button, TextInput, Modal} from 'react-materialize';
+
 import ApiClient from "../../../Repositories/ApiClient";
 
 export default function BackofficeLogin({ history }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const [loginData, setLoginData] = useState({});
 
   function sendLogin(event) {
     event.preventDefault()
@@ -14,9 +14,7 @@ export default function BackofficeLogin({ history }) {
     setLoading(true);
     setError(false);
 
-    const requestData = { email: emailInputRef.current.value, password: passwordInputRef.current.value }
-
-    ApiClient.AdminLogin(requestData)
+    ApiClient.AdminLogin(loginData)
       .then(() => history.push('/backoffice'))
       .catch(() => {
         setLoading(false)
@@ -25,29 +23,32 @@ export default function BackofficeLogin({ history }) {
   }
   return (
     <Card style={{ width: '50rem', padding: 20, margin: 20 }}>
-      <Card.Body>
-        <Card.Title>Login - Acesso Backoffice</Card.Title>
-        <Card.Text>Insira seus dados de login para acessar o backoffice</Card.Text>
+      <h1>Login - Acesso Backoffice</h1>
+      <p>Insira seus dados de login para acessar o backoffice</p>
 
-        <Form onSubmit={sendLogin}>
-          <Form.Group controlId="email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control ref={emailInputRef} type="email" required placeholder="Seu email" />
-          </Form.Group>
-          <Form.Group controlId="password">
-            <Form.Label>Senha</Form.Label>
-            <Form.Control ref={passwordInputRef} type="password" required placeholder="Sua senha" />
-          </Form.Group>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading}
-          >
-            {loading ? "Carregando..." : "Entrar"}
-          </Button>
-          {error && <Alert variant="danger" style={{ marginTop: 10 }}>Falha ao enviar</Alert>}
-        </Form>
-      </Card.Body>
+      <form onSubmit={sendLogin}>
+        <TextInput
+          label="Email"
+          placeholder="Seu email"
+          onChange={({ target }) =>
+            setLoginData({ ...loginData, email: target.value })} />
+        <TextInput
+          label="Senha"
+          placeholder="Sua senha"
+          type="password"
+          onChange={({ target }) =>
+            setLoginData({ ...loginData, email: target.value })} />
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Entrar"}
+        </Button>
+        <Modal open={error} onCloseEnd={() => setError(false)} >
+          Falha ao fazer login
+        </Modal>
+      </form>
     </Card>
   )
 }
