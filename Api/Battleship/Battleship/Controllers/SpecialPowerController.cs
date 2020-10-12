@@ -55,11 +55,11 @@ namespace Battleship.Controllers
                 {
                     var specialPower = IBoSpecialPower.Get(model.ID);
 
-                    specialPower.Cost = model.Cost is null ? specialPower.Cost : (double)model.Cost;
-                    specialPower.Name = String.IsNullOrEmpty(model.Name) ? specialPower.Name : model.Name;
-                    specialPower.Quantifier = model.Quantifier is null ? specialPower.Quantifier : Convert.ToInt32(model.Quantifier);
-                    specialPower.Type = model.Type is null ? specialPower.Type : (SpecialPowerTypes)model.Type;
-                    specialPower.Compensation = model.Compensation is null ? specialPower.Compensation : (double)model.Compensation;
+                    specialPower.Cost = model.Cost ?? specialPower.Cost;
+                    specialPower.Name = model.Name ?? specialPower.Name;
+                    specialPower.Quantifier = model.Quantifier ?? specialPower.Quantifier;
+                    specialPower.Type = model.Type ?? specialPower.Type;
+                    specialPower.Compensation = model.Compensation ?? specialPower.Compensation;
 
                     IBoSpecialPower.Update(specialPower);
 
@@ -111,7 +111,7 @@ namespace Battleship.Controllers
             }
             else
             {
-                outCreateSpecialPowerVM.Message = "Objeto de entrada não está valido!";
+                outCreateSpecialPowerVM.Message = "Entry Object not valid!";
                 outCreateSpecialPowerVM.HttpStatus = StatusCodes.Status400BadRequest;
             }
 
