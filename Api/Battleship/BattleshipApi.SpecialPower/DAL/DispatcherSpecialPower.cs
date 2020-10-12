@@ -1,9 +1,11 @@
 ﻿using BattleshipApi.Base.DAL;
+using BattleshipApi.SpecialPower.DML.Enums;
 using BattleshipApi.SpecialPower.DML.Intefaces;
 using DataBaseHelper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 
 namespace BattleshipApi.SpecialPower.DAL
 {
@@ -61,6 +63,21 @@ namespace BattleshipApi.SpecialPower.DAL
 
 
             return specialPowers;
+        }
+
+        public void Update(DML.SpecialPower specialPower)
+        {
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"UPDATE SpecialPowers ");
+            stringBuilder.AppendLine($"SET Name  =  '{specialPower.Name}', ");
+            stringBuilder.AppendLine($" Cost   =  {specialPower.Cost}, ");
+            stringBuilder.AppendLine($" Quantifier   =  {specialPower.Quantifier}, ");
+            stringBuilder.AppendLine($" Type   =  {(int)specialPower.Type}, ");
+            stringBuilder.AppendLine($" Compensation   =  {specialPower.Compensation} ");
+            stringBuilder.AppendLine($"WHERE ID ={specialPower.ID}");
+
+            IUnitOfWork.Executar(stringBuilder.ToString());
         }
     }
 }
