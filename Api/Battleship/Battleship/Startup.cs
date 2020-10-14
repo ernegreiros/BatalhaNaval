@@ -7,6 +7,9 @@ using BattleshipApi.Match.DML.Interfaces;
 using BattleshipApi.Player.BLL;
 using BattleshipApi.Player.DAL;
 using BattleshipApi.Player.DML.Interfaces;
+using BattleshipApi.Ships.BLL;
+using BattleshipApi.Ships.DAL;
+using BattleshipApi.Ships.DML.Intefaces;
 using BattleshipApi.SpecialPower.BLL;
 using BattleshipApi.SpecialPower.DAL;
 using BattleshipApi.SpecialPower.DML.Intefaces;
@@ -52,6 +55,9 @@ namespace Battleship
 
             services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
             services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
+
+            services.AddSingleton<IDispatcherShips, DispatcherShips>();
+            services.AddSingleton<IBoShips, BoShips>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
