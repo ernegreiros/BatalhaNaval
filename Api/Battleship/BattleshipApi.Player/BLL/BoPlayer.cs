@@ -8,6 +8,13 @@ namespace BattleshipApi.Player.BLL
     /// </summary>
     public class BoPlayer : IBoPlayer
     {
+        public bool PasswordMatch(string pLogin, string pPassword)
+        {
+#warning IMPLEMENTAR
+            return true;
+
+        }
+
         /// <summary>
         /// Check if player exists
         /// </summary>

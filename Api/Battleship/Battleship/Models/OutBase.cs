@@ -13,5 +13,6 @@
         /// Message
         /// </summary>
         public string Message { get; set; }
+
     }
 }
