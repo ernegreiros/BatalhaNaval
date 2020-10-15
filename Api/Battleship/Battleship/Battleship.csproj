@@ -15,6 +15,7 @@
     <ProjectReference Include="..\BattleshipApi.JWT\BattleshipApi.JWT.csproj" />
     <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
+    <ProjectReference Include="..\BattleshipApi.Ships\BattleshipApi.Ships.csproj" />
     <ProjectReference Include="..\BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj" />
   </ItemGroup>
 
@@ -25,6 +26,10 @@
     <Reference Include="ExtensionHelper">
       <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 

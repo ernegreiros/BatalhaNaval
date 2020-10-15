@@ -29,6 +29,11 @@ a i {
   background-color: #1e2629 !important;
 }
 
+.collection, .collection-item, .card, .modal,.collection-header{
+  background-color: #1e2629 !important;
+  border-color: #635d53 !important;
+}
+
 html {
   background-color: #2e3639 !important;
 }
@@ -90,4 +95,43 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #575656; 
+}
+
+.preloader-wrapper.active {
+  background-color: transparent !important;
+}
+
+.collapsible {
+  border-top-color:#2e3639 !important;
+  border-right-color: #2e3639 !important;
+  border-left-color: #2e3639 !important;
+  background-color: #1e2629 !important;
+}
+
+.collapsible-header {
+  -webkit-tap-highlight-color: transparent;
+  background-color: #1e2629 !important;
+  border-bottom-color: rgb(37, 40, 43) !important;
+}
+
+.collapsible-body { 
+border-bottom-color:#2e3639 !important;
+}
+
+.modal-footer{
+  background-color: #1e2629 !important;
+  /* display: none; */
+}
+
+.dropdown-content li{
+    background-color: #1e2629 !important;
+}
+
+.dropdown-content li:hover{
+  background-color: #2e3639 !important;
+
+}
+
+.dropdown-content li > span{
+  color: rgb(191, 189, 187) !important;
 }

@@ -1,16 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
+import * as serviceWorker from './serviceWorker';
+
 import './index.css';
+
 import Home from './Pages/Home/Home';
 import BattleField from './Pages/BattleField/BattleField';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import * as serviceWorker from './serviceWorker';
+import BackofficeLogin from "./Pages/Backoffice/Login/BackofficeLogin";
+import BackofficeHome from "./Pages/Backoffice/Home/BackofficeHome";
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path='/' exact={true} component={Home} />
       <Route path='/battlefield' component={BattleField}/>
+      <Route path='/backoffice-login' component={BackofficeLogin} />
+      <Route path='/backoffice' component={BackofficeHome} />
     </Switch>
   </BrowserRouter>,
   document.getElementById('root')

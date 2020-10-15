@@ -12,8 +12,7 @@ const InitialForm = () => {
                 <div className="row">
                     <div className="input-field">
                         <i className="material-icons prefix">contacts</i>
-                        <input id="contacts" type="tel" className="validate" />
-                        <label htmlFor="contacts">Código Segundo Jogador</label>
+                        <input id="contacts" placeholder="Código Segundo Jogador" type="tel" className="validate" />
                     </div>
                 </div>
                 <div className="row">

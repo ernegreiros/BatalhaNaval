@@ -11,6 +11,8 @@
         /// <param name="pPlayerID">Player id</param>
         /// <returns>Return if player exists</returns>
         bool PlayerExists(int pPlayerID);
+        Player GetPlayerInfo(int playerId);
+        void InsertPlayer(Player playerObject);
 
         /// <summary>
         /// Check if password is match

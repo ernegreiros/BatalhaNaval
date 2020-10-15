@@ -11,6 +11,9 @@ using BattleshipApi.Match.DML.Interfaces;
 using BattleshipApi.Player.BLL;
 using BattleshipApi.Player.DAL;
 using BattleshipApi.Player.DML.Interfaces;
+using BattleshipApi.Ships.BLL;
+using BattleshipApi.Ships.DAL;
+using BattleshipApi.Ships.DML.Intefaces;
 using BattleshipApi.SpecialPower.BLL;
 using BattleshipApi.SpecialPower.DAL;
 using BattleshipApi.SpecialPower.DML.Intefaces;
@@ -41,11 +44,14 @@ namespace Battleship
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => 
+                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddControllers();
+
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
 
-            services.AddSingleton<IUnitOfWork>(new UnitOfWork(Configuration["ConnectionString"]));
+            services.AddTransient<IUnitOfWork>(unit => new UnitOfWork(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<IDispatcherPlayer, DispatcherPlayer>();
             services.AddSingleton<IBoPlayer, BoPlayer>();
