@@ -31,7 +31,6 @@ namespace Battleship.Controllers
 
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     if (pModel.Any())
@@ -70,5 +69,6 @@ namespace Battleship.Controllers
 
             return outRegisterPositionsVM;
         }
+
     }
 }

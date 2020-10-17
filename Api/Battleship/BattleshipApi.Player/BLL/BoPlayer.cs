@@ -15,6 +15,18 @@ namespace BattleshipApi.Player.BLL
             IDispatcherPlayer = pIDispatcherPlayer;
         }
 
+        public bool PasswordMatch(string pLogin, string pPassword)
+        {
+#warning IMPLEMENTAR
+            return true;
+
+        }
+
+        /// <summary>
+        /// Check if player exists
+        /// </summary>
+        /// <param name="pPlayerID">Id do jogador</param>
+        /// <returns>Se o jogador existe ou não</returns>
         public bool PlayerExists(int pPlayerID)
         {
             if (pPlayerID <= 0)

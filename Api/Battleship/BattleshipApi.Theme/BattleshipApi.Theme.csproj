@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="BLL\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataBaseHelper">
+      <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="ExtensionHelper">
+      <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -5,15 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.BattleField\BattleshipApi.BattleField.csproj" />
+    <ProjectReference Include="..\BattleshipApi.JWT\BattleshipApi.JWT.csproj" />
     <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
     <ProjectReference Include="..\BattleshipApi.Ships\BattleshipApi.Ships.csproj" />
     <ProjectReference Include="..\BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj" />
+    <ProjectReference Include="..\BattleshipApi.Theme\BattleshipApi.Theme.csproj" />
   </ItemGroup>
 
   <ItemGroup>

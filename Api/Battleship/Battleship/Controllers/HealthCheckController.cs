@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BatalhaNavalApi.Controllers
 {
@@ -7,6 +8,7 @@ namespace BatalhaNavalApi.Controllers
     public class HealthCheckController : ControllerBase
     {
         // GET api/HealthCheck
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult<string> Get()
         {

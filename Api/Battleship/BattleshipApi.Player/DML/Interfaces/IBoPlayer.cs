@@ -13,5 +13,13 @@
         bool PlayerExists(int pPlayerID);
         Player GetPlayerInfo(int playerId);
         void InsertPlayer(Player playerObject);
+
+        /// <summary>
+        /// Check if password is match
+        /// </summary>
+        /// <param name="pLogin">Login</param>
+        /// <param name="pPassword">Password</param>
+        /// <returns></returns>
+        bool PasswordMatch(string pLogin, string pPassword);
     }
 }
