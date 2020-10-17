@@ -79,5 +79,10 @@ namespace BattleshipApi.SpecialPower.DAL
 
             IUnitOfWork.Executar(stringBuilder.ToString());
         }
+
+        public void Delete(int specialPowerId)
+        {
+            IUnitOfWork.Executar($"DELETE FROM SpecialPowers WHERE ID = {specialPowerId}");
+        }
     }
 }
