@@ -19,6 +19,11 @@ namespace BattleshipApi.JWT.BLL
         /// <summary>
         /// Name of policy
         /// </summary>
+        public const string NormalUserPolicyName = "Bearer";
+
+        /// <summary>
+        /// Name of policy
+        /// </summary>
         public const string SuperUserPolicyName = "SUPERUSER";
 
         /// <summary>

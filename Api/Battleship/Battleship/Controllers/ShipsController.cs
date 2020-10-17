@@ -62,7 +62,7 @@ namespace Battleship.Controllers
                         ImageId = Convert.ToInt32(shipObject.ImageId)
                     });
 
-                    outCreateShipVM.HttpStatus = StatusCodes.Status201Created;
+                    outCreateShipVM.HttpStatus = StatusCodes.Status200OK;
                     outCreateShipVM.Message = $"Ship {shipObject.Name} successfully registered!";
                 }
                 catch (Exception ex)
@@ -99,7 +99,7 @@ namespace Battleship.Controllers
 
                     IBoShips.Update(ship);
 
-                    outUpdateShipVM.HttpStatus = StatusCodes.Status201Created;
+                    outUpdateShipVM.HttpStatus = StatusCodes.Status200OK;
                     outUpdateShipVM.Message = $"Ship {shipObject.Name} successfully Updated!";
                 }
                 catch (Exception ex)

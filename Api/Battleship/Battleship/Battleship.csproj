@@ -17,6 +17,7 @@
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
     <ProjectReference Include="..\BattleshipApi.Ships\BattleshipApi.Ships.csproj" />
     <ProjectReference Include="..\BattleshipApi.SpecialPower\BattleshipApi.SpecialPower.csproj" />
+    <ProjectReference Include="..\BattleshipApi.Theme\BattleshipApi.Theme.csproj" />
   </ItemGroup>
 
   <ItemGroup>

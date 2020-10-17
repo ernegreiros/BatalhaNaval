@@ -17,6 +17,9 @@ using BattleshipApi.Ships.DML.Intefaces;
 using BattleshipApi.SpecialPower.BLL;
 using BattleshipApi.SpecialPower.DAL;
 using BattleshipApi.SpecialPower.DML.Intefaces;
+using BattleshipApi.Theme.BLL;
+using BattleshipApi.Theme.DAL;
+using BattleshipApi.Theme.DML.Interfaces;
 using DataBaseHelper;
 using DataBaseHelper.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -64,6 +67,9 @@ namespace Battleship
 
             services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
             services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
+
+            services.AddSingleton<IDispatcherTheme, DispatcherTheme>();
+            services.AddSingleton<IBoTheme, BoTheme>();
 
             ISigningConfigurations signingConfigurations = new SigningConfigurations();
             services.AddSingleton<ISigningConfigurations>(signingConfigurations);

@@ -4,6 +4,6 @@ namespace Battleship.Models.Ships.Out
 {
     public class OutGetShipVM : OutBase
     {
-        public object Ship  { get; set; }
+        public BattleshipApi.Ships.DML.Ships Ship  { get; set; }
     }
 }
