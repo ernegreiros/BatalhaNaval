@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Battleship.Models.SpecialPower.In;
+﻿using Battleship.Models.SpecialPower.In;
 using Battleship.Models.SpecialPower.Out;
+using BattleshipApi.JWT.BLL;
 using BattleshipApi.SpecialPower.DML;
 using BattleshipApi.SpecialPower.DML.Enums;
 using BattleshipApi.SpecialPower.DML.Intefaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Battleship.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = BoJWT.NormalUserPolicyName)]
     [ApiController]
     public class SpecialPowerController : ControllerBase
     {
@@ -20,30 +21,43 @@ namespace Battleship.Controllers
         private readonly IBoSpecialPower IBoSpecialPower;
         #endregion
 
-
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        /// <param name="pIBoSpecialPower"></param>
         public SpecialPowerController(IBoSpecialPower pIBoSpecialPower)
         {
             IBoSpecialPower = pIBoSpecialPower;
         }
 
         [HttpGet]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         [Route("{specialPowerId}")]
-        public SpecialPower Get(int specialPowerId)
+        public OutGetSpecialPowerVM Get(int specialPowerId)
         {
-            return IBoSpecialPower.Get(specialPowerId);
+            OutGetSpecialPowerVM outGetSpecialPowerVM = new OutGetSpecialPowerVM();
+
+            try
+            {
+                outGetSpecialPowerVM.SpecialPower = IBoSpecialPower.Get(specialPowerId); ;
+                outGetSpecialPowerVM.HttpStatus = StatusCodes.Status200OK;
+            }
+            catch (Exception ex)
+            {
+                outGetSpecialPowerVM.HttpStatus = StatusCodes.Status400BadRequest;
+                outGetSpecialPowerVM.Message = $"Error while getting Special Power! {ex.Message}";
+                outGetSpecialPowerVM.SpecialPower = null;
+            }
+
+            return outGetSpecialPowerVM;
         }
 
         [HttpGet]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         public List<SpecialPower> Get()
         {
             return IBoSpecialPower.GetAll();
         }
 
+
         [HttpPut]
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         public OutUpdateSpecialPowerVM Put(InUpdateSpecialPowerVM model)
         {
             OutUpdateSpecialPowerVM outUpdateSpecialPowerVM = new OutUpdateSpecialPowerVM();
@@ -82,6 +96,7 @@ namespace Battleship.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         public OutCreateSpecialPowerVM Post(InCreateSpecialPowerVM pModel)
         {
             OutCreateSpecialPowerVM outCreateSpecialPowerVM = new OutCreateSpecialPowerVM();
@@ -117,5 +132,31 @@ namespace Battleship.Controllers
 
             return outCreateSpecialPowerVM;
         }
+
+
+        [HttpDelete("{specialPowerId}")]
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
+        public OutDeleteSpecialPowerVM Delete(int specialPowerId)
+        {
+            OutDeleteSpecialPowerVM outDeleteSpecialPower = new OutDeleteSpecialPowerVM();
+
+            try
+            {
+                IBoSpecialPower.Delete(specialPowerId);
+
+                outDeleteSpecialPower.HttpStatus = StatusCodes.Status201Created;
+                outDeleteSpecialPower.Message = $"Special Power successfully Deleted!";
+            }
+            catch (Exception ex)
+            {
+                outDeleteSpecialPower.HttpStatus = StatusCodes.Status400BadRequest;
+                outDeleteSpecialPower.Message = $"Error when Deleting special power! {ex.Message}";
+            }
+
+
+            return outDeleteSpecialPower;
+
+        }
+
     }
 }

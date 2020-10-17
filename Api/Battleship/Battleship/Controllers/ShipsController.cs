@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Battleship.Models.Ships.In;
+﻿using Battleship.Models.Ships.In;
 using Battleship.Models.Ships.Out;
+using BattleshipApi.JWT.BLL;
 using BattleshipApi.Ships.DML;
 using BattleshipApi.Ships.DML.Enums;
 using BattleshipApi.Ships.DML.Intefaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Battleship.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = BoJWT.NormalUserPolicyName)]
     [ApiController]
     public class ShipsController : ControllerBase
     {
@@ -24,6 +24,7 @@ namespace Battleship.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         [Route("{shipId}")]
         public OutGetShipVM Get(int shipId)
         {
@@ -44,6 +45,7 @@ namespace Battleship.Controllers
             return outGetShipVM;
         }
 
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         [HttpPost]
         public OutCreateShipVM Post(InCreateShipVM shipObject)
         {
@@ -80,6 +82,7 @@ namespace Battleship.Controllers
             return outCreateShipVM;
         }
 
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         [HttpPut]
         public OutUpdateShipVM Put(InUpdateShipVM shipObject)
         {
@@ -117,7 +120,7 @@ namespace Battleship.Controllers
             return outUpdateShipVM;
         }
 
-
+        [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         [HttpDelete("{shipId}")]
         public OutDeleteShipVM Delete(int shipId)
         {

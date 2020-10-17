@@ -15,5 +15,6 @@ namespace BattleshipApi.SpecialPower.DML.Intefaces
         DML.SpecialPower Get(int specialPowerId);
         List<SpecialPower> GetAll();
         void Update(SpecialPower specialPower);
+        void Delete(int specialPowerId);
     }
 }

@@ -57,5 +57,13 @@ namespace BattleshipApi.SpecialPower.BLL
 
             IDispatcherSpecialPower.Update(specialPower);
         }
+
+        public void Delete(int specialPowerId)
+        {
+            if (specialPowerId <= 0)
+                throw new ArgumentNullException("Invalid Id");
+
+            IDispatcherSpecialPower.Delete(specialPowerId);
+        }
     }
 }
