@@ -68,6 +68,9 @@ namespace Battleship
             services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
             services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
 
+            services.AddSingleton<IDispatcherShips, DispatcherShips>();
+            services.AddSingleton<IBoShips, BoShips>();
+
             services.AddSingleton<IDispatcherTheme, DispatcherTheme>();
             services.AddSingleton<IBoTheme, BoTheme>();
 

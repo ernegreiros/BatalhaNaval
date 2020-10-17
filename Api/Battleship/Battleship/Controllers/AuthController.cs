@@ -39,9 +39,7 @@ namespace Battleship.Controllers
 
         [AllowAnonymous]
         [HttpPost()]
-        public OutAuthorizeVM Authorize(
-            InAuthorizeVM pModel
-            )
+        public OutAuthorizeVM Authorize(InAuthorizeVM pModel)
         {
             OutAuthorizeVM outAuthorizeVM = new OutAuthorizeVM();
 

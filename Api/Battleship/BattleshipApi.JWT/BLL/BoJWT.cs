@@ -90,7 +90,7 @@ namespace BattleshipApi.JWT.BLL
 
             DateTime dataCriacao = DateTime.Now;
             DateTime dataExpiracao = dataCriacao +
-                TimeSpan.FromSeconds(ITokenConfiguration.Minutes);
+                TimeSpan.FromMinutes(ITokenConfiguration.Minutes);
 
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
