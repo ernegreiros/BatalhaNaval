@@ -53,9 +53,9 @@ namespace BattleshipApi.Theme.BLL
 
             DML.Theme themeOld = Get(theme.Id);
 
-            themeOld.Name = theme.Name ?? themeOld.Name;
-            themeOld.Description = theme.Description ?? themeOld.Description;
-            themeOld.ImagePath = theme.ImagePath ?? themeOld.ImagePath;
+            theme.Name = theme.Name ?? themeOld.Name;
+            theme.Description = theme.Description ?? themeOld.Description;
+            theme.ImagePath = theme.ImagePath ?? themeOld.ImagePath;
 
             theme.CheckData();
             IDispatcherTheme.Update(theme);
