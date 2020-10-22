@@ -4,6 +4,11 @@ using BattleshipApi.Models.Match.Out;
 using BattleshipApi.Match.DML.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using BattleshipApi.JWT.BLL;
+using Battleship.Models.Match.Out;
+using System.Linq;
+using Battleship;
 
 namespace BattleshipApi.Controllers
 {
@@ -34,6 +39,7 @@ namespace BattleshipApi.Controllers
         /// <param name="pModel">In Object</param>
         /// <returns>Return Object</returns>
         /// <remarks>Method that creates a match</remarks>
+        [Authorize(BoJWT.NormalUserPolicyName)]
         [HttpPost]
         public OutInitMatchVM CreateMatch(InInitMatchVM pModel)
         {
@@ -65,6 +71,30 @@ namespace BattleshipApi.Controllers
             }
 
             return outIniciarPartidaVM;
+        }
+
+        [Authorize(BoJWT.NormalUserPolicyName)]
+        [HttpGet]
+        public OutCurrentMatchVM CurrentMatch()
+        {
+            OutCurrentMatchVM outCurrentMatchVM = new OutCurrentMatchVM();
+
+            try
+            {
+                string userName = User.Claims.GetJWTUserName();
+
+                outCurrentMatchVM.Match = IBoMatch.CurrentMatch(userName);
+                outCurrentMatchVM.HttpStatus = StatusCodes.Status200OK;
+                outCurrentMatchVM.Message = "OK";
+            }
+            catch (Exception ex)
+            {
+                outCurrentMatchVM.HttpStatus = StatusCodes.Status400BadRequest;
+                outCurrentMatchVM.Message = $"Error while getting current match! {ex.Message}";
+                outCurrentMatchVM.Match = null;
+            }
+
+            return outCurrentMatchVM;
         }
     }
 }

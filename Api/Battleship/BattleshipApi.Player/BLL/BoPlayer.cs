@@ -50,5 +50,18 @@ namespace BattleshipApi.Player.BLL
 
             IDispatcherPlayer.InsertPlayer(playerObject);
         }
+
+        /// <summary>
+        /// Find player by user name
+        /// </summary>
+        /// <param name="pUserName">User name</param>
+        /// <returns>Player</returns>
+        public DML.Player FindPlayerByUserName(string pUserName)
+        {
+            if (string.IsNullOrEmpty(pUserName))
+                throw new ArgumentNullException(paramName: nameof(pUserName), message: "User name is required");
+
+            return IDispatcherPlayer.FindPlayerByUserName(pUserName);
+        }
     }
 }

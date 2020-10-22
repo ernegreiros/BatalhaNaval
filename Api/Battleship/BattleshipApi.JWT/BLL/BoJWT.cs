@@ -55,9 +55,9 @@ namespace BattleshipApi.JWT.BLL
             ISigningConfigurations = iSigningConfigurations;
             IBoPlayer = iBoPlayer;
         }
-        #endregion
 
-        public string WriteToken(AuthenticationData pModel)
+        #endregion
+                public string WriteToken(AuthenticationData pModel)
         {
             pModel.CheckData();
 

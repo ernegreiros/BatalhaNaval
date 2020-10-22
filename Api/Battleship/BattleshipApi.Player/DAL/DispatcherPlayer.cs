@@ -54,9 +54,51 @@ namespace BattleshipApi.Player.DAL
             return player;
         }
 
+        /// <summary>
+        /// Find player by user name
+        /// </summary>
+        /// <param name="pUserName">User name</param>
+        /// <returns>Player</returns>
+        public DML.Player FindPlayerByUserName(string pUserName)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("DECLARE @NAME VARCHAR(30)");
+            stringBuilder.AppendLine($"SET @NAME = '{pUserName}'");
+            stringBuilder.AppendLine("SELECT");
+            stringBuilder.AppendLine("  ID,");
+            stringBuilder.AppendLine("  Name,");
+            stringBuilder.AppendLine("  Login,");
+            stringBuilder.AppendLine("  Code,");
+            stringBuilder.AppendLine("  Money,");
+            stringBuilder.AppendLine("FROM USERS WITH(NOLOCK)");
+            stringBuilder.AppendLine("WHERE NAME = @USER");
+
+
+            DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+                
+                return new DML.Player
+                {
+                    ID = Convert.ToInt32(row["ID"]),
+                    Name = row["Name"].ToString(),
+                    Login = row["Login"].ToString(),
+                    Password = null,
+                    Code = row["Code"].ToString(),
+                    Money = Convert.ToDouble(row["Money"])
+                };                
+            }
+            return null;
+
+
+        }
+
         public void InsertPlayer(DML.Player playerObject)
         {
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(playerObject).ToString());
         }
+
     }
 }
