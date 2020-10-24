@@ -1,3 +1,5 @@
+import UserService from "../Services/UserService";
+
 const urlApi = 'https://localhost:5001';
 
 const ApiClient = {
@@ -7,30 +9,35 @@ const ApiClient = {
             .then(response => response.json());
     },
     AdminLogin: (credentials) => {
-      return new Promise(res => setTimeout(() => res(), 3000))
-        // return fetch(`${urlApi}/api/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: credentials })
-        //   .then(response => ApiClient.CatchError(response))
-        //   .then(response => response.json());
+        const payload = JSON.stringify(credentials);
+        return fetch(`${urlApi}/api/Auth`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json())
+          .then(response => UserService().saveToken(response.token))
     },
     GetSpecialPowers: () => {
-        return fetch(`${urlApi}/api/SpecialPower`)
+      const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+        return fetch(`${urlApi}/api/SpecialPower`, { headers })
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json())
     },
     GetSpecialPowerById: (id) => {
-        return fetch(`${urlApi}/api/SpecialPower/${id}`)
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+        return fetch(`${urlApi}/api/SpecialPower/${id}`, { headers })
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json())
     },
     CreateSpecialPower: specialPower => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
         const payload = JSON.stringify(specialPower)
-        return fetch(`${urlApi}/api/SpecialPower`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload })
+        return fetch(`${urlApi}/api/SpecialPower`, { method: 'POST', headers, body: payload })
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json());
     },
     UpdateSpecialPower: specialPower => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
         const payload = JSON.stringify(specialPower)
-        return fetch(`${urlApi}/api/SpecialPower`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: payload })
+        return fetch(`${urlApi}/api/SpecialPower`, { method: 'PUT', headers, body: payload })
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json());
     },
