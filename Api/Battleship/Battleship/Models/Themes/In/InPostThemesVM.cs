@@ -17,7 +17,6 @@ namespace Battleship.Models.Themes.In
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        [MaxLength(200, ErrorMessage = "Image path max length is 200 caracters")]
         [Required(ErrorMessage = "Image path is required")]
         public string ImagePath { get; set; }
     }
