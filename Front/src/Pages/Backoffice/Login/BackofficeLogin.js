@@ -3,11 +3,12 @@ import { Card, Button, Modal } from 'react-materialize';
 import NavBar from '../../../Components/NavBar/NavBar';
 
 import ApiClient from "../../../Repositories/ApiClient";
+import UserService from "../../../Services/UserService";
 
 export default function BackofficeLogin({ history }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [loginData, setLoginData] = useState({});
+  const [loginData, setLoginData] = useState({ Login: null, Password: null });
 
   function sendLogin(event) {
     event.preventDefault()
@@ -51,7 +52,7 @@ export default function BackofficeLogin({ history }) {
                       type="text"
                       className="validate"
                       onChange={({ target }) =>
-                        setLoginData({ ...loginData, email: target.value })} />
+                        setLoginData({ ...loginData, Login: target.value })} />
                     <label htmlFor="email">Email</label>
                   </div>
 
@@ -61,7 +62,7 @@ export default function BackofficeLogin({ history }) {
                       type="password"
                       id="senha"
                       onChange={({ target }) =>
-                        setLoginData({ ...loginData, email: target.value })} />
+                        setLoginData({ ...loginData, Password: target.value })} />
                     <label htmlFor="senha">Senha</label>
                   </div>
                 </div>
