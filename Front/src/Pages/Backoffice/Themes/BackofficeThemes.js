@@ -1,22 +1,35 @@
 import React, {useEffect, useState} from "react";
-import {Table, Preloader, Row} from 'react-materialize';
+import {Table, Preloader, Row, Modal, Button} from 'react-materialize';
 
 import ApiClient from "../../../Repositories/ApiClient";
+import {BackofficeThemeForm} from "./BackofficeThemeForm";
 
 export default function BackofficeThemes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTheme, setEditingTheme] = useState({});
   const [themes, setThemes] = useState([]);
 
-  useEffect(() => getSpecialPowers(), []);
+  useEffect(() => getThemes(), []);
 
-  function getSpecialPowers() {
+  function getThemes() {
     setError(false);
     setLoading(true);
     ApiClient.GetThemes()
       .then(({ themes }) => setThemes(themes))
       .catch(() => setError(true))
       .finally(() => setLoading(false))
+  }
+
+  function handleModalClose() {
+    setIsEditing(false)
+    setEditingTheme({})
+  }
+
+  function handleEdit(theme) {
+    setIsEditing(true)
+    setEditingTheme(theme)
   }
 
   function renderTable() {
@@ -27,15 +40,18 @@ export default function BackofficeThemes() {
           <th>#</th>
           <th>Nome</th>
           <th>Descrição</th>
+          <th>Ações</th>
         </tr>
         </thead>
         <tbody>
-          {themes.map(({ id, name, description }) => {
+          {themes.map(theme => {
+            const { id, name, description } = theme
             return (
               <tr key={id}>
                 <td>{id}</td>
                 <td>{name}</td>
                 <td>{description}</td>
+                <td><Button onClick={() => handleEdit(theme)}>Editar</Button></td>
               </tr>
             )
           })}
@@ -48,6 +64,34 @@ export default function BackofficeThemes() {
     <div>
       <h4>Cadastros - Temas</h4>
       <br />
+
+      {(!error && !loading) && <Modal
+        fixedFooter={false}
+        actions = {[]}
+        header="Edição - Tema"
+        open={isEditing}
+        options={{
+          dismissible: true,
+          endingTop: '10%',
+          inDuration: 250,
+          onCloseStart: null,
+          onOpenEnd: () => setIsEditing(true),
+          opacity: 0.5,
+          outDuration: 250,
+          preventScrolling: true,
+          startingTop: '4%',
+          onCloseEnd: () => handleModalClose()
+        }}
+        trigger={<div><Button node="button" className="right">Cadastrar novo tema</Button><br /><br /></div>}
+      >
+
+        {isEditing && <BackofficeThemeForm
+          currentTheme={editingTheme}
+          onSaveSuccess={() => {
+            setIsEditing(false)
+            getThemes()
+          }} />}
+      </Modal>}
 
       {error
         ? <p>Falha ao carregar poderes especiais do servidor</p>
