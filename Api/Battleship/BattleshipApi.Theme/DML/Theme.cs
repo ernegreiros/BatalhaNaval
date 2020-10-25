@@ -12,7 +12,7 @@ namespace BattleshipApi.Theme.DML
         public string Name { get; set; }
         [Coluna(pNomeColuna: "DESCRIPTION", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 100)]
         public string Description { get; set; }
-        [Coluna(pNomeColuna: "IMAGEPATH", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 200)]
+        [Coluna(pNomeColuna: "IMAGEPATH", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar)]
         public string ImagePath { get; set; }
         public int Id { get; set; }
 
@@ -30,8 +30,6 @@ namespace BattleshipApi.Theme.DML
 
             if (string.IsNullOrEmpty(ImagePath))
                 throw new ArgumentNullException(paramName: nameof(ImagePath), message: "ImagePath is required");
-            else if (ImagePath.Length > 200)
-                throw new ArgumentOutOfRangeException(paramName: nameof(ImagePath), message: "ImagePath max length is 200 caracters");
 
         }
     }
