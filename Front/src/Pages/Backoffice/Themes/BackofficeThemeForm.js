@@ -4,7 +4,6 @@ import { TextInput, Button } from "react-materialize";
 import './BackofficeThemeForm.css';
 
 import ApiClient from "../../../Repositories/ApiClient";
-import {toBase64} from "../../../Utils/fileHelpers";
 
 export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const serializeThemeToForm = theme => ({ ...theme });
@@ -12,12 +11,16 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const [error, setError] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  async function handleImageChange(event) {
-    const { files } = event.target
-
-    toBase64(files[0])
-      .then(base64 => setTheme({ ...theme, imagePath: base64 }))
-      .catch(() => alert('Falha ao atualizar imagem'))
+  function openCloudinaryWidget(e) {
+    e.preventDefault();
+    window.cloudinary.openUploadWidget({
+      cloud_name: "venturi-x", upload_preset: "jmjebxux", sources:['local'], cropping: true
+    }, function(error, [result]) {
+      if (error)
+        return alert("Falha ao fazer upload da imagem");
+      console.log(result)
+      setTheme({ ...theme, imagePath: result.url });
+    });
   }
 
   function handleSubmit() {
@@ -54,7 +57,6 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
     <div className="container">
       <br />
       <form>
-        {theme.imagePath && <img src={theme.imagePath} alt="imagem de capa do tema"/>}
         <TextInput
           label="Nome"
           defaultValue={theme.name}
@@ -66,17 +68,20 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
           onChange={({ target }) =>
             setTheme({ ...theme, description: target.value })} />
 
-        <TextInput
-          label="Selecione imagem de capa do tema"
-          type="file"
-          onChange={handleImageChange} />
+        {theme.imagePath
+          ? <img src={theme.imagePath} alt="imagem de capa do tema"/>
+          : <p>Tema sem imagem de capa</p>}
 
-        <Button onClick={() => handleSubmit()} disabled={saving || !isValid}>
-          {saving ? "Salvando..." : "Salvar"}
-        </Button>
-        {error && <section>
-          <small>Falha ao salvar no servidor</small>
-        </section>}
+        <Button style={{ marginTop: 10 }} onClick={e => openCloudinaryWidget(e)}>Upload da imagem de capa do tema</Button>
+
+        <div style={{ marginTop: 30 }}>
+          <Button onClick={() => handleSubmit()} disabled={saving || !isValid}>
+            {saving ? "Salvando..." : "Salvar"}
+          </Button>
+          {error && <section>
+            <small>Falha ao salvar no servidor</small>
+          </section>}
+        </div>
       </form>
     </div>
 
