@@ -3,13 +3,11 @@ import {Table, Preloader, Row, Modal, Button} from 'react-materialize';
 
 import ApiClient from "../../../Repositories/ApiClient";
 import {BackofficeThemeForm} from "./BackofficeThemeForm";
-import {BackofficeThemeShips} from "./BackofficeThemeShips";
 
 export default function BackofficeThemes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [shipsThemeId, setShipsThemeId] = useState(null);
   const [editingTheme, setEditingTheme] = useState({});
   const [themes, setThemes] = useState([]);
 
@@ -34,10 +32,6 @@ export default function BackofficeThemes() {
     setEditingTheme(theme)
   }
 
-  function navigateToThemeShips(theme) {
-    setShipsThemeId(theme.id);
-  }
-
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
@@ -57,10 +51,7 @@ export default function BackofficeThemes() {
                 <td>{id}</td>
                 <td>{name}</td>
                 <td>{description}</td>
-                <td>
-                  <Button onClick={() => handleEdit(theme)}>Editar</Button>
-                  <Button style={{ marginLeft: 10 }} onClick={() => navigateToThemeShips(theme)}>Navios</Button>
-                </td>
+                <td><Button onClick={() => handleEdit(theme)}>Editar</Button></td>
               </tr>
             )
           })}
@@ -75,6 +66,7 @@ export default function BackofficeThemes() {
       <br />
 
       {(!error && !loading) && <Modal
+        style={{ width: 700 }}
         fixedFooter={false}
         actions = {[]}
         header="Edição - Tema"
@@ -108,12 +100,6 @@ export default function BackofficeThemes() {
           : themes.length === 0
             ? <p>Não há nenhum tema cadastrado</p>
             : renderTable()}
-      {shipsThemeId && (
-        <>
-          <p>Navios - {themes.find(t => t.id === shipsThemeId).name}</p>
-          <BackofficeThemeShips themeId={shipsThemeId} />
-        </>
-      )}
     </div>
   )
 }

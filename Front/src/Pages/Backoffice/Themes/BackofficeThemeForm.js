@@ -4,6 +4,7 @@ import { TextInput, Button } from "react-materialize";
 import './BackofficeThemeForm.css';
 
 import ApiClient from "../../../Repositories/ApiClient";
+import {BackofficeThemeShips} from "./BackofficeThemeShips";
 
 export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const serializeThemeToForm = theme => ({ ...theme });
@@ -73,6 +74,13 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
           : <p>Tema sem imagem de capa</p>}
 
         <Button style={{ marginTop: 10 }} onClick={e => openCloudinaryWidget(e)}>Upload da imagem de capa do tema</Button>
+
+        {theme.id && (
+          <>
+            <p>Navios - {theme.name}</p>
+            <BackofficeThemeShips themeId={theme.id} />
+          </>
+        )}
 
         <div style={{ marginTop: 30 }}>
           <Button onClick={() => handleSubmit()} disabled={saving || !isValid}>
