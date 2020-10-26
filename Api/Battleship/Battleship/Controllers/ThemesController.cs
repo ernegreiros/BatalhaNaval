@@ -89,17 +89,20 @@ namespace Battleship.Controllers
 
                     outPostThemes.HttpStatus = StatusCodes.Status201Created;
                     outPostThemes.Message = $"Theme {pModel.Name} successfully registered!";
+                    outPostThemes.Theme = IBoThemes.Get().LastOrDefault();
                 }
                 catch (Exception ex)
                 {
                     outPostThemes.HttpStatus = StatusCodes.Status400BadRequest;
                     outPostThemes.Message = $"Error when registering theme! {ex.Message}";
+                    outPostThemes.Theme = null;
                 }
             }
             else
             {
                 outPostThemes.Message = "Entry Object not valid!";
                 outPostThemes.HttpStatus = StatusCodes.Status400BadRequest;
+                outPostThemes.Theme = null;
             }
 
             return outPostThemes;

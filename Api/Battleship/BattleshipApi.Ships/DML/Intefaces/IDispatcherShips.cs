@@ -1,4 +1,5 @@
 ﻿using BattleshipApi.Base.DAL.Interfaces;
+using System.Collections.Generic;
 
 namespace BattleshipApi.Ships.DML.Intefaces
 {
@@ -9,5 +10,6 @@ namespace BattleshipApi.Ships.DML.Intefaces
         Ships Get(int shipId);
         void Update(Ships specialPower);
         void Delete(int shipId);
+        List<Ships> GetAll(int themeId);
     }
 }

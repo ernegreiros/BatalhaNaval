@@ -12,7 +12,7 @@ namespace BattleshipApi.Theme.DML
         public string Name { get; set; }
         [Coluna(pNomeColuna: "DESCRIPTION", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 100)]
         public string Description { get; set; }
-        [Coluna(pNomeColuna: "IMAGEPATH", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar)]
+        [Coluna(pNomeColuna: "IMAGEPATH", DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 8000)]
         public string ImagePath { get; set; }
         public int Id { get; set; }
 
