@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Preloader, Row, Table} from "react-materialize";
+import {Button, Modal, Preloader, Row, Table} from "react-materialize";
+
 import ApiClient from "../../../Repositories/ApiClient";
 import ShipsTypes from "../../../Enums/ShipsTypes";
+import {BackofficeThemeShipForm} from "./BackofficeThemeShipForm";
 
 export function BackofficeThemeShips({ themeId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [ships, setShips] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingShip, setEditingShip] = useState({});
 
   useEffect(() => getShips(), [])
 
@@ -14,9 +18,14 @@ export function BackofficeThemeShips({ themeId }) {
     setError(false);
     setLoading(true);
     ApiClient.GetThemeShips(themeId)
-      .then(({ ships }) => setShips(ships))
+      .then(({ ship }) => setShips(ship))
       .catch(() => setError(true))
       .finally(() => setLoading(false))
+  }
+
+  function handleModalClose() {
+    setIsEditing(false)
+    setEditingShip({})
   }
 
   function mapTypeName(type) {
@@ -70,6 +79,33 @@ export function BackofficeThemeShips({ themeId }) {
 
   return (
     <div>
+      {(!error && !loading) && <Modal
+        style={{ width: 700 }}
+        fixedFooter={false}
+        actions = {[]}
+        header="Edição - Navio"
+        open={isEditing}
+        options={{
+          dismissible: true,
+          endingTop: '10%',
+          inDuration: 250,
+          onCloseStart: null,
+          onOpenEnd: () => setIsEditing(true),
+          opacity: 0.5,
+          outDuration: 250,
+          preventScrolling: true,
+          startingTop: '4%',
+          onCloseEnd: () => handleModalClose()
+        }}
+        trigger={<div><Button node="button" className="right">Cadastrar novo navio</Button><br /><br /></div>}
+      >
+        {isEditing && <BackofficeThemeShipForm
+          currentShip={{ ...editingShip, themeId }}
+          onSaveSuccess={() => {
+            setIsEditing(false)
+            getShips()
+          }} />}
+      </Modal>}
       {renderTable()}
     </div>
   )

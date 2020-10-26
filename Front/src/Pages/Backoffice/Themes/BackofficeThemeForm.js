@@ -92,6 +92,5 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
         </div>
       </form>
     </div>
-
   )
 }

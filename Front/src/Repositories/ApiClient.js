@@ -63,12 +63,24 @@ const ApiClient = {
           .then(response => response.json());
     },
     GetThemeShips: themeId => {
-        return new Promise(resolve =>
-          setTimeout(() => resolve({ ships: [ { id: 1, name: 'Navio Antigo 1 campo', type: ShipsTypes.OneField  } ] }), 3000))
-        // const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
-        // return fetch(`${urlApi}/api/Ships`, { headers, params: { themeId } })
-        //   .then(response => ApiClient.CatchError(response))
-        //   .then(response => response.json())
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+        return fetch(`${urlApi}/api/Ships/ByTheme/${themeId}`, { headers })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json())
+    },
+    CreateShip: ship => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+        const payload = JSON.stringify(ship)
+        return fetch(`${urlApi}/api/Ships`, { method: 'POST', headers, body: payload })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json());
+    },
+    UpdateShip: ship => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+        const payload = JSON.stringify(ship)
+        return fetch(`${urlApi}/api/Ships`, { method: 'PUT', headers, body: payload })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json());
     },
     CreateTeam: team => {
         return fetch(`${urlApi}/api/teams/create`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: team })
