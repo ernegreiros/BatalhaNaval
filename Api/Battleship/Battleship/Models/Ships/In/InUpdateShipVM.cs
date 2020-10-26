@@ -10,6 +10,6 @@ namespace Battleship.Models.Ships.In
         public string Name { get; set; }
         public ShipsTypes? Type { get; set; }
         public int? ThemeId { get; set; }
-        public int? ImageId { get; set; }
+        public string ImagePath { get; set; }
     }
 }

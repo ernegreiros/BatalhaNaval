@@ -3,6 +3,8 @@ using BattleshipApi.Ships.DML.Enums;
 using BattleshipApi.Ships.DML.Intefaces;
 using DataBaseHelper.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BattleshipApi.Ships.DAL
@@ -32,11 +34,34 @@ namespace BattleshipApi.Ships.DAL
                 ID = Convert.ToInt32(row["ID"]),
                 Name = row["Name"].ToString(),
                 Type = (ShipsTypes)row["Type"],
-                ImageId = Convert.ToInt32(row["ImageId"]),
+                ImagePath =row["ImagePath"].ToString(),
                 ThemeId = Convert.ToInt32(row["ThemeId"])
             };
 
             return ship;
+        }
+
+        public List<DML.Ships> GetAll(int themeId)
+        {
+            var ships = new List<DML.Ships>();
+
+            var rows = IUnitOfWork.Consulta($"SELECT * FROM Ships WITH(NOLOCK) WHERE themeId ={themeId}").Tables[0].Rows;
+
+            foreach (DataRow row in rows)
+            {
+                ships.Add(
+                    new DML.Ships
+                    {
+                        ID = Convert.ToInt32(row["ID"]),
+                        Name = row["Name"].ToString(),
+                        Type = (ShipsTypes)row["Type"],
+                        ImagePath = row["ImagePath"].ToString(),
+                        ThemeId = Convert.ToInt32(row["ThemeId"])
+                    });
+            }
+
+
+            return ships;
         }
 
         public void Update(DML.Ships shipObject)
@@ -45,7 +70,7 @@ namespace BattleshipApi.Ships.DAL
             stringBuilder.AppendLine($"UPDATE Ships ");
             stringBuilder.AppendLine($"SET Name  =  '{shipObject.Name}', ");
             stringBuilder.AppendLine($" Type   =  {(int)shipObject.Type}, ");
-            stringBuilder.AppendLine($" ImageId   =  {shipObject.ImageId}, ");
+            stringBuilder.AppendLine($" ImagePath   =  '{shipObject.ImagePath}', ");
             stringBuilder.AppendLine($" ThemeId   =  {shipObject.ThemeId} ");
             stringBuilder.AppendLine($"WHERE ID ={shipObject.ID}");
 

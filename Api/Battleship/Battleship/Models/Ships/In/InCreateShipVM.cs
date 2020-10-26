@@ -12,8 +12,8 @@ namespace Battleship.Models.Ships.In
         [Required(ErrorMessage ="Ship type is required")]
         public int Type { get; set; }
 
-        [Required(ErrorMessage = "ImageId is required")]
-        public int ImageId { get; set; }
+        [Required(ErrorMessage = "ImagePath is required")]
+        public string ImagePath { get; set; }
         
         [Required(ErrorMessage = "ThemeId is required")]
         public int ThemeId { get; set; }
