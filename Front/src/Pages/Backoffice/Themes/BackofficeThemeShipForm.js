@@ -21,11 +21,12 @@ export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
     e.preventDefault();
     window.cloudinary.openUploadWidget({
       cloud_name: "venturi-x", upload_preset: "jmjebxux", sources:['local'], cropping: true
-    }, function(error, [result]) {
-      if (error)
+    }, function(error, result) {
+      if (!error)
+        return setShip({ ...ship, imagePath: result[0].url });
+
+      if (error.message !== "User closed widget")
         return alert("Falha ao fazer upload da imagem");
-      console.log(result)
-      setShip({ ...ship, imagePath: result.url });
     });
   }
 

@@ -28,6 +28,11 @@ export function BackofficeThemeShips({ themeId }) {
     setEditingShip({})
   }
 
+  function handleEdit(ship) {
+    setIsEditing(true)
+    setEditingShip(ship)
+  }
+
   function mapTypeName(type) {
     const { OneField, TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
     const names = {
@@ -53,13 +58,22 @@ export function BackofficeThemeShips({ themeId }) {
         </thead>
         <tbody>
         {ships.map(ship => {
-          const { id, name, type } =ship
+          const { id, name, type } = ship
           return (
             <tr key={id}>
               <td>{id}</td>
               <td>{name}</td>
               <td>{mapTypeName(type)}</td>
-              <td></td>
+              <td>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleEdit(ship);
+                  }}
+                >
+                  Editar
+                </Button>
+              </td>
             </tr>
           )
         })}
