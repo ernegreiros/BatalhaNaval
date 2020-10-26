@@ -1,4 +1,5 @@
 import UserService from "../Services/UserService";
+import ShipsTypes from "../Enums/ShipsTypes";
 
 const urlApi = 'https://localhost:5001';
 
@@ -60,6 +61,14 @@ const ApiClient = {
         return fetch(`${urlApi}/api/Themes`, { method: 'PUT', headers, body: payload })
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json());
+    },
+    GetThemeShips: themeId => {
+        return new Promise(resolve =>
+          setTimeout(() => resolve({ ships: [ { id: 1, name: 'Navio Antigo 1 campo', type: ShipsTypes.OneField  } ] }), 3000))
+        // const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+        // return fetch(`${urlApi}/api/Ships`, { headers, params: { themeId } })
+        //   .then(response => ApiClient.CatchError(response))
+        //   .then(response => response.json())
     },
     CreateTeam: team => {
         return fetch(`${urlApi}/api/teams/create`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: team })

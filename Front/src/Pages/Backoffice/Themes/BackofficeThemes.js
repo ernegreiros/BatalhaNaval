@@ -3,11 +3,13 @@ import {Table, Preloader, Row, Modal, Button} from 'react-materialize';
 
 import ApiClient from "../../../Repositories/ApiClient";
 import {BackofficeThemeForm} from "./BackofficeThemeForm";
+import {BackofficeThemeShips} from "./BackofficeThemeShips";
 
 export default function BackofficeThemes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [shipsThemeId, setShipsThemeId] = useState(null);
   const [editingTheme, setEditingTheme] = useState({});
   const [themes, setThemes] = useState([]);
 
@@ -32,6 +34,10 @@ export default function BackofficeThemes() {
     setEditingTheme(theme)
   }
 
+  function navigateToThemeShips(theme) {
+    setShipsThemeId(theme.id);
+  }
+
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
@@ -51,7 +57,10 @@ export default function BackofficeThemes() {
                 <td>{id}</td>
                 <td>{name}</td>
                 <td>{description}</td>
-                <td><Button onClick={() => handleEdit(theme)}>Editar</Button></td>
+                <td>
+                  <Button onClick={() => handleEdit(theme)}>Editar</Button>
+                  <Button style={{ marginLeft: 10 }} onClick={() => navigateToThemeShips(theme)}>Navios</Button>
+                </td>
               </tr>
             )
           })}
@@ -84,7 +93,6 @@ export default function BackofficeThemes() {
         }}
         trigger={<div><Button node="button" className="right">Cadastrar novo tema</Button><br /><br /></div>}
       >
-
         {isEditing && <BackofficeThemeForm
           currentTheme={editingTheme}
           onSaveSuccess={() => {
@@ -99,8 +107,13 @@ export default function BackofficeThemes() {
           ? <Row style={{ marginTop: 20 }}><Preloader /></Row>
           : themes.length === 0
             ? <p>Não há nenhum tema cadastrado</p>
-            : renderTable()
-      }
+            : renderTable()}
+      {shipsThemeId && (
+        <>
+          <p>Navios - {themes.find(t => t.id === shipsThemeId).name}</p>
+          <BackofficeThemeShips themeId={shipsThemeId} />
+        </>
+      )}
     </div>
   )
 }

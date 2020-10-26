@@ -33,10 +33,6 @@ class BackofficeHome extends Component {
                   <BackofficeThemes />
                 </div>
               </li>
-              <li>
-                <div className="collapsible-header"><i className="material-icons">person</i>Usuários</div>
-                <div className="collapsible-body"><span>Em Breve...</span></div>
-              </li>
             </ul>
           </div>
         </div>
