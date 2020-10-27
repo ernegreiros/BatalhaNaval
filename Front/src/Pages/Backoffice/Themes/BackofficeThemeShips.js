@@ -28,8 +28,8 @@ export function BackofficeThemeShips({ themeId }) {
   function handleDelete(ship) {
     ApiClient.DeleteShip(ship.id)
       .then(() => {
-        PopUp.showPopUp('sucess', 'Navio excluído!');
         getShips();
+        PopUp.showPopUp('success', 'Navio excluído!');
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao excluir o navio!'))
   }
