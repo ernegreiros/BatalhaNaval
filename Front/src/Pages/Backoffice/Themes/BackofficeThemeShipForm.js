@@ -3,14 +3,14 @@ import ApiClient from "../../../Repositories/ApiClient";
 import {Button, Select, TextInput} from "react-materialize";
 import ShipsTypes from "../../../Enums/ShipsTypes";
 
-export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
+export function BackofficeThemeShipForm({ currentShip, onSaveSuccess, disabledTypes }) {
   const { OneField, TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
   const options = [
-    { text: "1", value: OneField },
-    { text: "2", value: TwoFields },
-    { text: "3", value: ThreeFields },
-    { text: "4", value: FourFields },
-    { text: "5", value: FiveFields },
+    // esconder porque geralmente não tem navio de tamanho 1 { text: "1", value: OneField },
+    { text: "2", value: TwoFields, disabled: disabledTypes.includes(TwoFields) },
+    { text: "3", value: ThreeFields, disabled: disabledTypes.includes(ThreeFields) },
+    { text: "4", value: FourFields, disabled: disabledTypes.includes(FourFields) },
+    { text: "5", value: FiveFields, disabled: disabledTypes.includes(FiveFields) },
   ];
   const serializeShipToForm = ship => ({ ...ship });
   const [ship, setShip] = useState(currentShip.id ? serializeShipToForm(currentShip) : {})
@@ -96,7 +96,8 @@ export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
           }}
         >
           <option disabled value="">Quantidade de campos</option>
-          {options.map(({ value, text }) => <option key={value} value={value}>{text}</option>)}
+          {options.map(({ value, text, disabled }) =>
+            <option key={value} disabled={disabled} value={value}>{text}</option>)}
         </Select>
 
         {ship.imagePath
