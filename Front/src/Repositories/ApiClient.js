@@ -62,6 +62,12 @@ const ApiClient = {
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json());
     },
+    DeleteTheme: themeId => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+        return fetch(`${urlApi}/api/Themes/${themeId}`, { method: 'DELETE', headers })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json());
+    },
     GetThemeShips: themeId => {
         const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
         return fetch(`${urlApi}/api/Ships/ByTheme/${themeId}`, { headers })

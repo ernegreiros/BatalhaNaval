@@ -32,6 +32,15 @@ export default function BackofficeThemes() {
     setEditingTheme(theme)
   }
 
+  function handleDelete(theme) {
+    ApiClient.DeleteTheme(theme.id)
+      .then(() => {
+        alert('Tema excluído');
+        getThemes();
+      })
+      .catch(() => alert('Falha ao excluir o tema'))
+  }
+
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
@@ -51,7 +60,10 @@ export default function BackofficeThemes() {
                 <td>{id}</td>
                 <td>{name}</td>
                 <td>{description}</td>
-                <td><Button onClick={() => handleEdit(theme)}>Editar</Button></td>
+                <td>
+                  <Button onClick={() => handleEdit(theme)}>Editar</Button>
+                  <Button onClick={() => handleDelete(theme)}>Excluir</Button>
+                </td>
               </tr>
             )
           })}
