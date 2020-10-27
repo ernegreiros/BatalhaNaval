@@ -3,6 +3,8 @@ import ApiClient from "../../../Repositories/ApiClient";
 import {Button, Select, TextInput} from "react-materialize";
 import ShipsTypes from "../../../Enums/ShipsTypes";
 
+import './BackofficeThemeShipForm.css';
+
 export function BackofficeThemeShipForm({ currentShip, onSaveSuccess, disabledTypes }) {
   const { OneField, TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
   const options = [
