@@ -44,6 +44,15 @@ export default function BackofficeSpecialPowers() {
     setEditingSpecialPower(specialPower)
   }
 
+  function handleDelete(specialPower) {
+    ApiClient.DeleteSpecialPower(specialPower.id)
+      .then(() => {
+        alert('Poder especial excluído');
+        getSpecialPowers();
+      })
+      .catch(() => alert('Falha ao excluir o poder especial'))
+  }
+
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
@@ -69,7 +78,10 @@ export default function BackofficeSpecialPowers() {
                 <td>{quantifier}</td>
                 <td>{formatToMoney(cost)}</td>
                 <td>{formatToMoney(compensation)}</td>
-                <td><Button onClick={() => handleEdit(specialPower)}>Editar</Button></td>
+                <td>
+                  <Button onClick={() => handleEdit(specialPower)}>Editar</Button>
+                  <Button onClick={() => handleDelete(theme)}>Excluir</Button>
+                </td>
               </tr>
             )
           })}

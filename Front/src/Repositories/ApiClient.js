@@ -42,6 +42,12 @@ const ApiClient = {
           .then(response => ApiClient.CatchError(response))
           .then(response => response.json());
     },
+    DeleteSpecialPower: specialPower => {
+        const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+        return fetch(`${urlApi}/api/SpecialPower/${specialPower}`, { method: 'DELETE', headers })
+          .then(response => ApiClient.CatchError(response))
+          .then(response => response.json());
+    },
     GetThemes: () => {
         const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
         return fetch(`${urlApi}/api/Themes`, { headers })
