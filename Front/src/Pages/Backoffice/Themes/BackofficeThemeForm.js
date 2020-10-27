@@ -5,6 +5,7 @@ import './BackofficeThemeForm.css';
 
 import ApiClient from "../../../Repositories/ApiClient";
 import {BackofficeThemeShips} from "./BackofficeThemeShips";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const serializeThemeToForm = theme => ({ ...theme });
@@ -21,7 +22,7 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
         return setTheme({ ...theme, imagePath: result[0].url });
 
       if (error.message !== "User closed widget")
-        return alert("Falha ao fazer upload da imagem");
+        return PopUp.showPopUp('error', 'Falha ao fazer upload da imagem!');
     });
   }
 
@@ -47,7 +48,7 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   }
 
   function onSuccess() {
-    alert('Tema salvo com sucesso!')
+    PopUp.showPopUp('success', 'Tema salvo com sucesso!');
     onSaveSuccess();
   }
 

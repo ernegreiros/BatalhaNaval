@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { hoverUpdate, placeMove } from '../../Utils/battleGridHelpers';
+import PopUp from "../PopUp/PopUp";
 import BattleGridSquare from "./BattleGridSquare";
 
 const dictionary = {
@@ -54,7 +55,7 @@ class BattleGrid extends Component {
             return;
         }
         if (player !== activePlayer) {
-            return alert("It's not your turn!");
+            return PopUp.showPopUp('error', 'Its not your turn!!');
         }
         const { rotated } = this.state;
         const data = {

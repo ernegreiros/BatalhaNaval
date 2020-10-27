@@ -4,6 +4,7 @@ import { Button, Modal, Preloader, Row, Table } from "react-materialize";
 import ApiClient from "../../../Repositories/ApiClient";
 import ShipsTypes from "../../../Enums/ShipsTypes";
 import { BackofficeThemeShipForm } from "./BackofficeThemeShipForm";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 export function BackofficeThemeShips({ themeId }) {
   const [loading, setLoading] = useState(true);
@@ -27,10 +28,10 @@ export function BackofficeThemeShips({ themeId }) {
   function handleDelete(ship) {
     ApiClient.DeleteShip(ship.id)
       .then(() => {
-        alert('Navio excluído');
+        PopUp.showPopUp('sucess', 'Navio excluído!');
         getShips();
       })
-      .catch(() => alert('Falha ao excluir o navio'))
+      .catch(() => PopUp.showPopUp('error', 'Falha ao excluir o navio!'))
   }
 
   function handleModalClose() {

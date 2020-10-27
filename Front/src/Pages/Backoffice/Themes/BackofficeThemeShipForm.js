@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import ApiClient from "../../../Repositories/ApiClient";
 import {Button, Select, TextInput} from "react-materialize";
 import ShipsTypes from "../../../Enums/ShipsTypes";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
   const { OneField, TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
@@ -26,7 +27,7 @@ export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
         return setShip({ ...ship, imagePath: result[0].url });
 
       if (error.message !== "User closed widget")
-        return alert("Falha ao fazer upload da imagem");
+        return PopUp.showPopUp('error', 'Falha ao fazer upload da imagem!');
     });
   }
 
@@ -56,7 +57,7 @@ export function BackofficeThemeShipForm({ currentShip, onSaveSuccess }) {
   }
 
   function onSuccess() {
-    alert('Navio salvo com sucesso!')
+    PopUp.showPopUp('sucess', 'Navio salvo com sucesso!');
     onSaveSuccess();
   }
 

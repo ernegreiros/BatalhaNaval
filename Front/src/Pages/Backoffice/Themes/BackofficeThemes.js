@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Preloader, Row, Modal, Button } from 'react-materialize';
+import PopUp from "../../../Components/PopUp/PopUp";
 
 import ApiClient from "../../../Repositories/ApiClient";
 import { BackofficeThemeForm } from "./BackofficeThemeForm";
@@ -33,12 +34,14 @@ export default function BackofficeThemes() {
   }
 
   function handleDelete(theme) {
-    ApiClient.DeleteTheme(theme.id)
-      .then(() => {
-        alert('Tema excluído');
-        getThemes();
-      })
-      .catch(() => alert('Falha ao excluir o tema'))
+    if (window.confirm("Você realmente deseja deletar? todos os navios desse tema serão apagados!")) {
+      ApiClient.DeleteTheme(theme.id)
+        .then(() => {
+          PopUp.showPopUp('success', 'Removido com sucesso!');
+          getThemes();
+        })
+        .catch(() => PopUp.showPopUp('error', 'Falha ao excluir o tema'))
+    }
   }
 
   function renderTable() {
@@ -64,7 +67,7 @@ export default function BackofficeThemes() {
                   <Button onClick={() => handleEdit(theme)}>Editar</Button>
                 </td>
                 <td>
-                  <Button style={{backgroundColor:"red"}} onClick={() => handleDelete(theme)}>Excluir</Button>
+                  <Button style={{ backgroundColor: "red" }} onClick={() => handleDelete(theme)}>Excluir</Button>
                 </td>
               </tr>
             )
