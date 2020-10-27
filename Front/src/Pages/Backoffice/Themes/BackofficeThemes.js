@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Table, Preloader, Row, Modal, Button} from 'react-materialize';
+import React, { useEffect, useState } from "react";
+import { Table, Preloader, Row, Modal, Button } from 'react-materialize';
+import PopUp from "../../../Components/PopUp/PopUp";
 
 import ApiClient from "../../../Repositories/ApiClient";
-import {BackofficeThemeForm} from "./BackofficeThemeForm";
+import { BackofficeThemeForm } from "./BackofficeThemeForm";
 
 export default function BackofficeThemes() {
   const [loading, setLoading] = useState(true);
@@ -32,16 +33,27 @@ export default function BackofficeThemes() {
     setEditingTheme(theme)
   }
 
+  function handleDelete(theme) {
+    if (window.confirm("Você realmente deseja deletar? todos os navios desse tema serão apagados!")) {
+      ApiClient.DeleteTheme(theme.id)
+        .then(() => {
+          PopUp.showPopUp('success', 'Removido com sucesso!');
+          getThemes();
+        })
+        .catch(() => PopUp.showPopUp('error', 'Falha ao excluir o tema'))
+    }
+  }
+
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
         <thead>
-        <tr>
-          <th>#</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Ações</th>
-        </tr>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
         </thead>
         <tbody>
           {themes.map(theme => {
@@ -51,7 +63,12 @@ export default function BackofficeThemes() {
                 <td>{id}</td>
                 <td>{name}</td>
                 <td>{description}</td>
-                <td><Button onClick={() => handleEdit(theme)}>Editar</Button></td>
+                <td>
+                  <Button onClick={() => handleEdit(theme)}>Editar</Button>
+                </td>
+                <td>
+                  <Button style={{ backgroundColor: "red" }} onClick={() => handleDelete(theme)}>Excluir</Button>
+                </td>
               </tr>
             )
           })}
@@ -66,8 +83,9 @@ export default function BackofficeThemes() {
       <br />
 
       {(!error && !loading) && <Modal
+        style={{ width: 700 }}
         fixedFooter={false}
-        actions = {[]}
+        actions={[]}
         header="Edição - Tema"
         open={isEditing}
         options={{
@@ -84,7 +102,6 @@ export default function BackofficeThemes() {
         }}
         trigger={<div><Button node="button" className="right">Cadastrar novo tema</Button><br /><br /></div>}
       >
-
         {isEditing && <BackofficeThemeForm
           currentTheme={editingTheme}
           onSaveSuccess={() => {
@@ -99,8 +116,7 @@ export default function BackofficeThemes() {
           ? <Row style={{ marginTop: 20 }}><Preloader /></Row>
           : themes.length === 0
             ? <p>Não há nenhum tema cadastrado</p>
-            : renderTable()
-      }
+            : renderTable()}
     </div>
   )
 }

@@ -4,7 +4,8 @@ import { TextInput, Button } from "react-materialize";
 import './BackofficeThemeForm.css';
 
 import ApiClient from "../../../Repositories/ApiClient";
-import {toBase64} from "../../../Utils/fileHelpers";
+import {BackofficeThemeShips} from "./BackofficeThemeShips";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const serializeThemeToForm = theme => ({ ...theme });
@@ -12,12 +13,17 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   const [error, setError] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  async function handleImageChange(event) {
-    const { files } = event.target
+  function openCloudinaryWidget(e) {
+    e.preventDefault();
+    window.cloudinary.openUploadWidget({
+      cloud_name: "venturi-x", upload_preset: "jmjebxux", sources:['local'], cropping: true
+    }, function(error, result) {
+      if (!error)
+        return setTheme({ ...theme, imagePath: result[0].url });
 
-    toBase64(files[0])
-      .then(base64 => setTheme({ ...theme, imagePath: base64 }))
-      .catch(() => alert('Falha ao atualizar imagem'))
+      if (error.message !== "User closed widget")
+        return PopUp.showPopUp('error', 'Falha ao fazer upload da imagem!');
+    });
   }
 
   function handleSubmit() {
@@ -42,7 +48,7 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
   }
 
   function onSuccess() {
-    alert('Tema salvo com sucesso!')
+    PopUp.showPopUp('success', 'Tema salvo com sucesso!');
     onSaveSuccess();
   }
 
@@ -54,7 +60,6 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
     <div className="container">
       <br />
       <form>
-        {theme.imagePath && <img src={theme.imagePath} alt="imagem de capa do tema"/>}
         <TextInput
           label="Nome"
           defaultValue={theme.name}
@@ -66,19 +71,28 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
           onChange={({ target }) =>
             setTheme({ ...theme, description: target.value })} />
 
-        <TextInput
-          label="Selecione imagem de capa do tema"
-          type="file"
-          onChange={handleImageChange} />
+        {theme.imagePath
+          ? <img src={theme.imagePath} alt="imagem de capa do tema"/>
+          : <p>Tema sem imagem de capa</p>}
 
-        <Button onClick={() => handleSubmit()} disabled={saving || !isValid}>
-          {saving ? "Salvando..." : "Salvar"}
-        </Button>
-        {error && <section>
-          <small>Falha ao salvar no servidor</small>
-        </section>}
+        <Button style={{ marginTop: 10 }} onClick={e => openCloudinaryWidget(e)}>Upload da imagem de capa do tema</Button>
+
+        {theme.id && (
+          <>
+            <p>Navios - {theme.name}</p>
+            <BackofficeThemeShips themeId={theme.id} />
+          </>
+        )}
+
+        <div style={{ marginTop: 30 }}>
+          <Button onClick={() => handleSubmit()} disabled={saving || !isValid}>
+            {saving ? "Salvando..." : "Salvar"}
+          </Button>
+          {error && <section>
+            <small>Falha ao salvar no servidor</small>
+          </section>}
+        </div>
       </form>
     </div>
-
   )
 }

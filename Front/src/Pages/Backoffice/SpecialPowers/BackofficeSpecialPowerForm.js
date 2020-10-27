@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextInput, Select, Button } from "react-materialize";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 import SpecialPowerTypes from "../../../Enums/SpecialPowerTypes";
 import ApiClient from "../../../Repositories/ApiClient";
@@ -51,7 +52,7 @@ export function BackofficeSpecialPowerForm({ currentSpecialPower = {}, onSaveSuc
   }
 
   function onSuccess() {
-    alert('Poder especial salvo com sucesso!')
+    PopUp.showPopUp('success', 'Poder especial salvo com sucesso!');
     onSaveSuccess();
   }
 

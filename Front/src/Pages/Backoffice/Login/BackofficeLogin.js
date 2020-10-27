@@ -3,7 +3,6 @@ import { Card, Button, Modal } from 'react-materialize';
 import NavBar from '../../../Components/NavBar/NavBar';
 
 import ApiClient from "../../../Repositories/ApiClient";
-import UserService from "../../../Services/UserService";
 
 export default function BackofficeLogin({ history }) {
   const [loading, setLoading] = useState(false);
