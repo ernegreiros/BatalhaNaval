@@ -16,9 +16,9 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
     e.preventDefault();
     window.cloudinary.openUploadWidget({
       cloud_name: "venturi-x", upload_preset: "jmjebxux", sources:['local'], cropping: true
-    }, function(error, [result]) {
+    }, function(error, result) {
       if (!error)
-        return setTheme({ ...theme, imagePath: result.url });
+        return setTheme({ ...theme, imagePath: result[0].url });
 
       if (error.message !== "User closed widget")
         return alert("Falha ao fazer upload da imagem");
