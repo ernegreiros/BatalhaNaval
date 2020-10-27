@@ -102,7 +102,7 @@ export function BackofficeThemeShipForm({ currentShip, onSaveSuccess, disabledTy
 
         {ship.imagePath
           ? <img src={ship.imagePath} alt="imagem de capa do tema"/>
-          : <p>Tema sem imagem de capa</p>}
+          : <p>Navio sem imagem de capa</p>}
 
         <Button style={{ marginTop: 10 }} onClick={e => openCloudinaryWidget(e)}>Upload da imagem do navio</Button>
 

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Button, Modal, Preloader, Row, Table} from "react-materialize";
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Preloader, Row, Table } from "react-materialize";
 
 import ApiClient from "../../../Repositories/ApiClient";
 import ShipsTypes from "../../../Enums/ShipsTypes";
-import {BackofficeThemeShipForm} from "./BackofficeThemeShipForm";
+import { BackofficeThemeShipForm } from "./BackofficeThemeShipForm";
 
 export function BackofficeThemeShips({ themeId }) {
   const [loading, setLoading] = useState(true);
@@ -11,6 +11,7 @@ export function BackofficeThemeShips({ themeId }) {
   const [ships, setShips] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingShip, setEditingShip] = useState({});
+  let ShipsMessage = '';
 
   useEffect(() => getShips(), [])
 
@@ -21,6 +22,15 @@ export function BackofficeThemeShips({ themeId }) {
       .then(({ ship }) => setShips(ship))
       .catch(() => setError(true))
       .finally(() => setLoading(false))
+  }
+
+  function handleDelete(ship) {
+    ApiClient.DeleteShip(ship.id)
+      .then(() => {
+        alert('Navio excluído');
+        getShips();
+      })
+      .catch(() => alert('Falha ao excluir o navio'))
   }
 
   function handleModalClose() {
@@ -49,34 +59,45 @@ export function BackofficeThemeShips({ themeId }) {
     return (
       <Table style={{ margin: 20 }}>
         <thead>
-        <tr>
-          <th>#</th>
-          <th>Nome</th>
-          <th>Campos</th>
-          <th>Ações</th>
-        </tr>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Tamanho</th>
+            <th>Ações</th>
+          </tr>
         </thead>
         <tbody>
-        {ships.map(ship => {
-          const { id, name, type } = ship
-          return (
-            <tr key={id}>
-              <td>{id}</td>
-              <td>{name}</td>
-              <td>{mapTypeName(type)}</td>
-              <td>
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleEdit(ship);
-                  }}
-                >
-                  Editar
+          {ships.map(ship => {
+            const { id, name, type } = ship
+            return (
+              <tr key={id}>
+                <td>{id}</td>
+                <td>{name}</td>
+                <td>{mapTypeName(type)}</td>
+                <td>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleEdit(ship);
+                    }}
+                  >
+                    Editar
                 </Button>
-              </td>
-            </tr>
-          )
-        })}
+                </td>
+                <td>
+                  <Button
+                    style={{backgroundColor:"red"}}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(ship);
+                    }}
+                  >
+                    Excluir
+                </Button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </Table>
     )
@@ -89,7 +110,7 @@ export function BackofficeThemeShips({ themeId }) {
     return <p>Falha ao carregar poderes especiais do servidor</p>;
 
   if (ships.length === 0)
-    return <p>Não há nenhum navio cadastrado</p>;
+    ShipsMessage = <p>Não há nenhum navio cadastrado</p>;
 
   const { TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
 
@@ -109,10 +130,11 @@ export function BackofficeThemeShips({ themeId }) {
 
   return (
     <div>
+      <p>{ShipsMessage}</p>
       {(!error && !loading) && <Modal
         style={{ width: 700 }}
         fixedFooter={false}
-        actions = {[]}
+        actions={[]}
         header="Edição - Navio"
         open={isEditing}
         options={{

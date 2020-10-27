@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {Table, Preloader, Row, Modal, Button} from 'react-materialize';
+import React, { useEffect, useState } from "react";
+import { Table, Preloader, Row, Modal, Button } from 'react-materialize';
 
 import ApiClient from "../../../Repositories/ApiClient";
-import {BackofficeThemeForm} from "./BackofficeThemeForm";
+import { BackofficeThemeForm } from "./BackofficeThemeForm";
 
 export default function BackofficeThemes() {
   const [loading, setLoading] = useState(true);
@@ -45,12 +45,12 @@ export default function BackofficeThemes() {
     return (
       <Table style={{ margin: 20 }}>
         <thead>
-        <tr>
-          <th>#</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Ações</th>
-        </tr>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
         </thead>
         <tbody>
           {themes.map(theme => {
@@ -62,7 +62,9 @@ export default function BackofficeThemes() {
                 <td>{description}</td>
                 <td>
                   <Button onClick={() => handleEdit(theme)}>Editar</Button>
-                  <Button onClick={() => handleDelete(theme)}>Excluir</Button>
+                </td>
+                <td>
+                  <Button style={{backgroundColor:"red"}} onClick={() => handleDelete(theme)}>Excluir</Button>
                 </td>
               </tr>
             )
@@ -80,7 +82,7 @@ export default function BackofficeThemes() {
       {(!error && !loading) && <Modal
         style={{ width: 700 }}
         fixedFooter={false}
-        actions = {[]}
+        actions={[]}
         header="Edição - Tema"
         open={isEditing}
         options={{
