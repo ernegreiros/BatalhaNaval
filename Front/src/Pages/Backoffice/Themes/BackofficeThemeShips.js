@@ -128,6 +128,9 @@ export function BackofficeThemeShips({ themeId }) {
   if (ships.find(ship => ship.type === FiveFields))
     disabledShipTypes.push(FiveFields)
 
+  if (editingShip && editingShip.id)
+    disabledShipTypes = disabledShipTypes.filter(type => type !== editingShip.type)
+
   return (
     <div>
       <p>{ShipsMessage}</p>
