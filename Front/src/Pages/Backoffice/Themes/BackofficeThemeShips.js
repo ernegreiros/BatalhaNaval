@@ -113,6 +113,25 @@ export function BackofficeThemeShips({ themeId }) {
   if (ships.length === 0)
     ShipsMessage = <p>Não há nenhum navio cadastrado</p>;
 
+  const { TwoFields, ThreeFields, FourFields, FiveFields } = ShipsTypes;
+
+  let disabledShipTypes = []
+
+  if (ships.filter(ship => ship.type === TwoFields).length === 2)
+    disabledShipTypes.push(TwoFields)
+
+  if (ships.find(ship => ship.type === ThreeFields))
+    disabledShipTypes.push(ThreeFields)
+
+  if (ships.find(ship => ship.type === FourFields))
+    disabledShipTypes.push(FourFields)
+
+  if (ships.find(ship => ship.type === FiveFields))
+    disabledShipTypes.push(FiveFields)
+
+  if (editingShip && editingShip.id)
+    disabledShipTypes = disabledShipTypes.filter(type => type !== editingShip.type)
+
   return (
     <div>
       <p>{ShipsMessage}</p>
@@ -138,6 +157,7 @@ export function BackofficeThemeShips({ themeId }) {
       >
         {isEditing && <BackofficeThemeShipForm
           currentShip={{ ...editingShip, themeId }}
+          disabledTypes={disabledShipTypes}
           onSaveSuccess={() => {
             setIsEditing(false)
             getShips()
