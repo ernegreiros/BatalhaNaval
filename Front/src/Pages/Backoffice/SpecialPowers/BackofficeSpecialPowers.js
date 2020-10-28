@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {Table, Modal, Button, Preloader, Row} from 'react-materialize';
+import React, { useEffect, useState } from "react";
+import { Table, Modal, Button, Preloader, Row } from 'react-materialize';
 
 import ApiClient from "../../../Repositories/ApiClient";
 import SpecialPowerTypes from "../../../Enums/SpecialPowerTypes";
-import {formatToMoney} from "../../../Utils/MoneyHelper";
-import {BackofficeSpecialPowerForm} from "./BackofficeSpecialPowerForm";
+import { formatToMoney } from "../../../Utils/MoneyHelper";
+import { BackofficeSpecialPowerForm } from "./BackofficeSpecialPowerForm";
+import PopUp from "../../../Components/PopUp/PopUp";
 
 export default function BackofficeSpecialPowers() {
   const [loading, setLoading] = useState(true);
@@ -44,23 +45,32 @@ export default function BackofficeSpecialPowers() {
     setEditingSpecialPower(specialPower)
   }
 
+  function handleDelete(specialPower) {
+    ApiClient.DeleteSpecialPower(specialPower.id)
+      .then(() => {
+        PopUp.showPopUp('success', 'Poder especial excluído!');
+        getSpecialPowers();
+      })
+      .catch(() => PopUp.showPopUp('error', 'Falha ao excluir o poder especial!'))
+  }
+
   function renderTable() {
     return (
       <Table style={{ margin: 20 }}>
         <thead>
-        <tr>
-          <th>#</th>
-          <th>Nome</th>
-          <th>Tipo</th>
-          <th>Quantidade</th>
-          <th>Preço</th>
-          <th>Compensação</th>
-          <th>Ações</th>
-        </tr>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Compensação</th>
+            <th>Ações</th>
+          </tr>
         </thead>
         <tbody>
           {specialPowers.map((specialPower, index) => {
-            const { id, name, quantifier, type, cost, compensation} = specialPower;
+            const { id, name, quantifier, type, cost, compensation } = specialPower;
             return (
               <tr key={index}>
                 <td>{id}</td>
@@ -69,7 +79,12 @@ export default function BackofficeSpecialPowers() {
                 <td>{quantifier}</td>
                 <td>{formatToMoney(cost)}</td>
                 <td>{formatToMoney(compensation)}</td>
-                <td><Button onClick={() => handleEdit(specialPower)}>Editar</Button></td>
+                <td>
+                  <Button onClick={() => handleEdit(specialPower)}>Editar</Button>
+                </td>
+                <td>
+                  <Button style={{backgroundColor:"red"}} onClick={() => handleDelete(specialPower)}>Excluir</Button>
+                </td>
               </tr>
             )
           })}
@@ -85,7 +100,7 @@ export default function BackofficeSpecialPowers() {
 
       {(!error && !loading) && <Modal
         fixedFooter={false}
-        actions = {[]}
+        actions={[]}
         header="Edição - Poder Especial"
         open={isEditing}
         options={{
@@ -102,7 +117,7 @@ export default function BackofficeSpecialPowers() {
         }}
         trigger={<div><Button node="button" className="right">Cadastrar novo poder</Button><br /><br /></div>}
       >
-        
+
         {isEditing && <BackofficeSpecialPowerForm
           currentSpecialPower={editingSpecialPower}
           onSaveSuccess={() => {

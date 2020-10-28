@@ -40,6 +40,14 @@ namespace BattleshipApi.Ships.BLL
             return IDispatcherShips.Get(shipId);
         }
 
+        public List<DML.Ships> GetAll(int themeId)
+        {
+            if (themeId <= 0)
+                throw new ArgumentNullException("Invalid Theme");
+
+            return IDispatcherShips.GetAll(themeId);
+        }
+
         public void Update(DML.Ships shipObject)
         {
             if (shipObject.ID <= 0)

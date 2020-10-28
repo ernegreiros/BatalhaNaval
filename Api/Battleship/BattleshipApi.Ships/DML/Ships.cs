@@ -16,8 +16,8 @@ namespace BattleshipApi.Ships.DML
         [Coluna(pNomeColuna: "Type", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Enum)]
         public ShipsTypes Type { get; set; }
 
-        [Coluna(pNomeColuna: "ImageId", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
-        public int ImageId { get; set; }
+        [Coluna(pNomeColuna: "ImagePath", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 8000)]
+        public string ImagePath { get; set; }
 
         [Coluna(pNomeColuna: "ThemeId", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
         public int ThemeId { get; set; }
@@ -30,8 +30,8 @@ namespace BattleshipApi.Ships.DML
             else if (Name.Length > 30)
                 throw new ArgumentOutOfRangeException(paramName: nameof(Name), message: "Ship name max lenght is 30 positions");
 
-            if (ImageId <= 0)
-                throw new ArgumentOutOfRangeException("Invalid ImageId");
+            if (string.IsNullOrEmpty(ImagePath))
+                throw new ArgumentOutOfRangeException("Invalid ImagePath");
 
             if (ThemeId <= 0)
                 throw new ArgumentOutOfRangeException("Invalid ThemeId");

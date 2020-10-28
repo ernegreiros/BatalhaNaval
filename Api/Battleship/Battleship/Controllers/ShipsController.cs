@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace Battleship.Controllers
 {
@@ -45,6 +46,28 @@ namespace Battleship.Controllers
             return outGetShipVM;
         }
 
+        [HttpGet]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
+        [Route("byTheme/{themeId}")]
+        public OutGetAllShipVM GetAll(int themeId)
+        {
+            OutGetAllShipVM outGetShipVM = new OutGetAllShipVM();
+
+            try
+            {
+                outGetShipVM.Ship = IBoShips.GetAll(themeId);
+                outGetShipVM.HttpStatus = StatusCodes.Status200OK;
+            }
+            catch (Exception ex)
+            {
+                outGetShipVM.HttpStatus = StatusCodes.Status400BadRequest;
+                outGetShipVM.Message = $"Error while getting Ships! {ex.Message}";
+                outGetShipVM.Ship = null;
+            }
+
+            return outGetShipVM;
+        }
+
         [Authorize(Policy = BoJWT.SuperUserPolicyName)]
         [HttpPost]
         public OutCreateShipVM Post(InCreateShipVM shipObject)
@@ -61,7 +84,7 @@ namespace Battleship.Controllers
                         Name = shipObject.Name,
                         Type = (ShipsTypes)shipObject.Type,
                         ThemeId = Convert.ToInt32(shipObject.ThemeId),
-                        ImageId = Convert.ToInt32(shipObject.ImageId)
+                        ImagePath = shipObject.ImagePath
                     });
 
                     outCreateShipVM.HttpStatus = StatusCodes.Status201Created;
@@ -97,7 +120,7 @@ namespace Battleship.Controllers
 
                     ship.Name = shipObject.Name ?? ship.Name;
                     ship.Type = shipObject.Type ?? ship.Type;
-                    ship.ImageId = shipObject.ImageId ?? ship.ImageId;
+                    ship.ImagePath = shipObject.ImagePath ?? ship.ImagePath;
                     ship.ThemeId = shipObject.ThemeId ?? ship.ThemeId;
 
                     IBoShips.Update(ship);

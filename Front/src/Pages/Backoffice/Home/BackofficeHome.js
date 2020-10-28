@@ -3,6 +3,7 @@ import M from "materialize-css";
 import './BackofficeHome.css';
 import BackofficeSpecialPowers from "../SpecialPowers/BackofficeSpecialPowers";
 import NavBar from "../../../Components/NavBar/NavBar";
+import BackofficeThemes from "../Themes/BackofficeThemes";
 
 class BackofficeHome extends Component {
 
@@ -20,15 +21,17 @@ class BackofficeHome extends Component {
           </div>
           <div className="row">
             <ul className="collapsible">
-              <li className="">
+              <li>
                 <div className="collapsible-header"><i className="material-icons">whatshot</i>Poderes Especiais</div>
                 <div className="collapsible-body">
                   <BackofficeSpecialPowers />
                 </div>
               </li>
-              <li className="">
-                <div className="collapsible-header"><i className="material-icons">person</i>Usuários</div>
-                <div className="collapsible-body"><span>Em Breve...</span></div>
+              <li>
+                <div className="collapsible-header"><i className="material-icons">format_paint</i>Temas</div>
+                <div className="collapsible-body">
+                  <BackofficeThemes />
+                </div>
               </li>
             </ul>
           </div>
