@@ -53,6 +53,7 @@ namespace BattleshipApi.BattleField.BLL
                     IDispatcherBattleField.BeginTransaction();
                     foreach (DML.BattleField battleField in list)
                     {
+                        battleField.Attacked = 0;
                         IDispatcherBattleField.RegisterPosition(battleField);
                     }
                     IDispatcherBattleField.Commit();
