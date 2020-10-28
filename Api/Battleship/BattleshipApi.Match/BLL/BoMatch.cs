@@ -1,6 +1,7 @@
 ﻿using BattleshipApi.Player.DML.Interfaces;
 using BattleshipApi.Match.DML.Interfaces;
 using System;
+using System.Linq;
 
 namespace BattleshipApi.Match.BLL
 {
@@ -48,6 +49,21 @@ namespace BattleshipApi.Match.BLL
         /// <summary>
         /// Search the player's current game (With status started)
         /// </summary>
+        /// <param name="pUserName">User name</param>
+        /// <returns>Partida atual</returns>
+        public DML.Match CurrentMatch(string pUserName)
+        {
+            if (string.IsNullOrEmpty(pUserName))
+                throw new ArgumentNullException(paramName: nameof(pUserName), message: "User name is required");
+
+            Player.DML.Player player = IBoJogador.FindPlayerByUserName(pUserName);
+
+            return CurrentMatch(player.ID);
+        }
+
+        /// <summary>
+        /// Search the player's current game (With status started)
+        /// </summary>
         /// <param name="pPlayerID">Player ID</param>
         /// <returns>Partida atual</returns>
         public DML.Match CurrentMatch(int pPlayerID)
@@ -71,5 +87,6 @@ namespace BattleshipApi.Match.BLL
 
             IDispatcherPartida.CloseMatch(pMatchId);
         }
+
     }
 }

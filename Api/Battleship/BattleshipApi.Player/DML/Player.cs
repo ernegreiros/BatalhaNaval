@@ -5,6 +5,11 @@ namespace BattleshipApi.Player.DML
     [Tabela(pNomeTabela: "Users")]
     public class Player
     {
+        public Player()
+        {
+            Money = 1000;
+        }
+
         public int ID { get; set; }
 
         [Coluna(pNomeColuna: "Name", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Varchar, pTamanhoCampo: 30)]
