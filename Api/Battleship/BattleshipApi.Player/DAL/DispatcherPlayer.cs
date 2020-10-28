@@ -100,5 +100,40 @@ namespace BattleshipApi.Player.DAL
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(playerObject).ToString());
         }
 
+        /// <summary>
+        /// Check if password is match
+        /// </summary>
+        /// <param name="pLogin">Login</param>
+        /// <param name="pPassword">Password</param>
+        /// <returns></returns>
+        public bool PasswordMatch(string pLogin, string pPassword)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("DECLARE @LOGIN VARCHAR(30),");
+            stringBuilder.AppendLine("  @PASSWORD VARCHAR(30)");
+            stringBuilder.AppendLine($"SET @LOGIN = '{pLogin}'");
+            stringBuilder.AppendLine($"SET @PASSWORD = '{pPassword}'");
+            stringBuilder.AppendLine("SELECT TOP 1 1 FROM Users WITH(NOLOCK)");
+            stringBuilder.AppendLine("WHERE LOGIN = @LOGIN AND PASSWORD = @PASSWORD");
+
+            DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
+
+            return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+        }
+
+        public void Update(DML.Player oldPlayer)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("DECLARE @PASSWORD VARCHAR(30), @NAME VARCHAR(30), @ID INT");
+            stringBuilder.AppendLine($"SET @PASSWORD = '{oldPlayer.Password}'");
+            stringBuilder.AppendLine($"SET @NAME = '{oldPlayer.Name}'");
+            stringBuilder.AppendLine($"SET @ID = {oldPlayer.ID}");
+            stringBuilder.AppendLine("UPDATE USERS");
+            stringBuilder.AppendLine("SET NAME = @NAME,");
+            stringBuilder.AppendLine("  PASSWORD = @PASSWORD");
+            stringBuilder.AppendLine("WHERE ID @ID");
+
+            IUnitOfWork.Executar(stringBuilder.ToString());
+        }
     }
 }
