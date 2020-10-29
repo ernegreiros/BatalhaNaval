@@ -67,5 +67,53 @@ namespace BattleshipApi.BattleField.BLL
             else
                 throw new Exception("Battlefield positions count is 0");
         }
+
+
+        public int AttackPositions(List<DML.BattleField> pBattleFieldsPositions)
+        {
+            if (pBattleFieldsPositions == null)
+                throw new ArgumentNullException(paramName: nameof(pBattleFieldsPositions), "Battlefield positions cannot be null");
+            else if (pBattleFieldsPositions.Any())
+            {
+                BattleFieldList list = pBattleFieldsPositions as BattleFieldList;
+                int targetHited = 0;
+
+                if (!IBoPlayer.PlayerExists(list.First().Player))
+                    throw new Exception("Player do not exists");
+
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.First().Player);
+                if (currentMatch == null)
+                    throw new Exception("The player does not have any match");
+                else if (currentMatch.ID != list.First().MatchID)
+                    throw new Exception("The current match of the player is another");
+
+                list.CheckData();
+
+                try
+                {
+                    IDispatcherBattleField.BeginTransaction();
+                    foreach (DML.BattleField battleField in list)
+                    {
+                        if (targetHited == 1)
+                        {
+                            IDispatcherBattleField.AttackPosition(battleField);
+                        }
+                        else
+                            targetHited = IDispatcherBattleField.AttackPosition(battleField);
+                        
+                    }
+                    IDispatcherBattleField.Commit();
+
+                    return targetHited;
+                }
+                catch (Exception ex)
+                {
+                    IDispatcherBattleField.Rollback();
+                    throw new Exception($"Error on register positions. Original error: {ex.Message}");
+                }
+            }
+            else
+                throw new Exception("Battlefield positions count is 0");
+        }
     }
 }

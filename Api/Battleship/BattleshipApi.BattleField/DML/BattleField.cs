@@ -8,6 +8,7 @@ namespace BattleshipApi.BattleField.DML
     /// <summary>
     /// Battlefield
     /// </summary>
+    [Tabela(pNomeTabela: "BattleField")]
     public class BattleField
     {
         #region Constructor
