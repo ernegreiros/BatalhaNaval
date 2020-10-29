@@ -8,6 +8,9 @@ using BattleshipApi.JWT.DML.Interfaces;
 using BattleshipApi.Match.BLL;
 using BattleshipApi.Match.DAL;
 using BattleshipApi.Match.DML.Interfaces;
+using BattleshipApi.MatchSpecialPower.BLL;
+using BattleshipApi.MatchSpecialPower.DAL;
+using BattleshipApi.MatchSpecialPower.DML.Interfaces;
 using BattleshipApi.Player.BLL;
 using BattleshipApi.Player.DAL;
 using BattleshipApi.Player.DML.Interfaces;
@@ -73,6 +76,9 @@ namespace Battleship
 
             services.AddSingleton<IDispatcherTheme, DispatcherTheme>();
             services.AddSingleton<IBoTheme, BoTheme>();
+
+            services.AddSingleton<IDispatcherMatchSpecialPower, DispatcherMatchSpecialPower>();
+            services.AddSingleton<IBoMatchSpecialPower, BoMatchSpecialPower>();
 
             ISigningConfigurations signingConfigurations = new SigningConfigurations();
             services.AddSingleton<ISigningConfigurations>(signingConfigurations);
