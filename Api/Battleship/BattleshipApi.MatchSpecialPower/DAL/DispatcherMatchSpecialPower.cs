@@ -17,17 +17,15 @@ namespace BattleshipApi.MatchSpecialPower.DAL
         {
             StringBuilder stringBuilder = new StringBuilder();
             #region Query
-            stringBuilder.AppendLine("DECLARE @MATCH INT,");
-            stringBuilder.AppendLine("    @PLAYER1 INT,");
-            stringBuilder.AppendLine("    @PLAYER2 INT");
-            stringBuilder.AppendLine($"SET @MATCH = { pMatchId }");
+            GetPlayersFromMatchQuery(pMatchId, stringBuilder);
+            DataLoadOfSpecialPowersOnMatch(stringBuilder);
+            #endregion
 
-            /*Buscando jogadores da partida*/
-            stringBuilder.AppendLine("SELECT @PLAYER1 = PLAYER1,");
-            stringBuilder.AppendLine("    @PLAYER2 = Player2");
-            stringBuilder.AppendLine("FROM Match WITH(NOLOCK)");
-            stringBuilder.AppendLine("WHERE ID = @MATCH");
-            stringBuilder.AppendLine("");
+            IUnitOfWork.Executar(stringBuilder.ToString());
+        }
+
+        private static void DataLoadOfSpecialPowersOnMatch(StringBuilder stringBuilder)
+        {
 
             /*Carga de poderes especiais para o jogador 1*/
             stringBuilder.AppendLine("INSERT INTO MatchSpecialPowers (");
@@ -54,10 +52,21 @@ namespace BattleshipApi.MatchSpecialPower.DAL
             stringBuilder.AppendLine("    S.ID,");
             stringBuilder.AppendLine("    0");
             stringBuilder.AppendLine("FROM SpecialPowers S WITH(NOLOCK)");
-            #endregion
+        }
 
+        private static void GetPlayersFromMatchQuery(int pMatchId, StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine("DECLARE @MATCH INT,");
+            stringBuilder.AppendLine("    @PLAYER1 INT,");
+            stringBuilder.AppendLine("    @PLAYER2 INT");
+            stringBuilder.AppendLine($"SET @MATCH = { pMatchId }");
 
-            IUnitOfWork.Executar(stringBuilder.ToString());
+            /*Buscando jogadores da partida*/
+            stringBuilder.AppendLine("SELECT @PLAYER1 = PLAYER1,");
+            stringBuilder.AppendLine("    @PLAYER2 = Player2");
+            stringBuilder.AppendLine("FROM Match WITH(NOLOCK)");
+            stringBuilder.AppendLine("WHERE ID = @MATCH");
+            stringBuilder.AppendLine("");
         }
 
         public void RegisterUseOfSpecialPower(int pMatchId, int pPlayer, int pSpecialPower)
