@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DAL\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
   </ItemGroup>
 

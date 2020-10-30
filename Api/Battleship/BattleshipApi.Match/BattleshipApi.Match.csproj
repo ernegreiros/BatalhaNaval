@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
+    <ProjectReference Include="..\BattleshipApi.MatchSpecialPower\BattleshipApi.MatchSpecialPower.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
   </ItemGroup>
 
