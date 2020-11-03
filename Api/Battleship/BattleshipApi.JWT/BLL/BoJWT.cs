@@ -92,6 +92,8 @@ namespace BattleshipApi.JWT.BLL
             DateTime dataExpiracao = dataCriacao +
                 TimeSpan.FromMinutes(ITokenConfiguration.Minutes);
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
             {

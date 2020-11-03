@@ -69,9 +69,9 @@ namespace BattleshipApi.Player.DAL
             stringBuilder.AppendLine("  Name,");
             stringBuilder.AppendLine("  Login,");
             stringBuilder.AppendLine("  Code,");
-            stringBuilder.AppendLine("  Money,");
+            stringBuilder.AppendLine("  Money");
             stringBuilder.AppendLine("FROM USERS WITH(NOLOCK)");
-            stringBuilder.AppendLine("WHERE NAME = @USER");
+            stringBuilder.AppendLine("WHERE Login = @NAME");
 
 
             DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
