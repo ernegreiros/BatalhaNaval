@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.Ships", "Batt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.Theme", "BattleshipApi.Theme\BattleshipApi.Theme.csproj", "{E6D951BF-5E0F-40AC-A89E-FDC549B6C868}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipApi.MatchSpecialPower", "BattleshipApi.MatchSpecialPower\BattleshipApi.MatchSpecialPower.csproj", "{5B472A04-AB69-4CA3-ABDD-50835ECDCF26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipApi.MatchSpecialPower", "BattleshipApi.MatchSpecialPower\BattleshipApi.MatchSpecialPower.csproj", "{5B472A04-AB69-4CA3-ABDD-50835ECDCF26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipApi.MatchAttacks", "BattleshipApi.MatchAttacks\BattleshipApi.MatchAttacks.csproj", "{BD1EEC90-BC7D-4706-B7AF-DDF901ECE8E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{5B472A04-AB69-4CA3-ABDD-50835ECDCF26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B472A04-AB69-4CA3-ABDD-50835ECDCF26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B472A04-AB69-4CA3-ABDD-50835ECDCF26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD1EEC90-BC7D-4706-B7AF-DDF901ECE8E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD1EEC90-BC7D-4706-B7AF-DDF901ECE8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD1EEC90-BC7D-4706-B7AF-DDF901ECE8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD1EEC90-BC7D-4706-B7AF-DDF901ECE8E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

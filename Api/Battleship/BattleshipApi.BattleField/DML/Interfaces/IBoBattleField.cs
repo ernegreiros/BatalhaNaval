@@ -10,6 +10,6 @@ namespace BattleshipApi.BattleField.DML.Interfaces
     public interface IBoBattleField
     {
         void RegisterPositions(List<BattleField> pBattleFieldsPositions);
-        int AttackPositions(List<BattleField> pBattleFieldsPositions);
+        int AttackPositions(List<BattleField> pBattleFieldsPositions, int? pSpecialPowerId);
     }
 }

@@ -6,9 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
-    <ProjectReference Include="..\BattleshipApi.MatchAttacks\BattleshipApi.MatchAttacks.csproj" />
-    <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
-    <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
   </ItemGroup>
 
   <ItemGroup>

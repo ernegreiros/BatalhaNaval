@@ -1,4 +1,6 @@
-﻿namespace BattleshipApi.Match.DML.Interfaces
+﻿using System.Collections.Generic;
+
+namespace BattleshipApi.Match.DML.Interfaces
 {
     /// <summary>
     /// Business object interface of match

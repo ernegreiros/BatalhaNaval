@@ -1,6 +1,8 @@
 ﻿using BattleshipApi.BattleField.DML;
 using BattleshipApi.BattleField.DML.Interfaces;
 using BattleshipApi.Match.DML.Interfaces;
+using BattleshipApi.MatchAttacks.DML.Interfaces;
+using BattleshipApi.MatchSpecialPower.DML.Interfaces;
 using BattleshipApi.Player.DML.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,12 +17,16 @@ namespace BattleshipApi.BattleField.BLL
         private readonly IDispatcherBattleField IDispatcherBattleField;
         private readonly IBoPlayer IBoPlayer;
         private readonly IBoMatch IBoMatch;
+        private readonly IBoMatchSpecialPower IBoMatchSpecialPower;
+        private readonly IBoMatchAttacks IBoMatchAttacks;
 
-        public BoBattleField(IDispatcherBattleField iDispatcherBattleField, IBoPlayer iBoPlayer, IBoMatch iBoMatch)
+        public BoBattleField(IDispatcherBattleField iDispatcherBattleField, IBoPlayer iBoPlayer, IBoMatch iBoMatch, IBoMatchSpecialPower iBoMatchSpecialPower, IBoMatchAttacks iBoMatchAttacks)
         {
             IDispatcherBattleField = iDispatcherBattleField;
             IBoPlayer = iBoPlayer;
             IBoMatch = iBoMatch;
+            IBoMatchSpecialPower = iBoMatchSpecialPower;
+            IBoMatchAttacks = iBoMatchAttacks;
         }
 
         #endregion
@@ -69,13 +75,15 @@ namespace BattleshipApi.BattleField.BLL
         }
 
 
-        public int AttackPositions(List<DML.BattleField> pBattleFieldsPositions)
+        public int AttackPositions(List<DML.BattleField> pBattleFieldsPositions, int? pSpecialPowerId)
         {
             if (pBattleFieldsPositions == null)
                 throw new ArgumentNullException(paramName: nameof(pBattleFieldsPositions), "Battlefield positions cannot be null");
             else if (pBattleFieldsPositions.Any())
             {
                 BattleFieldList list = pBattleFieldsPositions as BattleFieldList;
+                List<MatchAttacks.DML.MatchAttacks> matchAttacks = new List<MatchAttacks.DML.MatchAttacks>();
+
                 int targetHited = 0;
 
                 if (!IBoPlayer.PlayerExists(list.First().Player))
@@ -97,11 +105,22 @@ namespace BattleshipApi.BattleField.BLL
                         if (targetHited == 1)
                         {
                             IDispatcherBattleField.AttackPosition(battleField);
+                            matchAttacks.Add(new MatchAttacks.DML.MatchAttacks()
+                            {
+                                MatchId = battleField.MatchID,
+                                PosX = battleField.PosX,
+                                PosY = battleField.PosY,
+                                /*O alvo não é quem está atacando*/
+                                Target = currentMatch.Player1 == battleField.Player ? currentMatch.Player2 : currentMatch.Player1
+                            });
                         }
                         else
                             targetHited = IDispatcherBattleField.AttackPosition(battleField);
-                        
                     }
+
+                    IBoMatchAttacks.RegisterMatchAttacks(matchAttacks);
+                    IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.First().MatchID, list.First().Player, Convert.ToInt32(pSpecialPowerId));
+
                     IDispatcherBattleField.Commit();
 
                     return targetHited;
