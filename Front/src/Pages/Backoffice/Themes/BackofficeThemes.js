@@ -81,6 +81,8 @@ export default function BackofficeThemes() {
     <div>
       <h4>Cadastros - Temas</h4>
       <br />
+      <h6>Após o cadastro do tema é possivel adicionar os navios!</h6>
+      <br />      
 
       {(!error && !loading) && <Modal
         style={{ width: 700 }}
@@ -111,7 +113,7 @@ export default function BackofficeThemes() {
       </Modal>}
 
       {error
-        ? <p>Falha ao carregar poderes especiais do servidor</p>
+        ? <p>Falha ao carregar Temas do servidor</p>
         : loading
           ? <Row style={{ marginTop: 20 }}><Preloader /></Row>
           : themes.length === 0
