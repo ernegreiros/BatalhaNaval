@@ -1,6 +1,9 @@
 ﻿using BattleshipApi.Player.DML.Interfaces;
 using BattleshipApi.Match.DML.Interfaces;
 using System;
+using System.Linq;
+using DataBaseHelper.Interfaces;
+using BattleshipApi.MatchSpecialPower.DML.Interfaces;
 
 namespace BattleshipApi.Match.BLL
 {
@@ -14,10 +17,12 @@ namespace BattleshipApi.Match.BLL
         /// </summary>
         /// <param name="pIBOPlayer">Business class of player</param>
         /// <param name="pIDispatcherMatch">Connection class to the database for match</param>
-        public BoMatch(IBoPlayer pIBOPlayer, IDispatcherMatch pIDispatcherMatch)
+        /// <param name="pIBoMatchSpecialPower">Business class of match/special power</param>
+        public BoMatch(IBoPlayer pIBOPlayer, IDispatcherMatch pIDispatcherMatch, IBoMatchSpecialPower pIBoMatchSpecialPower)
         {
             IBoJogador = pIBOPlayer;
-            IDispatcherPartida = pIDispatcherMatch;
+            IDispatcherMatch = pIDispatcherMatch;
+            IBoMatchSpecialPower = pIBoMatchSpecialPower;
         }
 
         /// <summary>
@@ -28,7 +33,12 @@ namespace BattleshipApi.Match.BLL
         /// <summary>
         /// Connection class to the database for match
         /// </summary>
-        private readonly IDispatcherMatch IDispatcherPartida;
+        private readonly IDispatcherMatch IDispatcherMatch;
+
+        /// <summary>
+        /// Business object
+        /// </summary>
+        private readonly IBoMatchSpecialPower IBoMatchSpecialPower;
 
         /// <summary>
         /// Create a match and returns your id
@@ -41,8 +51,37 @@ namespace BattleshipApi.Match.BLL
                 throw new Exception("Jogador 1 já possui uma partida iniciada");
             if (CurrentMatch(pMatch.Player2) != null)
                 throw new Exception("Jogador 2 já possui uma partida iniciada");
-                       
-            return IDispatcherPartida.CurrentMatch(pMatch.Player1).ID;
+
+            try
+            {
+
+                IDispatcherMatch.BeginTransaction();
+                int matchId = IDispatcherMatch.CreateMatch(pMatch);
+                IBoMatchSpecialPower.RegisterSpecialPowerToMatch(matchId);
+                IDispatcherMatch.Commit();
+                return matchId;
+
+            }
+            catch (Exception)
+            {
+                IDispatcherMatch.Rollback();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Search the player's current game (With status started)
+        /// </summary>
+        /// <param name="pUserName">User name</param>
+        /// <returns>Partida atual</returns>
+        public DML.Match CurrentMatch(string pUserName)
+        {
+            if (string.IsNullOrEmpty(pUserName))
+                throw new ArgumentNullException(paramName: nameof(pUserName), message: "User name is required");
+
+            Player.DML.Player player = IBoJogador.FindPlayerByUserName(pUserName);
+
+            return CurrentMatch(player.ID);
         }
 
         /// <summary>
@@ -54,7 +93,7 @@ namespace BattleshipApi.Match.BLL
         {
             if (IBoJogador.PlayerExists(pPlayerID))
             {
-                return IDispatcherPartida.CurrentMatch(pPlayerID);
+                return IDispatcherMatch.CurrentMatch(pPlayerID);
             }
             else
                 throw new Exception("Jogador informado não cadastrado");
@@ -69,7 +108,8 @@ namespace BattleshipApi.Match.BLL
             if (pMatchId <= 0)
                 throw new Exception("Id da partida é obrigatório");
 
-            IDispatcherPartida.CloseMatch(pMatchId);
+            IDispatcherMatch.CloseMatch(pMatchId);
         }
+
     }
 }

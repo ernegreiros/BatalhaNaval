@@ -15,7 +15,7 @@ export default function BackofficeLogin({ history }) {
     setLoading(true);
     setError(false);
 
-    ApiClient.AdminLogin(loginData)
+    ApiClient.Login(loginData)
       .then(() => history.push('/backoffice'))
       .catch(() => {
         setLoading(false)

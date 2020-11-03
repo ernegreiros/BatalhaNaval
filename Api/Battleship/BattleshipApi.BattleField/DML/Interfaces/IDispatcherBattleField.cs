@@ -12,5 +12,11 @@ namespace BattleshipApi.BattleField.DML.Interfaces
         /// </summary>
         /// <param name="pBattleFieldsPosition">Position</param>
         void RegisterPosition(BattleField pBattleFieldsPosition);
+
+        /// <summary>
+        /// Attack position
+        /// </summary>
+        /// <param name="pBattleFieldPosition"></param>
+        int AttackPosition(BattleField pBattleFieldPosition);
     }
 }

@@ -1,7 +1,14 @@
-﻿namespace BattleshipApi.Models.Player.Out
+﻿using BattleshipApi.Player.DML;
+
+namespace BattleshipApi.Models.Player.Out
 {
     public class OutGetPlayerVM : OutBase
     {
-        public int ID { get; set; }
+        public OutGetPlayerVM()
+        {
+            Player = new BattleshipApi.Player.DML.Player();
+        }
+
+        public BattleshipApi.Player.DML.Player Player { get; set; }
     }
 }

@@ -55,9 +55,9 @@ namespace BattleshipApi.JWT.BLL
             ISigningConfigurations = iSigningConfigurations;
             IBoPlayer = iBoPlayer;
         }
-        #endregion
 
-        public string WriteToken(AuthenticationData pModel)
+        #endregion
+                public string WriteToken(AuthenticationData pModel)
         {
             pModel.CheckData();
 
@@ -91,6 +91,8 @@ namespace BattleshipApi.JWT.BLL
             DateTime dataCriacao = DateTime.Now;
             DateTime dataExpiracao = dataCriacao +
                 TimeSpan.FromMinutes(ITokenConfiguration.Minutes);
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor

@@ -6,13 +6,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
-    <ProjectReference Include="..\BattleshipApi.MatchSpecialPower\BattleshipApi.MatchSpecialPower.csproj" />
-    <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="DataBaseHelper">
       <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="ExtensionHelper">
+      <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
 

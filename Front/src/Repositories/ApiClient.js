@@ -1,5 +1,4 @@
 import UserService from "../Services/UserService";
-import ShipsTypes from "../Enums/ShipsTypes";
 
 const urlApi = 'https://localhost:5001';
 
@@ -9,12 +8,25 @@ const ApiClient = {
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },
-  AdminLogin: (credentials) => {
+  Login: (credentials) => {
     const payload = JSON.stringify(credentials);
     return fetch(`${urlApi}/api/Auth`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload })
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json())
       .then(response => UserService().saveToken(response.token))
+  },
+  GetPlayer: () => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return fetch(`${urlApi}/api/Player`, { headers })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
+  },
+  CreatePlayer: singUpInfo => {
+    const payload = JSON.stringify(singUpInfo);
+    const headers = new Headers({ 'content-type': 'application/json' });
+    return fetch(`${urlApi}/api/Player`, { method: 'POST', headers, body: payload })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
   },
   GetSpecialPowers: () => {
     const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });

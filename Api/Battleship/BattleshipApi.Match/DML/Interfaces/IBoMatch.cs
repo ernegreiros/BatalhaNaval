@@ -20,6 +20,13 @@
         DML.Match CurrentMatch(int pPlayerID);
 
         /// <summary>
+        /// Search the player's current game (With status started)
+        /// </summary>
+        /// <param name="pUserName">User name</param>
+        /// <returns>Partida atual</returns>
+        DML.Match CurrentMatch(string pUserName);
+
+        /// <summary>
         /// Close the match
         /// </summary>
         /// <param name="pMatchId">Match ID</param>
