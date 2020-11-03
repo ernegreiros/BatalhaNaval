@@ -15,7 +15,7 @@ namespace BattleshipApi.Match.DML
         /// </summary>
         public Match()
         {
-            Status = MatchStatus.WaitingBattleField;
+            Status = DML.Enumerados.MatchStatus.WaitingBattleField;
             CurrentPlayer = Player1;
             Winner = null;
         }
@@ -43,7 +43,7 @@ namespace BattleshipApi.Match.DML
         /// Status da partida
         /// </summary>
         [Coluna(pNomeColuna: "Status", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Enum)]
-        public MatchStatus Status { get; set; }
+        public DML.Enumerados.MatchStatus Status { get; set; }
 
         [Coluna(pNomeColuna: "CurrentPlayer", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
         public int CurrentPlayer { get; set; }
