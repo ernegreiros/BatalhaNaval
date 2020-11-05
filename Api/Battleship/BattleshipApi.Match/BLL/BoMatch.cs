@@ -111,5 +111,7 @@ namespace BattleshipApi.Match.BLL
             IDispatcherMatch.CloseMatch(pMatchId);
         }
 
+
+
     }
 }

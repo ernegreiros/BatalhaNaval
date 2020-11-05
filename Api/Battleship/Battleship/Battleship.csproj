@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BattleshipApi.BattleField\BattleshipApi.BattleField.csproj" />
     <ProjectReference Include="..\BattleshipApi.JWT\BattleshipApi.JWT.csproj" />
+    <ProjectReference Include="..\BattleshipApi.MatchAttacks\BattleshipApi.MatchAttacks.csproj" />
     <ProjectReference Include="..\BattleshipApi.MatchSpecialPower\BattleshipApi.MatchSpecialPower.csproj" />
     <ProjectReference Include="..\BattleshipApi.Match\BattleshipApi.Match.csproj" />
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
