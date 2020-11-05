@@ -50,6 +50,8 @@ namespace BattleshipApi.Player.BLL
             return IDispatcherPlayer.GetPlayerInfo(playerId);
         }
 
+
+
         public void InsertPlayer(DML.Player playerObject)
         {
             if (String.IsNullOrEmpty(playerObject.Name))
@@ -71,6 +73,14 @@ namespace BattleshipApi.Player.BLL
             return IDispatcherPlayer.FindPlayerByUserName(pUserName);
         }
 
+        public DML.Player FindPlayerByCode(string pCode)
+        {
+            if (string.IsNullOrEmpty(pCode))
+                throw new ArgumentNullException(paramName: nameof(pCode), message: "Code is required");
+
+            return IDispatcherPlayer.FindPlayerByCode(pCode);
+        }
+
         public void Update(DML.Player player)
         {
             if (player == null)
@@ -86,5 +96,7 @@ namespace BattleshipApi.Player.BLL
 
             IDispatcherPlayer.Update(oldPlayer);
         }
+
+
     }
 }
