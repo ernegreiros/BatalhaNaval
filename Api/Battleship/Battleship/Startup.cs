@@ -53,8 +53,11 @@ namespace Battleship
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => 
-                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            services.AddCors(options => options.AddDefaultPolicy(
+                                        builder => builder.SetIsOriginAllowed(x => true)
+                                                          .AllowAnyMethod()
+                                                          .AllowAnyHeader()
+                                                          .AllowCredentials()));
             services.AddControllers();
 
             services.AddSignalR();
@@ -112,13 +115,6 @@ namespace Battleship
                 paramsValidation.ClockSkew = TimeSpan.Zero;
             });
 
-            services.AddCors(options => {
-                options.AddPolicy("mypolicy", builder => builder
-                 .AllowAnyOrigin()
-                 .AllowAnyMethod()
-                 .AllowAnyHeader());
-            });
-
             services.AddAuthorization(auth =>
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
@@ -145,18 +141,16 @@ namespace Battleship
 
             app.UseStaticFiles();
 
-
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-            app.UseCors("mypolicy");
+
+            app.UseCors();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<WebSocketHandler>("/websocketHandler");
                 endpoints.MapControllers();
-                endpoints.MapHub<WebSocketHandler>("/api/websocketHandler");
             });
         }
     }

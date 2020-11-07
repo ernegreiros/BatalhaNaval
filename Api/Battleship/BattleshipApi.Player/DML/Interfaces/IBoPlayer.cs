@@ -39,6 +39,9 @@
         /// <param name="pUserName">User name</param>
         /// <returns>Player</returns>
         Player FindPlayerByUserName(string pUserName);
+
+        Player FindPlayerByCode(string pUserName);
+
         void Update(Player player);
     }
 }

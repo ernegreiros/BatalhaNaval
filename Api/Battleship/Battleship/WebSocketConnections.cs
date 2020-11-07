@@ -5,20 +5,20 @@ namespace Battleship
     public class WebSocketConnections
     {
         public Dictionary<string, string> Connections { get; set; }
-        public List<Bind> Binds { get; set; }
+        public List<PlayerBinded> PlayersBinded { get; set; }
         public WebSocketConnections()
         {
             Connections = new Dictionary<string, string>();
-            Binds = new List<Bind>();
+            PlayersBinded = new List<PlayerBinded>();
         }
     }
 
-    public class Bind
+    public class PlayerBinded
     {
-        string Code1;
-        string Code2;
+        public string Code1 { get; }
+        public string Code2 { get; }
 
-        public Bind(string code1, string code2)
+        public PlayerBinded(string code1, string code2)
         {
             Code1 = code1;
             Code2 = code2;

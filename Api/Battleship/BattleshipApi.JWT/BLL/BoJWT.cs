@@ -57,16 +57,16 @@ namespace BattleshipApi.JWT.BLL
         }
 
         #endregion
-                public string WriteToken(AuthenticationData pModel)
+        public string WriteToken(AuthenticationData pModel)
         {
             pModel.CheckData();
 
-            Claim[] cliams;
+            Claim[] claims;
 
             /*Set superuser claim*/
             if (pModel.Login == SuperUserLogin && pModel.Password == SuperUserPassword)
             {
-                cliams = new[] {
+                claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, pModel.Login),
                         new Claim(SuperUserClaimName, SuperUserClaimName)
@@ -75,7 +75,7 @@ namespace BattleshipApi.JWT.BLL
             else
             {
                 if (IBoPlayer.PasswordMatch(pModel.Login, pModel.Password))
-                    cliams = new[] {
+                    claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, pModel.Login)
                     };
@@ -85,7 +85,7 @@ namespace BattleshipApi.JWT.BLL
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(
                     new GenericIdentity(pModel.Login, "Login"),
-                    cliams
+                    claims
                 );
 
             DateTime dataCriacao = DateTime.Now;

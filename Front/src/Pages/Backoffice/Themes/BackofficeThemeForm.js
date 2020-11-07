@@ -76,10 +76,14 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
           : <p>Tema sem imagem de capa</p>}
 
         <Button style={{ marginTop: 10 }} onClick={e => openCloudinaryWidget(e)}>Upload da imagem de capa do tema</Button>
+        <p>A Imagem de capa do tema, aparece como uma imagem de fundo para o jogador!</p>
 
         {theme.id && (
           <>
-            <p>Navios - {theme.name}</p>
+            <br />
+            <br />
+            <h5>Navios - {theme.name}</h5>
+            <br />
             <BackofficeThemeShips themeId={theme.id} />
           </>
         )}
@@ -93,6 +97,8 @@ export function BackofficeThemeForm({ currentTheme = {}, onSaveSuccess }) {
           </section>}
         </div>
       </form>
+      <br />
+      <p>Após o cadastro do tema é possivel adicionar os navios!</p>
     </div>
   )
 }
