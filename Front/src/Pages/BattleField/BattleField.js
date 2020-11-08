@@ -6,8 +6,8 @@ import NavBar from "../../Components/NavBar/NavBar";
 
 
 class BattleField extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       activePlayer: "player",
