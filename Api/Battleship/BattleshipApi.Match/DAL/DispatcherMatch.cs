@@ -3,6 +3,7 @@ using BattleshipApi.Match.DML.Enumerados;
 using BattleshipApi.Match.DML.Interfaces;
 using DataBaseHelper.Interfaces;
 using System;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Text;
 
@@ -72,7 +73,7 @@ namespace BattleshipApi.Match.DAL
 
                 return partida;
             }
-            return null;                       
+            return null;
         }
 
         /// <summary>
@@ -82,11 +83,48 @@ namespace BattleshipApi.Match.DAL
         public void CloseMatch(int pMatchID)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("DECLARE @ID");
+            stringBuilder.AppendLine("DECLARE @ID INTEGER, @WINNER INTEGER");
             stringBuilder.AppendLine($"SET @ID = {pMatchID}");
-            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Closed)} WHERE ID = @ID");
+            stringBuilder.AppendLine("SET @WINNER = 0");
+
+            stringBuilder.AppendLine("SELECT @WINNER = B.PlayerId");
+            stringBuilder.AppendLine("FROM BattleField B WITH(NOLOCK)");
+            stringBuilder.AppendLine("WHERE B.MatchId = @ID");
+            stringBuilder.AppendLine("    AND EXISTS (");
+            stringBuilder.AppendLine("        SELECT TOP 1 1 FROM BattleField X WITH(NOLOCK)");
+            stringBuilder.AppendLine("        WHERE X.Attacked = 0 AND X.MatchId = B.MatchId");
+            stringBuilder.AppendLine(")");
+
+            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Closed)},");
+            stringBuilder.AppendLine("Winner = @WINNER");
+            stringBuilder.AppendLine("WHERE ID = @ID");
+
+            stringBuilder.AppendLine("DECLARE @REWARD FLOAT");
+            stringBuilder.AppendLine("SET @REWARD = 300");
+            stringBuilder.AppendLine("SELECT @REWARD = SUM(S.Compensation)");
+            stringBuilder.AppendLine("FROM SpecialPowers S WITH(NOLOCK)");
+            stringBuilder.AppendLine("INNER JOIN MatchSpecialPowers MS WITH(NOLOCK) ON MS.SpecialPowerId = S.ID");
+            stringBuilder.AppendLine("WHERE MS.MatchId = @ID AND USED = 1 AND PLAYERID = @WINNER");
+
+            stringBuilder.AppendLine("UPDATE USERS");
+            stringBuilder.AppendLine("SET MONEY = ISNULL(MONEY,0) + @REWARD");
+            stringBuilder.AppendLine("WHERE ID = @WINNER");
 
             IUnitOfWork.Executar(stringBuilder.ToString());
+        }
+
+        public void ChangeCurrentPlayer(int pMatchId, int pCurrentPlayer)
+        {
+            StringBuilder query = new StringBuilder();
+
+            query.AppendLine("DECLARE @MATCH INTEGER, @CURRENT INTEGER");
+            query.AppendLine($"SET @MATCH = {pMatchId}");
+            query.AppendLine($"SET @CURRENT = {pCurrentPlayer}");
+            query.AppendLine("UPDATE Match");
+            query.AppendLine("SET CURRENTPLAYER = @CURRENT");
+            query.AppendLine("WHERE ID = @MATCH");
+
+            IUnitOfWork.Executar(query.ToString());
         }
     }
 }

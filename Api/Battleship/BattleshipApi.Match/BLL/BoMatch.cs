@@ -111,7 +111,15 @@ namespace BattleshipApi.Match.BLL
             IDispatcherMatch.CloseMatch(pMatchId);
         }
 
+        public void ChangeCurrentPlayer(int pMatchId, int pCurrentPlayer)
+        {
+            if (pMatchId <= 0)
+                throw new Exception("Id da partida é obrigatório");
 
+            if (pCurrentPlayer <= 0)
+                throw new Exception("Current player id required");
 
+            IDispatcherMatch.ChangeCurrentPlayer(pMatchId, pCurrentPlayer);
+        }
     }
 }

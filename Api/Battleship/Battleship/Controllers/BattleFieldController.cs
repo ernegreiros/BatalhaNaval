@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 using Battleship.Models.BattleField.In;
 using Battleship.Models.BattleField.Out;
 using BattleshipApi.BattleField.DML.Interfaces;
+using BattleshipApi.JWT.BLL;
+using BattleshipApi.Match.DML;
+using BattleshipApi.Match.DML.Interfaces;
+using BattleshipApi.MatchAttacks.DML.Interfaces;
+using BattleshipApi.Player.DML.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +22,21 @@ namespace Battleship.Controllers
     {
         #region readonly
         private readonly IBoBattleField IBoBattleField;
+        private readonly IBoPlayer IBoPlayer;
+        private readonly IBoMatch IBoMatch;
+        private readonly IBoMatchAttacks IBoMatchAttacks;
 
-        public BattleFieldController(IBoBattleField iBoBattleField)
+        public BattleFieldController(IBoBattleField iBoBattleField, IBoPlayer iBoPlayer, IBoMatch iBoMatch, IBoMatchAttacks iBoMatchAttacks)
         {
             IBoBattleField = iBoBattleField;
+            IBoPlayer = iBoPlayer;
+            IBoMatch = iBoMatch;
+            IBoMatchAttacks = iBoMatchAttacks;
         }
+
         #endregion
 
-
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         [HttpPost]
         public OutRegisterPositionsVM RegisterPositions(List<InRegisterPositionsVM> pModel)
         {
@@ -70,5 +83,55 @@ namespace Battleship.Controllers
             return outRegisterPositionsVM;
         }
 
+        [HttpPost]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
+        public OutAttackPlayerVM AttackPositions(List<InAttackPlayerVM> pAttackPositions, int? pSpecialPower)
+        {
+            OutAttackPlayerVM outAttackPlayerVM = new OutAttackPlayerVM();
+
+            if (pAttackPositions.Any())
+            {
+                BattleshipApi.Player.DML.Player player = IBoPlayer.FindPlayerByUserName(User.Claims.GetJWTUserName());
+
+                if (player == null || player.ID <= 0)
+                {
+                    outAttackPlayerVM.Message = "Player not found";
+                    outAttackPlayerVM.HttpStatus = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+                    Match currentMatch = IBoMatch.CurrentMatch(player.ID);
+
+                    if (currentMatch == null || currentMatch.ID <= 0)
+                    {
+                        outAttackPlayerVM.Message = "Match not found";
+                        outAttackPlayerVM.HttpStatus = StatusCodes.Status400BadRequest;
+                    }
+                    else
+                    {
+                        outAttackPlayerVM.HitTarget = IBoBattleField.AttackPositions(pAttackPositions.Select(c => new BattleshipApi.BattleField.DML.BattleField()
+                        {
+                            Attacked = 0,
+                            MatchID = currentMatch.ID,
+                            Player = player.ID,
+                            PositionObject = new BattleshipApi.BattleField.DML.BattleFieldPosition()
+                            {
+                                X = c.PosX,
+                                Y = c.PosY
+                            }
+                        }).ToList(), pSpecialPower, out bool enemyDefeated) == 1;
+                        outAttackPlayerVM.EnemyDefeated = enemyDefeated;
+                        outAttackPlayerVM.PositionsAttacked = IBoMatchAttacks.PositionsAttacked(currentMatch.ID, currentMatch.CurrentPlayer == currentMatch.Player1 ? currentMatch.Player2 : currentMatch.Player1);
+                    }
+                }
+            }
+            else
+            {
+                outAttackPlayerVM.Message = "No attack positions";
+                outAttackPlayerVM.HttpStatus = StatusCodes.Status400BadRequest;
+            }
+
+            return outAttackPlayerVM;
+        }
     }
 }
