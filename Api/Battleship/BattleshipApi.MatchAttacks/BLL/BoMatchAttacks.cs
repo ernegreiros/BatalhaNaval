@@ -15,6 +15,11 @@ namespace BattleshipApi.MatchAttacks.BLL
             IDispatcherMatchAttacks = iDispatcherMatchAttacks;
         }
 
+        public List<DML.MatchAttacks> PositionsAttacked(int pMatchId, int pTarget)
+        {
+            return IDispatcherMatchAttacks.PositionsAttacked(pMatchId, pTarget);
+        }
+
         public void RegisterMatchAttacks(List<DML.MatchAttacks> pMatchAttacks)
         {
             if (pMatchAttacks.Any())

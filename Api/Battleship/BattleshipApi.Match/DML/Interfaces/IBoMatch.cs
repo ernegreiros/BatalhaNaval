@@ -33,5 +33,7 @@ namespace BattleshipApi.Match.DML.Interfaces
         /// </summary>
         /// <param name="pMatchId">Match ID</param>
         void CloseMatch(int pMatchId);
+
+        void ChangeCurrentPlayer(int pMatchId, int pCurrentPlayer);
     }
 }

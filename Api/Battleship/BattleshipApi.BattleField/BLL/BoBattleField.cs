@@ -45,7 +45,7 @@ namespace BattleshipApi.BattleField.BLL
 
                 if (!IBoPlayer.PlayerExists(list.First().Player))
                     throw new Exception("Player do not exists");
-                
+
                 Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.First().Player);
                 if (currentMatch == null)
                     throw new Exception("The player does not have any match");
@@ -75,7 +75,7 @@ namespace BattleshipApi.BattleField.BLL
         }
 
 
-        public int AttackPositions(List<DML.BattleField> pBattleFieldsPositions, int? pSpecialPowerId)
+        public int AttackPositions(List<DML.BattleField> pBattleFieldsPositions, int? pSpecialPowerId, out bool enemyDefeated)
         {
             if (pBattleFieldsPositions == null)
                 throw new ArgumentNullException(paramName: nameof(pBattleFieldsPositions), "Battlefield positions cannot be null");
@@ -115,11 +115,32 @@ namespace BattleshipApi.BattleField.BLL
                             });
                         }
                         else
+                        {
                             targetHited = IDispatcherBattleField.AttackPosition(battleField);
+                            matchAttacks.Add(new MatchAttacks.DML.MatchAttacks()
+                            {
+                                MatchId = battleField.MatchID,
+                                PosX = battleField.PosX,
+                                PosY = battleField.PosY,
+                                /*O alvo não é quem está atacando*/
+                                Target = currentMatch.Player1 == battleField.Player ? currentMatch.Player2 : currentMatch.Player1
+                            });
+                        }
                     }
 
                     IBoMatchAttacks.RegisterMatchAttacks(matchAttacks);
-                    IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.First().MatchID, list.First().Player, Convert.ToInt32(pSpecialPowerId));
+                    if (pSpecialPowerId != null)
+                        IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.First().MatchID, list.First().Player, Convert.ToInt32(pSpecialPowerId));
+
+                    enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.Player1 == list.First().Player ? currentMatch.Player2 : currentMatch.Player1);
+                    if (enemyDefeated)
+                    {
+                        IBoMatch.CloseMatch(currentMatch.ID);                        
+                    }
+                    else
+                    {
+                        IBoMatch.ChangeCurrentPlayer(currentMatch.ID, currentMatch.Player1 == list.First().Player ? currentMatch.Player2 : currentMatch.Player1);
+                    }
 
                     IDispatcherBattleField.Commit();
 
@@ -133,6 +154,16 @@ namespace BattleshipApi.BattleField.BLL
             }
             else
                 throw new Exception("Battlefield positions count is 0");
+        }
+
+        public bool PlayerDefeated(int pMatchId, int pTarget)
+        {
+            if (pMatchId <= 0)
+                throw new ArgumentOutOfRangeException("Match id must be grater than zero");
+            if (pTarget <= 0)
+                throw new ArgumentOutOfRangeException("Target id must be grater than zero");
+
+            return IDispatcherBattleField.PlayerDefeated(pMatchId, pTarget);
         }
     }
 }
