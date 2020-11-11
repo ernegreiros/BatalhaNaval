@@ -19,7 +19,7 @@ namespace BattleshipApi.MatchAttacks.DAL
         {
             StringBuilder query = new StringBuilder();
 
-            query.AppendLine("DECLARE @MATCH INTEGER, @TARGET INTERGER");
+            query.AppendLine("DECLARE @MATCH INTEGER, @TARGET INTEGER");
             query.AppendLine($"SET @MATCH = { pMatchId }");
             query.AppendLine($"SET @TARGET = { pTarget }");
             query.AppendLine("SELECT MatchId,");
