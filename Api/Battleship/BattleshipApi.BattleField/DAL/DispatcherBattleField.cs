@@ -59,6 +59,23 @@ namespace BattleshipApi.BattleField.DAL
             return hited;
         }
 
+        public bool PlayerDefeated(int pMatchId, int pTarget)
+        {
+            StringBuilder query = new StringBuilder();
+
+            query.AppendLine("DECLARE @TARGET INTEGER, @MATCHID INTEGER");
+            query.AppendLine($"SET @TARGET = { pTarget }");
+            query.AppendLine($"SET @MATCHID = {pMatchId}");
+            query.AppendLine("SELECT TOP 1 1 FROM BattleField WITH(NOLOCK)");
+            query.AppendLine("    WHERE MatchId = @MatchId");
+            query.AppendLine("    AND PlayerId = @TARGET");
+            query.AppendLine("    AND Attacked = 0"); /*Pegamos apenas o que não foi atacado, desse modo ainda sobrou algum barco*/
+
+            DataSet ds = IUnitOfWork.Consulta(query.ToString());
+
+            return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+        }
+
         public void RegisterPosition(DML.BattleField pBattleFieldsPosition)
         {
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(pBattleFieldsPosition).ToString());

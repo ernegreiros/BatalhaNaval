@@ -8,5 +8,6 @@ namespace BattleshipApi.MatchAttacks.DML.Interfaces
     public interface IDispatcherMatchAttacks : IDispatcherBase
     {
         void RegisterMatchAttacks(MatchAttacks pMatchAttack);
+        List<MatchAttacks> PositionsAttacked(int pMatchId, int pTarget);
     }
 }
