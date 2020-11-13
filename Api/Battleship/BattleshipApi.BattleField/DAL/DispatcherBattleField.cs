@@ -50,13 +50,22 @@ namespace BattleshipApi.BattleField.DAL
 
             stringBuilder.AppendLine("UPDATE BattleField");
             stringBuilder.AppendLine("SET ATTACKED = 1");
+            stringBuilder.AppendLine("FROM Match A");
+            /*LEFT JOIN PELAS POSIÇÕES E CONTROLE*/
+            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.MatchId = B.MatchId AND A.MatchContrl + 1 = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
             stringBuilder.AppendLine("WHERE POSX = @POSX AND POSY = @POSY");
             stringBuilder.AppendLine("AND ATTACKED = 0 AND MATCHID = @MATCHID");
             stringBuilder.AppendLine("AND PLAYERID <> @PLAYERID");
+            stringBuilder.AppendLine("AND ISNULL(B.ID,0) = 0"); /*Aonde não tenha posição defendida*/
 
             IUnitOfWork.Executar(stringBuilder.ToString());
 
             return hited;
+        }
+
+        public void DeffendPosition(DML.BattleFieldDefend p)
+        {
+            IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(p).ToString());
         }
 
         public bool PlayerDefeated(int pMatchId, int pTarget)

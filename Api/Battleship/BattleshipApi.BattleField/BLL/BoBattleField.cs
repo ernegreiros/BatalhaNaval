@@ -165,5 +165,41 @@ namespace BattleshipApi.BattleField.BLL
 
             return IDispatcherBattleField.PlayerDefeated(pMatchId, pTarget);
         }
+
+        public void DeffendPositions(List<DML.BattleField> lists, int pSpecialPower)
+        {
+            if (lists == null)
+                throw new ArgumentNullException(paramName: nameof(lists), "Battlefield positions cannot be null");
+            else if (lists.Any())
+            {
+                List<BattleFieldDefend> positions = lists.Select(c => new BattleFieldDefend()
+                {
+                    Id = c.Id,
+                    MatchContrl = 0,
+                    MatchID = c.MatchID,
+                    Player = c.Player,
+                    PositionObject = new BattleFieldPosition()
+                    {
+                        X = c.PositionObject.X,
+                        Y = c.PositionObject.Y
+                    }
+                }).ToList();
+
+                if (!IBoPlayer.PlayerExists(positions.First().Player))
+                    throw new Exception("Player do not exists");
+
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(positions.First().Player);
+                if (currentMatch == null)
+                    throw new Exception("The player does not have any match");
+                else if (currentMatch.ID != positions.First().MatchID)
+                    throw new Exception("The current match of the player is another");
+
+                /*Defende o próximo controle, pois o próximo jogador não pode atacar se for nesse controle*/
+                int controle = currentMatch.Controle + 1;
+                positions.ForEach(p => { p.MatchContrl = controle; IDispatcherBattleField.DeffendPosition(p); });
+
+                IBoMatchSpecialPower.RegisterUseOfSpecialPower(currentMatch.ID,currentMatch.CurrentPlayer,pSpecialPower);
+            }
+        }
     }
 }

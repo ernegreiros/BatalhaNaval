@@ -18,6 +18,7 @@ namespace BattleshipApi.Match.DML
             Status = DML.Enumerados.MatchStatus.WaitingBattleField;
             CurrentPlayer = Player1;
             Winner = null;
+            Controle = 1;
         }
         #endregion
 
@@ -49,6 +50,9 @@ namespace BattleshipApi.Match.DML
         public int CurrentPlayer { get; set; }
 
         public int? Winner { get; set; }
+
+        [Coluna(pNomeColuna: "MatchContrl", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
+        public int Controle { get; set; }
         #endregion
     }
 }

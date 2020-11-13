@@ -133,5 +133,53 @@ namespace Battleship.Controllers
 
             return outAttackPlayerVM;
         }
+
+        [HttpPost]
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
+        public OutDefendPositionsVM DefendPositions(List<InDefendPositionVM> pDeffendPositions, int pSpecialPower)
+        {
+            OutDefendPositionsVM outDefendPlayer = new OutDefendPositionsVM();
+
+            if (pDeffendPositions.Any())
+            {
+                BattleshipApi.Player.DML.Player player = IBoPlayer.FindPlayerByUserName(User.Claims.GetJWTUserName());
+
+                if (player == null || player.ID <= 0)
+                {
+                    outDefendPlayer.Message = "Player not found";
+                    outDefendPlayer.HttpStatus = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+                    Match currentMatch = IBoMatch.CurrentMatch(player.ID);
+
+                    if (currentMatch == null || currentMatch.ID <= 0)
+                    {
+                        outDefendPlayer.Message = "Match not found";
+                        outDefendPlayer.HttpStatus = StatusCodes.Status400BadRequest;
+                    }
+                    else
+                    {
+                        IBoBattleField.DeffendPositions(pDeffendPositions.Select(c => new BattleshipApi.BattleField.DML.BattleField()
+                        {
+                            MatchID = currentMatch.ID,
+                            Player = player.ID,
+                            PositionObject = new BattleshipApi.BattleField.DML.BattleFieldPosition()
+                            {
+                                X = c.PosX,
+                                Y = c.PosY
+                            }
+                        }).ToList(), pSpecialPower);
+                    }
+                }
+            }
+            else
+            {
+                outDefendPlayer.Message = "No deffend positions";
+                outDefendPlayer.HttpStatus = StatusCodes.Status400BadRequest;
+            }
+
+            return outDefendPlayer;
+        } 
     }
 }
