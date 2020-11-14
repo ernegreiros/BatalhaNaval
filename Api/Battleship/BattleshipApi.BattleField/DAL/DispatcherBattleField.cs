@@ -1,4 +1,5 @@
 ﻿using BattleshipApi.Base.DAL;
+using BattleshipApi.BattleField.DML;
 using BattleshipApi.BattleField.DML.Interfaces;
 using DataBaseHelper.Interfaces;
 using System;
@@ -88,6 +89,39 @@ namespace BattleshipApi.BattleField.DAL
         public void RegisterPosition(DML.BattleField pBattleFieldsPosition)
         {
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(pBattleFieldsPosition).ToString());
+        }
+
+        public DML.BattleField ShowPosition(BattleFieldDefend p)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine("DECLARE @PLAYERID INTEGER, @POSX INTEGER, @POSY INTEGER, @MATCHID INTEGER"); 
+            query.AppendLine($"SET @playerid = {p.Player}");
+            query.AppendLine($"SET @POSX = {p.PosX}");
+            query.AppendLine($"SET @POSY = {p.PosY}");
+            query.AppendLine($"SET @MATCHID = {p.MatchID}");
+            query.AppendLine("SELECT * from BattleField");
+            query.AppendLine("WHERE PLAYERID = @PLAYERID AND POSX = @POSX");
+            query.AppendLine("    AND POSY = @POSY AND MATCHID = @MATCHID");
+
+            DataSet ds = IUnitOfWork.Consulta(query.ToString());
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+
+                return new DML.BattleField()
+                {
+                    Attacked = Convert.ToInt32(row["Attacked"]),
+                    MatchID = p.MatchID,
+                    Player = p.Player,
+                    PositionObject = new BattleFieldPosition()
+                    {
+                        X = p.PosX,
+                        Y = p.PosY
+                    }
+                };
+            }
+            return null;
         }
     }
 }
