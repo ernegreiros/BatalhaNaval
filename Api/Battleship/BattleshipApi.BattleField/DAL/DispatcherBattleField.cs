@@ -52,7 +52,7 @@ namespace BattleshipApi.BattleField.DAL
             stringBuilder.AppendLine("SET ATTACKED = 1");
             stringBuilder.AppendLine("FROM Match A");
             /*LEFT JOIN PELAS POSIÇÕES E CONTROLE*/
-            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.MatchId = B.MatchId AND A.MatchContrl + 1 = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
+            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.MatchId = B.MatchId AND A.MatchContrl = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
             stringBuilder.AppendLine("WHERE POSX = @POSX AND POSY = @POSY");
             stringBuilder.AppendLine("AND ATTACKED = 0 AND MATCHID = @MATCHID");
             stringBuilder.AppendLine("AND PLAYERID <> @PLAYERID");
