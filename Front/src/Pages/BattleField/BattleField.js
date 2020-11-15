@@ -10,8 +10,9 @@ import NavBar from "../../Components/NavBar/NavBar";
 import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 
+const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
 // workaround para evitar rerender do carousel
-let theme = null;
+let theme = themeFromLocalStorage ? JSON.parse(themeFromLocalStorage) : null;
 
 class BattleField extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class BattleField extends Component {
       activePlayer: "player",
       player: createPlayer(),
       themes: [],
-      themeSelected: false,
+      themeSelected: theme !== null,
       loadingTheme: true,
       allShipsSet: false,
       gameStarting: false,
@@ -49,7 +50,8 @@ class BattleField extends Component {
     if (!theme || cycledTheme.id !== theme.id) theme = cycledTheme;
   }
 
-  selectTheme = () => this.setState({ themeSelected: true, theme })
+  selectTheme = () =>
+    this.setState({ themeSelected: true, theme }, () => localStorage.setItem('battle-field-theme', JSON.stringify(theme)))
 
   updateGrids(player, grid, type, opponent) {
     const payload = {
