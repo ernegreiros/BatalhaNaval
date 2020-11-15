@@ -135,7 +135,7 @@ namespace BattleshipApi.BattleField.BLL
                     enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.Player1 == list.First().Player ? currentMatch.Player2 : currentMatch.Player1);
                     if (enemyDefeated)
                     {
-                        IBoMatch.CloseMatch(currentMatch.ID);                        
+                        IBoMatch.CloseMatch(currentMatch.ID);
                     }
                     else
                     {
@@ -164,6 +164,85 @@ namespace BattleshipApi.BattleField.BLL
                 throw new ArgumentOutOfRangeException("Target id must be grater than zero");
 
             return IDispatcherBattleField.PlayerDefeated(pMatchId, pTarget);
+        }
+
+        public void DeffendPositions(List<DML.BattleField> lists, int pSpecialPower)
+        {
+            if (lists == null)
+                throw new ArgumentNullException(paramName: nameof(lists), "Battlefield positions cannot be null");
+            else if (lists.Any())
+            {
+                List<BattleFieldDefend> positions = lists.Select(c => new BattleFieldDefend()
+                {
+                    Id = c.Id,
+                    MatchContrl = 0,
+                    MatchID = c.MatchID,
+                    Player = c.Player,
+                    PositionObject = new BattleFieldPosition()
+                    {
+                        X = c.PositionObject.X,
+                        Y = c.PositionObject.Y
+                    }
+                }).ToList();
+
+                if (!IBoPlayer.PlayerExists(positions.First().Player))
+                    throw new Exception("Player do not exists");
+
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(positions.First().Player);
+                if (currentMatch == null)
+                    throw new Exception("The player does not have any match");
+                else if (currentMatch.ID != positions.First().MatchID)
+                    throw new Exception("The current match of the player is another");
+
+                /*Defende o próximo controle, pois o próximo jogador não pode atacar se for nesse controle*/
+                int controle = currentMatch.Controle + 1;
+                positions.ForEach(p => { p.MatchContrl = controle; IDispatcherBattleField.DeffendPosition(p); });
+
+                IBoMatchSpecialPower.RegisterUseOfSpecialPower(currentMatch.ID, currentMatch.CurrentPlayer, pSpecialPower);
+            }
+        }
+
+        public List<DML.BattleField> ShowPositions(List<DML.BattleField> lists, int pSpecialPower)
+        {
+            if (lists == null)
+            {
+                throw new ArgumentNullException(paramName: nameof(lists), "Battlefield positions cannot be null");
+            }
+            else if (lists.Any())
+            {
+                List<DML.BattleField> retorno = new List<DML.BattleField>();
+                List<BattleFieldDefend> positions = lists.Select(c => new BattleFieldDefend()
+                {
+                    Id = c.Id,
+                    MatchContrl = 0,
+                    MatchID = c.MatchID,
+                    Player = c.Player,
+                    PositionObject = new BattleFieldPosition()
+                    {
+                        X = c.PositionObject.X,
+                        Y = c.PositionObject.Y
+                    }
+                }).ToList();
+
+                if (!IBoPlayer.PlayerExists(positions.First().Player))
+                    throw new Exception("Player do not exists");
+
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(positions.First().Player);
+                if (currentMatch == null)
+                    throw new Exception("The player does not have any match");
+                else if (currentMatch.ID != positions.First().MatchID)
+                    throw new Exception("The current match of the player is another");
+
+                positions.ForEach(p =>
+                {
+                    p.Player = currentMatch.CurrentPlayer == currentMatch.Player1 ? currentMatch.Player2 : currentMatch.Player1;
+                    retorno.Add(IDispatcherBattleField.ShowPosition(p));
+                });
+
+                IBoMatchSpecialPower.RegisterUseOfSpecialPower(currentMatch.ID, currentMatch.CurrentPlayer, pSpecialPower);
+                return retorno;
+            }
+            return null;
         }
     }
 }

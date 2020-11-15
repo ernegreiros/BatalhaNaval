@@ -121,7 +121,8 @@ namespace BattleshipApi.Match.DAL
             query.AppendLine($"SET @MATCH = {pMatchId}");
             query.AppendLine($"SET @CURRENT = {pCurrentPlayer}");
             query.AppendLine("UPDATE Match");
-            query.AppendLine("SET CURRENTPLAYER = @CURRENT");
+            query.AppendLine("SET CURRENTPLAYER = @CURRENT,");
+            query.AppendLine("  MatchContrl  = ISNULL(MatchContrl ,1) + 1");
             query.AppendLine("WHERE ID = @MATCH");
 
             IUnitOfWork.Executar(query.ToString());

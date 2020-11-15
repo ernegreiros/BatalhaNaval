@@ -11,5 +11,7 @@ namespace BattleshipApi.BattleField.DML.Interfaces
     {
         void RegisterPositions(List<BattleField> pBattleFieldsPositions);
         int AttackPositions(List<BattleField> pBattleFieldsPositions, int? pSpecialPowerId, out bool enemyDefeated);
+        void DeffendPositions(List<BattleField> lists, int pSpecialPower);
+        List<BattleField> ShowPositions(List<BattleField> lists, int pSpecialPower);
     }
 }

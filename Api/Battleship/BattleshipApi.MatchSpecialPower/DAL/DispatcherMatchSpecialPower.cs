@@ -84,6 +84,15 @@ namespace BattleshipApi.MatchSpecialPower.DAL
             stringBuilder.AppendLine("    AND PlayerId = @PlayerId");
             stringBuilder.AppendLine("    AND SpecialPowerId = @SpecialPowerId");
 
+            stringBuilder.AppendLine("UPDATE A");
+            stringBuilder.AppendLine("    SET Money = ISNULL(Money,0) - S.COST");
+            stringBuilder.AppendLine("FROM Users A");
+            stringBuilder.AppendLine("INNER JOIN MatchSpecialPowers M ON M.PlayerId = A.ID");
+            stringBuilder.AppendLine("INNER JOIN SpecialPowers S ON S.ID = M.SpecialPowerId");
+            stringBuilder.AppendLine("WHERE MatchId = @MatchId");
+            stringBuilder.AppendLine("    AND ID = @PlayerId");
+            stringBuilder.AppendLine("    AND SpecialPowerId = @SpecialPowerId");
+
             IUnitOfWork.Executar(stringBuilder.ToString());
         }
     }

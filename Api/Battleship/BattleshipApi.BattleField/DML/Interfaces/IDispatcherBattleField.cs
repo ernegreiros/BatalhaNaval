@@ -19,5 +19,7 @@ namespace BattleshipApi.BattleField.DML.Interfaces
         /// <param name="pBattleFieldPosition"></param>
         int AttackPosition(BattleField pBattleFieldPosition);
         bool PlayerDefeated(int pMatchId, int pTarget);
+        void DeffendPosition(BattleFieldDefend p);
+        BattleField ShowPosition(BattleFieldDefend p);
     }
 }
