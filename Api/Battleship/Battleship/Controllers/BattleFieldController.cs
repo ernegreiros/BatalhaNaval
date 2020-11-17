@@ -37,7 +37,7 @@ namespace Battleship.Controllers
         #endregion
 
         [Authorize(Policy = BoJWT.NormalUserPolicyName)]
-        [HttpPost]
+        [HttpPost("positions")]
         public OutRegisterPositionsVM RegisterPositions(List<InRegisterPositionsVM> pModel)
         {
             OutRegisterPositionsVM outRegisterPositionsVM = new OutRegisterPositionsVM();
