@@ -43,7 +43,8 @@ hubConnection.on("AskingForConnection", function (player, myCode) {
     HelperModal.ShowWantToConnectModal(player, myCode);
 });
 
-hubConnection.on("Connected", function () {
+hubConnection.on("Connected", function (matchId) {
+    localStorage.setItem('match-id', matchId.toString())
     PopUp.showPopUp('success', 'Conectado');
     window.location.href = '/battlefield';
 });
