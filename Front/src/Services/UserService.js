@@ -7,5 +7,13 @@ export default function UserService() {
     return localStorage.getItem('user-token');
   }
 
-  return { saveToken, getToken }
+  function setPlayerData(data) {
+    localStorage.setItem('player', JSON.stringify(data));
+  }
+
+  function getPlayerData() {
+    return JSON.parse(localStorage.getItem('player'));
+  }
+
+  return { saveToken, getToken, setPlayerData, getPlayerData }
 }
