@@ -63,14 +63,15 @@ namespace Battleship
 
             var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
 
-            await Clients.Caller.SendAsync("Connected");
-            await Clients.Client(partnerConnectionId).SendAsync("Connected");
+            var matchId = matchObject.CreateMatch(new Match()
+            {
+                Player1 = player.ID,
+                Player2 = partnerPlayer.ID
+            });
 
-            //matchObject.CreateMatch(new Match()
-            //{
-            //    Player1 = player.ID,
-            //    Player2 = partnerPlayer.ID
-            //});
+            await Clients.Caller.SendAsync("Connected", matchId);
+            await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId);
+
         }
 
         public async Task AskForConnection(string myConnectionId, string partnerCode, string myCode)
