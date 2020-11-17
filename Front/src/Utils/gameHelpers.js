@@ -15,13 +15,8 @@ const dictionary = {
 const makeShips = () => {
   return [
     {
-      type: 'Carrier',
-      size: 5,
-      positions: []
-    },
-    {
-      type: "Battleship",
-      size: 4,
+      type: "Destroyer",
+      size: 2,
       positions: []
     },
     {
@@ -35,10 +30,15 @@ const makeShips = () => {
       positions: []
     },
     {
-      type: "Destroyer",
-      size: 2,
+      type: "Battleship",
+      size: 4,
       positions: []
-    }
+    },
+    {
+      type: 'Carrier',
+      size: 5,
+      positions: []
+    },
   ];
 }
 
