@@ -17,31 +17,27 @@ class ShipGrid extends Component {
   }
 
   renderSquares() {
-    const { activePlayer, player, grid, shipsSet, gameOver } = this.props;
+    const { grid, shipsSet, gameOver } = this.props;
 
-    if (player === activePlayer || gameOver) {
-      return grid.map((row, i) => {
-        return row.map((square, j) => {
-          return (
-            <ShipGridSquare
-              key={`${i}${j}`}
-              i={i}
-              j={j}
-              shipsSet={shipsSet}
-              square={square}
-              handleHover={this.handleHover}
-              handleClick={this.handleClick}
-            />
-          );
-        });
+    return grid.map((row, i) => {
+      return row.map((square, j) => {
+        return (
+          <ShipGridSquare
+            key={`${i}${j}`}
+            i={i}
+            j={j}
+            shipsSet={shipsSet}
+            square={square}
+            handleHover={this.handleHover}
+            handleClick={this.handleClick}
+          />
+        );
       });
-    } else {
-      return null;
-    }
+    });
   }
 
   handleHover(row, col, type) {
-    const { grid, ships, currentShip } = this.props;
+    const { grid, ships, currentShip, allShipsSet } = this.props;
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
@@ -52,12 +48,16 @@ class ShipGrid extends Component {
       ships,
       currentShip
     };
-    const updatedGrid = hoverUpdate(data);
-    this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid");
+
+    if (!allShipsSet) {
+      const updatedGrid = hoverUpdate(data);
+      this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid");
+    }
+
   }
 
   handleClick(row, col) {
-    const { grid, ships, currentShip } = this.props;
+    const { grid, ships, currentShip, allShipsSet } = this.props;
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
@@ -67,10 +67,13 @@ class ShipGrid extends Component {
       ships,
       currentShip
     };
-    const gameUpdate = placeShip(data);
-    if (gameUpdate) {
-      this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid");
-      this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid");
+
+    if (!allShipsSet) {
+      const gameUpdate = placeShip(data);
+      if (gameUpdate) {
+        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid");
+        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid");
+      }
     }
   }
 
@@ -86,16 +89,16 @@ class ShipGrid extends Component {
         <div className="grid">
           {positionedShips.map((ship, index) => {
             const themeShip = themeShips.find(s => s.type === ship.size);
-            const { 0: first, [ship.positions.length -1]: last } = ship.positions;
+            const { 0: first, [ship.positions.length - 1]: last } = ship.positions;
 
             return (
               <img
                 key={index}
                 style={{
                   margin: "auto",
-                   ...(rotated
-                     ? { gridRow: first.row + 1, gridColumn: `${first.col + 1}/${last.col + 2}` }
-                     : { transform: "rotate(90deg)", maxWidth: "none", maxHeight: "100%", gridRow: `${first.row + 1}/${last.row + 2}`, gridColumn: first.col + 1 })
+                  ...(rotated
+                    ? { gridRow: first.row + 1, gridColumn: `${first.col + 1}/${last.col + 2}` }
+                    : { transform: "rotate(90deg)", maxWidth: "none", maxHeight: "100%", gridRow: `${first.row + 1}/${last.row + 2}`, gridColumn: first.col + 1 })
                 }}
                 src={themeShip.imagePath} />
             )

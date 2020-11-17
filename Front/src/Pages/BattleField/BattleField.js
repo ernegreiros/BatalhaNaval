@@ -139,6 +139,7 @@ class BattleField extends Component {
         updateGrids={this.updateGrids}
         updateShips={this.updateShips}
         shipsSet={this.state[player].shipsSet}
+        allShipsSet={this.state.allShipsSet}
         activePlayer={activePlayer}
         gameOver={gameOver}
       />
@@ -164,9 +165,8 @@ class BattleField extends Component {
       updatedShips,
       player
     }
-    if (currentShip + 1 === ships.length ) {
-      PopUp.showPopUp("error", "Colocou todos os navios")
-      this.shipReducer("START_GAME", payload); 
+    if (currentShip + 1 === ships.length) {
+      this.shipReducer("START_GAME", payload);
     } else {
       this.shipReducer("SET_SHIP", payload)
     }
@@ -176,34 +176,12 @@ class BattleField extends Component {
     const { currentShip, ships } = this.state[player];
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
 
-    if (action === "SET_PLAYER_ONE") {
-      this.setState({
-        player1: {
-          ...this.state.player1,
-          ships: updatedShips,
-          shipsSet: true
-        },
-        activePlayer: "player2"
-      });
-    }
-    if (action === "SET_PLAYER_TWO") {
-      this.setState({
-        player2: {
-          ...this.state.player2,
-          ships: updatedShips,
-          shipsSet: true
-        },
-        allShipsSet: true,
-        gameStarting: true
-      });
-    }
     if (action === "START_GAME") {
-      setTimeout(() => {
-        this.setState({
-          activePlayer: "player1",
-          gameStarting: false
-        });
-      }, 3000);
+      this.setState({
+        activePlayer: "player",
+        gameStarting: true,
+        allShipsSet: true
+      });
     }
     if (action === "SET_SHIP") {
       const updatedPlayer = {
