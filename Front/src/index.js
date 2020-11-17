@@ -21,7 +21,7 @@ const PrivateRoute = ({ component: Component, ...rest }) =>
     render={(props) => {
       if (!UserService().getToken()) {
         PopUp.showPopUp('error', 'Favor fazer o login para acessar o jogo');
-        return <Redirect to='/login' />
+        return <Redirect to='/' />
       }
 
       return <Component {...props} />
@@ -30,8 +30,8 @@ const PrivateRoute = ({ component: Component, ...rest }) =>
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <PrivateRoute path='/' exact={true} component={Home} />
-      <Route path='/login' exact={true} component={Login} />
+      <Route path='/' exact={true} component={Login} />
+      <PrivateRoute path='/Home' exact={true} component={Home} />
       <Route path='/signup' exact={true} component={SignUp} />
       <Route path='/battlefield' component={BattleField}/>
       <Route path='/backoffice-login' component={BackofficeLogin} />
