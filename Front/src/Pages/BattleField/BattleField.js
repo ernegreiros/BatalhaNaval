@@ -164,11 +164,9 @@ class BattleField extends Component {
       updatedShips,
       player
     }
-    if (currentShip + 1 === ships.length && player === "player2") {
-      this.shipReducer("SET_PLAYER_TWO", payload);
-      this.shipReducer("START_GAME", payload);
-    } else if (currentShip + 1 === ships.length && player === "player1") {
-      this.shipReducer("SET_PLAYER_ONE", payload);
+    if (currentShip + 1 === ships.length ) {
+      PopUp.showPopUp("error", "Colocou todos os navios")
+      this.shipReducer("START_GAME", payload); 
     } else {
       this.shipReducer("SET_SHIP", payload)
     }
