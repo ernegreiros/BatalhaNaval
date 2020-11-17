@@ -5,6 +5,7 @@ import NavBar from '../../Components/NavBar/NavBar';
 import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 import Modal from '../../Components/Modal/Modal';
+import UserService from "../../Services/UserService";
 
 const Home = ({ history }) => {
   const [player, setPlayer] = useState({ name: "", code: "", login: "" });
@@ -15,12 +16,14 @@ const Home = ({ history }) => {
 
   async function init() {
     await ApiClient.GetPlayer()
-      .then(({ player }) => setPlayer({ name: player.name, code: player.code, login: player.login }))
-      .catch(
-        () => {
-          PopUp.showPopUp('error', 'Falha ao obter dados do jogador');
-          history.push('/')
-        });
+      .then(({ player }) => {
+        setPlayer({ name: player.name, code: player.code, login: player.login })
+        UserService().setPlayerData(player);
+      })
+      .catch(() => {
+        PopUp.showPopUp('error', 'Falha ao obter dados do jogador');
+        history.push('/')
+      });
   }
 
   return (
