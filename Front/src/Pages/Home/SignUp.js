@@ -17,7 +17,7 @@ export default function({ history }) {
     ApiClient.CreatePlayer(signUpInfo)
       .then(() => {
           PopUp.showPopUp('success', 'Cadastro realizado com sucesso! Faça o seu login');
-          history.push('/login')
+          history.push('/Home')
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao cadastrar'))
   }
