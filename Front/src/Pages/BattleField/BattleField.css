@@ -26,3 +26,7 @@
   z-index: -1;
   opacity: .25;
 }
+
+.theme-ship.active {
+  border: 5px solid green;
+}

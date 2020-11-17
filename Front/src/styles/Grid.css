@@ -55,9 +55,11 @@
   background-color: rgb(185, 185, 185);
 }
 
+/*
 .occupied {
   background-color: rgb(80, 81, 82);
 }
+ */
 
 .active-occupied {
   background-color: red;

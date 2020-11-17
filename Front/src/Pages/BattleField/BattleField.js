@@ -9,6 +9,7 @@ import ShipGrid from "../../Components/ShipsGrid/ShipGrid";
 import NavBar from "../../Components/NavBar/NavBar";
 import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
+import UserService from "../../Services/UserService";
 
 const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
 // workaround para evitar rerender do carousel
@@ -23,9 +24,13 @@ class BattleField extends Component {
       player: createPlayer(),
       themes: [],
       themeSelected: theme !== null,
+      theme: theme !== null ? theme : null,
       loadingTheme: true,
+      themeShips: [],
+      settingThemeShip: null,
       allShipsSet: false,
-      gameStarting: false,
+      gameStarted: false,
+      waitingAdversary: false,
       winner: null,
       gameOver: false,
       logs: [welcomeMessage]
@@ -40,6 +45,14 @@ class BattleField extends Component {
       .then(({ themes }) => this.setState({ themes }))
       .catch(() => PopUp.showPopUp('error', 'Falha ao carregar temas'))
       .finally(() => this.setState({ loadingTheme: false }))
+
+    if (theme !== null) this.getThemeShips()
+  }
+
+  getThemeShips = () => {
+    ApiClient.GetThemeShips(theme.id)
+      .then(({ ship }) => this.setState({ themeShips: ship, settingThemeShip: ship[0] }))
+      .catch(() => PopUp.showPopUp('error', 'Falha ao carregar navios do tema'))
   }
 
   onCarouselCycle = element => {
@@ -50,8 +63,12 @@ class BattleField extends Component {
     if (!theme || cycledTheme.id !== theme.id) theme = cycledTheme;
   }
 
-  selectTheme = () =>
-    this.setState({ themeSelected: true, theme }, () => localStorage.setItem('battle-field-theme', JSON.stringify(theme)))
+  selectTheme = () => {
+    this.setState({ themeSelected: true, theme }, () => {
+      localStorage.setItem('battle-field-theme', JSON.stringify(theme))
+      this.getThemeShips()
+    })
+  }
 
   updateGrids(player, grid, type, opponent) {
     const payload = {
@@ -110,13 +127,15 @@ class BattleField extends Component {
   }
 
   renderShipGrid(player) {
-    const { activePlayer, gameOver } = this.state;
+    const { activePlayer, gameOver, themeShips } = this.state;
+
     return (
       <ShipGrid
         player={player}
         grid={this.state[player].shipsGrid}
         ships={this.state[player].ships}
         currentShip={this.state[player].currentShip}
+        themeShips={themeShips}
         updateGrids={this.updateGrids}
         updateShips={this.updateShips}
         shipsSet={this.state[player].shipsSet}
@@ -124,6 +143,19 @@ class BattleField extends Component {
         gameOver={gameOver}
       />
     );
+  }
+
+  renderShips = () => {
+    const { themeShips, theme, player } = this.state;
+    const settingThemeShipSize = player.ships.find(ship => ship.positions.length === 0)?.size ?? 5;
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20, marginLeft: 30 }}>
+        <h4>Navios - {theme.name}</h4>
+        {themeShips.map(themeShip =>
+          <img className={themeShip.type === settingThemeShipSize ? "theme-ship active": ""} key={themeShip.id} src={themeShip.imagePath} />)}
+      </div>
+    )
   }
 
   updateShips(player, updatedShips) {
@@ -143,7 +175,9 @@ class BattleField extends Component {
   }
 
   shipReducer(action, { updatedShips, player }) {
-    const { currentShip } = this.state[player];
+    const { currentShip, ships } = this.state[player];
+    const positionedShips = ships.filter(ship => ship.positions.length > 0);
+
     if (action === "SET_PLAYER_ONE") {
       this.setState({
         player1: {
@@ -177,7 +211,7 @@ class BattleField extends Component {
       const updatedPlayer = {
         ...this.state[player],
         ships: updatedShips,
-        currentShip: currentShip + 1
+        currentShip: positionedShips.length < 5 ? currentShip + 1 : 4
       };
       this.setState({
         [player]: updatedPlayer
@@ -185,8 +219,27 @@ class BattleField extends Component {
     }
   }
 
+  startBattleShip = () => {
+    const { ships } = this.state.player;
+    const matchId = localStorage.getItem('match-id');
+    const shipsPositions = ships
+      .map(ship => ship.positions)
+      .reduce((current, next) => [...current, ...next], []);
+    const positions = shipsPositions.map(position => ({
+      Player: UserService().getPlayerData().id,
+      MatchID: Number(matchId),
+      PosX: position.col,
+      PosY: position.row
+    }));
+
+    ApiClient.RegisterPositions(positions)
+      .then(() => this.setState({ waitingAdversary: true }))
+      .catch(() => PopUp.showPopUp('error', 'Falha ao enviar posições para o servidor'))
+  }
+
   render() {
-    const { themes, loadingTheme, themeSelected } = this.state;
+    const { themes, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
+    const positionedAllShips = player.ships.every(ship => ship.positions.length > 0);
 
     return (
       <Fragment>
@@ -230,11 +283,14 @@ class BattleField extends Component {
           <div className="game">
             <img className="battlefield-background" src={theme.imagePath} />
             <div className="row">
-              <div className="col l6 s12">
+              <div className="col l6 s12" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {this.renderShipGrid("player")}
+                <Button onClick={() => this.startBattleShip()} disabled={!positionedAllShips || waitingAdversary}>
+                  {waitingAdversary ? 'Aguardando adversário' : 'INICIAR'}
+                </Button>
               </div>
               <div className="col l6 s12">
-                {this.renderBattleGrid("player")}
+                {gameStarted ? this.renderBattleGrid("player") : this.renderShips()}
               </div>
             </div>
           </div>
