@@ -62,7 +62,7 @@ namespace BattleshipApi.Match.BLL
                 return matchId;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 IDispatcherMatch.Rollback();
                 throw;

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import  { Button, Carousel } from "react-materialize";
+import { Button, Carousel } from "react-materialize";
 
 import './BattleField.css';
 
@@ -153,7 +153,7 @@ class BattleField extends Component {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20, marginLeft: 30 }}>
         <h4>Navios - {theme.name}</h4>
         {themeShips.map(themeShip =>
-          <img className={themeShip.type === settingThemeShipSize ? "theme-ship active": ""} key={themeShip.id} src={themeShip.imagePath} />)}
+          <img className={themeShip.type === settingThemeShipSize ? "theme-ship active" : ""} key={themeShip.id} src={themeShip.imagePath} />)}
       </div>
     )
   }
