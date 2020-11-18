@@ -10,6 +10,7 @@ import NavBar from "../../Components/NavBar/NavBar";
 import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 import UserService from "../../Services/UserService";
+import WebSocketHandler from "../../Components/WebSocketHandler/WebSocketHandler";
 
 const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
 // workaround para evitar rerender do carousel
@@ -41,6 +42,9 @@ class BattleField extends Component {
   }
 
   componentDidMount() {
+    const match = JSON.parse(localStorage.getItem('match'));
+    WebSocketHandler(match.player.login);
+
     ApiClient.GetThemes()
       .then(({ themes }) => this.setState({ themes }))
       .catch(() => PopUp.showPopUp('error', 'Falha ao carregar temas'))
@@ -197,8 +201,11 @@ class BattleField extends Component {
   }
 
   startBattleShip = () => {
+
     const { ships } = this.state.player;
-    const matchId = localStorage.getItem('match-id');
+    const match = JSON.parse(localStorage.getItem('match'));
+    const matchId = match.matchId;
+
     const shipsPositions = ships
       .map(ship => ship.positions)
       .reduce((current, next) => [...current, ...next], []);
@@ -212,6 +219,8 @@ class BattleField extends Component {
     ApiClient.RegisterPositions(positions)
       .then(() => this.setState({ waitingAdversary: true }))
       .catch(() => PopUp.showPopUp('error', 'Falha ao enviar posições para o servidor'))
+    
+    WebSocketHandler.PlayerReady(match.adversary.code, match.player.name);
   }
 
   render() {

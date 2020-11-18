@@ -39,18 +39,29 @@ WebSocketHandler.ConnectionRefused = (partnerCode) => {
     });
 }
 
+WebSocketHandler.PlayerReady = (partnerCode,myName) => {
+    hubConnection.invoke("PlayerReady", partnerCode, myName).catch(function (err) {    
+        console.log(err.toString());
+    });
+}
+
 hubConnection.on("AskingForConnection", function (player, myCode) {
     HelperModal.ShowWantToConnectModal(player, myCode);
 });
 
-hubConnection.on("Connected", function (matchId) {
-    localStorage.setItem('match-id', matchId.toString())
+hubConnection.on("Connected", function (matchId, player, partnerPlayer) {
+    localStorage.setItem('match', JSON.stringify({"matchId": matchId, "adversary": partnerPlayer, "player":player }));
+    localStorage.setItem('battle-field-theme', null)
     PopUp.showPopUp('success', 'Conectado');
     window.location.href = '/battlefield';
 });
 
 hubConnection.on("ConnectionRefused", function () {
     PopUp.showPopUp('error', 'Pedido de jogo recusado');
+});
+
+hubConnection.on("PlayerReady", function (partnerName) {
+    PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
 });
 
 export default WebSocketHandler;

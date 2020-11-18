@@ -42,17 +42,6 @@ namespace Battleship
             await Clients.Caller.SendAsync("CodeRegistered", player.Code);
         }
 
-        private void AddOrUpdateConnectionId(string code, string connectionId)
-        {
-            if (ConnectionAlreadyExists(code))
-            {
-                connections.Connections[code] = connectionId;
-                return;
-            }
-
-            connections.Connections.Add(code, connectionId);
-        }
-
         public async Task Connect(string myConnectionId, string partnerCode, string myCode)
         {
             var player = playerObject.FindPlayerByCode(myCode);
@@ -63,17 +52,24 @@ namespace Battleship
 
             var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
 
-            //adicionar tratamento para não quebrar quando existe partida
-            var matchId = matchObject.CreateMatch(new Match()
+            var currentMatchPlayer = matchObject.CurrentMatch(player.Login);
+            var currentMatchPartner = matchObject.CurrentMatch(partnerPlayer.Login);
+
+            var matchId = currentMatchPlayer.ID;
+
+            if (!PlayersAlreadyInSameMatch(currentMatchPlayer, currentMatchPartner))
             {
-                Player1 = player.ID,
-                Player2 = partnerPlayer.ID
-            });
+                matchId = matchObject.CreateMatch(new Match()
+                {
+                    Player1 = player.ID,
+                    Player2 = partnerPlayer.ID
+                });
+            }
 
-            await Clients.Caller.SendAsync("Connected", matchId);
-            await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId);
-
+            await Clients.Caller.SendAsync("Connected", matchId, player, partnerPlayer);
+            await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId, partnerPlayer, player);
         }
+
 
         public async Task AskForConnection(string myConnectionId, string partnerCode, string myCode)
         {
@@ -89,6 +85,12 @@ namespace Battleship
         {
             var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
             await Clients.Client(partnerConnectionId).SendAsync("ConnectionRefused");
+        }
+
+        public async Task PlayerReady(string partnerCode, string myName)
+        {
+            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName);
         }
 
         public async Task Action(string mycode, string action, string x, string y)
@@ -108,5 +110,21 @@ namespace Battleship
                                                    || (x.Code2 == myCode && x.Code1 == partnerCode));
         }
 
+        private bool PlayersAlreadyInSameMatch(Match currentMatchPlayer, Match currentMatchPartner)
+        {
+            bool inSameMatch = currentMatchPlayer.ID == currentMatchPartner.ID;
+            return inSameMatch;
+        }
+
+        private void AddOrUpdateConnectionId(string code, string connectionId)
+        {
+            if (ConnectionAlreadyExists(code))
+            {
+                connections.Connections[code] = connectionId;
+                return;
+            }
+
+            connections.Connections.Add(code, connectionId);
+        }
     }
 }
