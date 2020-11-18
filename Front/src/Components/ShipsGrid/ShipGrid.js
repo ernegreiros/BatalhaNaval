@@ -12,6 +12,7 @@ class ShipGrid extends Component {
       activeSpot: null
     };
 
+    this.handleRotate = this.handleRotate.bind(this);
     this.handleHover = this.handleHover.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
@@ -33,6 +34,14 @@ class ShipGrid extends Component {
           />
         );
       });
+    });
+  }
+
+  handleRotate() {
+    this.setState(prevState => {
+      return {
+        rotated: !prevState.rotated
+      };
     });
   }
 
@@ -77,6 +86,13 @@ class ShipGrid extends Component {
     }
   }
 
+  RotateImage = (CloudNaryimagePath) => {
+    let separator = 'upload';
+    let stringArray = CloudNaryimagePath.split(separator);
+    stringArray[1] = `/a_90${stringArray[1]}`;
+    return stringArray.join(separator);
+  }
+
   render() {
     const { rotated } = this.state;
     const { themeShips, ships } = this.props;
@@ -98,12 +114,15 @@ class ShipGrid extends Component {
                   margin: "auto",
                   ...(rotated
                     ? { gridRow: first.row + 1, gridColumn: `${first.col + 1}/${last.col + 2}` }
-                    : { transform: "rotate(90deg)", maxWidth: "none", maxHeight: "100%", gridRow: `${first.row + 1}/${last.row + 2}`, gridColumn: first.col + 1 })
+                    : { maxWidth: "100%", height: "100%", gridRow: `${first.row + 1}/${last.row + 2}`, gridColumn: `${first.col + 1}/${last.col + 1}` })
                 }}
-                src={themeShip.imagePath} />
+                src={rotated ? themeShip.imagePath : this.RotateImage(themeShip.imagePath)} />
             )
           })}
         </div>
+        <button className="btn-rotate" onClick={this.handleRotate}>
+          Rotate direction
+          </button>
       </div>
     );
   }

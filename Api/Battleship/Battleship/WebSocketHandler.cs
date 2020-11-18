@@ -63,6 +63,7 @@ namespace Battleship
 
             var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
 
+            //adicionar tratamento para não quebrar quando existe partida
             var matchId = matchObject.CreateMatch(new Match()
             {
                 Player1 = player.ID,
