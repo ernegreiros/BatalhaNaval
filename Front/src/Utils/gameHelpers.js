@@ -17,27 +17,32 @@ const makeShips = () => {
     {
       type: "Destroyer",
       size: 2,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
       type: "Cruiser",
       size: 3,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
       type: "Submarine",
       size: 3,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
       type: "Battleship",
       size: 4,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
       type: 'Carrier',
       size: 5,
-      positions: []
+      positions: [],
+      vertical: false
     },
   ];
 }

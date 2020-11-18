@@ -155,6 +155,7 @@ class BattleField extends Component {
         <h4>Navios - {theme.name}</h4>
         {themeShips.map(themeShip =>
           <img className={themeShip.type === settingThemeShipSize ? "theme-ship active" : ""} key={themeShip.id} src={themeShip.imagePath} />)}
+        <h5><b>Precione a tecla 'G' para girar os barcos!</b></h5>  
       </div>
     )
   }
