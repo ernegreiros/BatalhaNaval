@@ -57,24 +57,27 @@ class BattleGrid extends Component {
         if (player !== activePlayer) {
             return PopUp.showPopUp('error', 'Its not your turn!!');
         }
-        const { rotated } = this.state;
-        const data = {
-            player,
-            grid: grid.slice(),
-            rotated,
-            row,
-            col,
-            opponent
-        };
-        const updatedGame = placeMove(data);
-        if (updatedGame) {
-            this.props.updateGrids(
-                this.props.player,
-                updatedGame.grid,
-                "movesGrid",
-                updatedGame.opponent
-            );
-        }
+
+        this.props.updateAttack([{ row, col }])
+
+        // const { rotated } = this.state;
+        // const data = {
+        //     player,
+        //     grid: grid.slice(),
+        //     rotated,
+        //     row,
+        //     col,
+        //     opponent
+        // };
+        // const updatedGame = placeMove(data);
+        // if (updatedGame) {
+        //     this.props.updateGrids(
+        //         this.props.player,
+        //         updatedGame.grid,
+        //         "movesGrid",
+        //         updatedGame.opponent
+        //     );
+        // }
     }
 
     handleRotate() {

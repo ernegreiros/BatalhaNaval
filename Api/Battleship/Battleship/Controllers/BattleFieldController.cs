@@ -83,7 +83,7 @@ namespace Battleship.Controllers
             return outRegisterPositionsVM;
         }
 
-        [HttpPost]
+        [HttpPost("attack")]
         [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         public OutAttackPlayerVM AttackPositions(List<InAttackPlayerVM> pAttackPositions, int? pSpecialPower)
         {

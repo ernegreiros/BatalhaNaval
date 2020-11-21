@@ -119,6 +119,13 @@ const ApiClient = {
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },
+  AttackPositions: positions => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+    const payload = JSON.stringify(positions)
+    return fetch(`${urlApi}/api/BattleField/attack`, { method: 'POST', headers, body: payload })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json());
+  },
   CreateTeam: team => {
     return fetch(`${urlApi}/api/teams/create`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: team })
       .then(response => response.json());
