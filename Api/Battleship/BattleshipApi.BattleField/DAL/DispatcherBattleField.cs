@@ -53,10 +53,10 @@ namespace BattleshipApi.BattleField.DAL
             stringBuilder.AppendLine("SET ATTACKED = 1");
             stringBuilder.AppendLine("FROM Match A");
             /*LEFT JOIN PELAS POSIÇÕES E CONTROLE*/
-            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.MatchId = B.MatchId AND A.MatchContrl = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
-            stringBuilder.AppendLine("WHERE POSX = @POSX AND POSY = @POSY");
-            stringBuilder.AppendLine("AND ATTACKED = 0 AND MATCHID = @MATCHID");
-            stringBuilder.AppendLine("AND PLAYERID <> @PLAYERID");
+            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.ID = B.MatchId AND A.MatchContrl = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
+            stringBuilder.AppendLine("WHERE BattleField.POSX = @POSX AND BattleField.POSY = @POSY");
+            stringBuilder.AppendLine("AND ATTACKED = 0 AND BattleField.MATCHID = @MATCHID");
+            stringBuilder.AppendLine("AND BattleField.PLAYERID <> @PLAYERID");
             stringBuilder.AppendLine("AND ISNULL(B.ID,0) = 0"); /*Aonde não tenha posição defendida*/
 
             IUnitOfWork.Executar(stringBuilder.ToString());
@@ -83,7 +83,7 @@ namespace BattleshipApi.BattleField.DAL
 
             DataSet ds = IUnitOfWork.Consulta(query.ToString());
 
-            return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+            return !(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0);
         }
 
         public void RegisterPosition(DML.BattleField pBattleFieldsPosition)
