@@ -232,7 +232,7 @@ class BattleField extends Component {
         <NavBar />
         {!themeSelected && (
           <div>
-            <h1>Escolha o Tema</h1>
+            <h2 className="center">Escolha o Tema</h2>
             {!loadingTheme && (
               <div>
                 <Carousel
