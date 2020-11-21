@@ -23,6 +23,7 @@ class BattleField extends Component {
     this.state = {
       activePlayer: "player",
       player: createPlayer(),
+      player2: createPlayer(),
       themes: [],
       themeSelected: theme !== null,
       theme: theme !== null ? theme : null,
@@ -72,6 +73,12 @@ class BattleField extends Component {
       localStorage.setItem('battle-field-theme', JSON.stringify(theme))
       this.getThemeShips()
     })
+  }
+
+  updateAttack = positions => {
+    ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })))
+      .then((res) => console.log(res))
+      .catch(() => PopUp.showPopUp('error', 'Falha ao realizar ataque'));
   }
 
   updateGrids(player, grid, type, opponent) {
@@ -124,6 +131,7 @@ class BattleField extends Component {
         grid={this.state[player].movesGrid}
         opponent={this.state[opponent]}
         updateGrids={this.updateGrids}
+        updateAttack={this.updateAttack}
         activePlayer={activePlayer}
         shipsSet={this.state[player].shipsSet}
       />
@@ -159,7 +167,7 @@ class BattleField extends Component {
         <h4>Navios - {theme.name}</h4>
         {themeShips.map(themeShip =>
           <img className={themeShip.type === settingThemeShipSize ? "theme-ship active" : ""} key={themeShip.id} src={themeShip.imagePath} />)}
-        <h5><b>Precione a tecla 'G' para girar os barcos!</b></h5>  
+        <h5><b>Precione a tecla 'G' para girar os barcos!</b></h5>
       </div>
     )
   }
@@ -201,14 +209,15 @@ class BattleField extends Component {
   }
 
   startBattleShip = () => {
-
     const { ships } = this.state.player;
     const match = JSON.parse(localStorage.getItem('match'));
     const matchId = match.matchId;
 
+    const { player } = this.state;
     const shipsPositions = ships
       .map(ship => ship.positions)
       .reduce((current, next) => [...current, ...next], []);
+
     const positions = shipsPositions.map(position => ({
       Player: UserService().getPlayerData().id,
       MatchID: Number(matchId),
@@ -217,10 +226,11 @@ class BattleField extends Component {
     }));
 
     ApiClient.RegisterPositions(positions)
-      .then(() => this.setState({ waitingAdversary: true }))
+      .then(() => {
+        WebSocketHandler.PlayerReady(match.adversary.code, match.player.name);
+        this.setState({ gameStarted: true, player: { ...player, shipsSet: true } })
+      })
       .catch(() => PopUp.showPopUp('error', 'Falha ao enviar posições para o servidor'))
-    
-    WebSocketHandler.PlayerReady(match.adversary.code, match.player.name);
   }
 
   render() {
