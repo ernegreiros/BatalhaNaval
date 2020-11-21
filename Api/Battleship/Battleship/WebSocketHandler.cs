@@ -50,14 +50,14 @@ namespace Battleship
             if (!BondAlreadyExists(partnerCode, myCode))
                 connections.PlayersBinded.Add(new PlayerBinded(myCode, partnerCode));
 
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
 
             var currentMatchPlayer = matchObject.CurrentMatch(player.Login);
             var currentMatchPartner = matchObject.CurrentMatch(partnerPlayer.Login);
 
-            var matchId = currentMatchPlayer.ID;
+            var matchId = currentMatchPartner?.ID;
 
-            if (!PlayersAlreadyInSameMatch(currentMatchPlayer, currentMatchPartner))
+            if (currentMatchPlayer is null || currentMatchPartner is null || !PlayersAlreadyInSameMatch(currentMatchPlayer, currentMatchPartner))
             {
                 matchId = matchObject.CreateMatch(new Match()
                 {
@@ -70,38 +70,47 @@ namespace Battleship
             await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId, partnerPlayer, player);
         }
 
-
         public async Task AskForConnection(string myConnectionId, string partnerCode, string myCode)
         {
             var player = playerObject.FindPlayerByCode(myCode);
             var partnerPlayer = playerObject.FindPlayerByCode(partnerCode);
 
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
 
             await Clients.Client(partnerConnectionId).SendAsync("AskingForConnection", player, partnerCode);
         }
 
         public async Task ConnectionRefused(string partnerCode)
         {
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
             await Clients.Client(partnerConnectionId).SendAsync("ConnectionRefused");
         }
 
-        public async Task PlayerReady(string partnerCode, string myName)
+        public async Task PlayerReady(string partnerCode, string myName, string myCode)
         {
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
+
+            var item = connections.Connections.FirstOrDefault(c => c.Code == myCode);
+            item.Ready = true;
+
             await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName);
+
+            if (AllPlayersReady(partnerCode, myCode))
+            {
+                await Clients.Caller.SendAsync("StartGame");
+                await Clients.Client(partnerConnectionId).SendAsync("StartGame");
+            }
+        }
+
+        private bool AllPlayersReady(string partnerCode, string myCode)
+        {
+            return connections.Connections.FirstOrDefault(c => c.Code == myCode).Ready && connections.Connections.FirstOrDefault(c => c.Code == partnerCode).Ready;
         }
 
         public async Task Action(string mycode, string action, string x, string y)
         {
-            var connectionId = connections.Connections.Where(c => c.Key == mycode).FirstOrDefault().Value;
+            var connectionId = GetConnectionId(mycode);
             await Clients.Client(connectionId).SendAsync(action, x, y);
-        }
-
-        private bool ConnectionAlreadyExists(string code)
-        {
-            return connections.Connections.Any(x => x.Key == code);
         }
 
         private bool BondAlreadyExists(string partnerCode, string myCode)
@@ -116,15 +125,26 @@ namespace Battleship
             return inSameMatch;
         }
 
+        private bool ConnectionAlreadyExists(string code)
+        {
+            return connections.Connections.Any(x => x.Code == code);
+        }
+
         private void AddOrUpdateConnectionId(string code, string connectionId)
         {
             if (ConnectionAlreadyExists(code))
             {
-                connections.Connections[code] = connectionId;
+                var item = connections.Connections.FirstOrDefault(c => c.Code == code);
+                item.ConnectionId = connectionId;
                 return;
             }
 
-            connections.Connections.Add(code, connectionId);
+            connections.Connections.Add(new Connection(code, connectionId, false));
+        }
+
+        private string GetConnectionId(string code)
+        {
+            return connections.Connections.FirstOrDefault(c => c.Code == code).ConnectionId;
         }
     }
 }
