@@ -42,6 +42,7 @@ class BattleField extends Component {
     this.updateShips = this.updateShips.bind(this);
   }
 
+
   componentDidMount() {
     const match = JSON.parse(localStorage.getItem('match'));
     WebSocketHandler(match.player.login);
@@ -52,6 +53,31 @@ class BattleField extends Component {
       .finally(() => this.setState({ loadingTheme: false }))
 
     if (theme !== null) this.getThemeShips()
+
+  }
+
+  StartCheckingPlayerReady = () => {
+    this.intervalId = setInterval(this.CheckPlayersReady, 1000);
+  }
+
+  StopCheckingPlayerReady = () => {
+    clearInterval(this.intervalId);
+  }
+
+  CheckPlayersReady = () => {
+    console.log('Checking all players ready...');
+    
+    let playersReady = localStorage.getItem('StartMatch');
+
+    if (playersReady === 'true') {
+      this.StopCheckingPlayerReady();
+
+      const { player } = this.state;
+      this.setState({ gameStarted: true, player: { ...player, shipsSet: true } });
+      return;
+    }
+
+    console.log('All players not ready yet!');
   }
 
   getThemeShips = () => {
@@ -227,8 +253,8 @@ class BattleField extends Component {
 
     ApiClient.RegisterPositions(positions)
       .then(() => {
-        WebSocketHandler.PlayerReady(match.adversary.code, match.player.name);
-        this.setState({ gameStarted: true, player: { ...player, shipsSet: true } })
+        WebSocketHandler.PlayerReady(match.adversary.code, match.player.name, match.player.code);
+        this.StartCheckingPlayerReady();
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao enviar posições para o servidor'))
   }

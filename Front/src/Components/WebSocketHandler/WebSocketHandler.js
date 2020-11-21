@@ -24,6 +24,7 @@ WebSocketHandler.Connect = (partnerCode, mycode) => {
         PopUp.showPopUp('error', 'Não foi possivel conectar ao jogador');
         console.log(err.toString());
     });
+
 }
 
 WebSocketHandler.AskForConnection = (partnerCode, mycode) => {
@@ -34,13 +35,13 @@ WebSocketHandler.AskForConnection = (partnerCode, mycode) => {
 }
 
 WebSocketHandler.ConnectionRefused = (partnerCode) => {
-    hubConnection.invoke("ConnectionRefused", partnerCode).catch(function (err) {    
+    hubConnection.invoke("ConnectionRefused", partnerCode).catch(function (err) {
         console.log(err.toString());
     });
 }
 
-WebSocketHandler.PlayerReady = (partnerCode,myName) => {
-    hubConnection.invoke("PlayerReady", partnerCode, myName).catch(function (err) {    
+WebSocketHandler.PlayerReady = (partnerCode, myName, myCode) => {
+    hubConnection.invoke("PlayerReady", partnerCode, myName, myCode).catch(function (err) {
         console.log(err.toString());
     });
 }
@@ -50,8 +51,9 @@ hubConnection.on("AskingForConnection", function (player, myCode) {
 });
 
 hubConnection.on("Connected", function (matchId, player, partnerPlayer) {
-    localStorage.setItem('match', JSON.stringify({"matchId": matchId, "adversary": partnerPlayer, "player":player }));
+    localStorage.setItem('match', JSON.stringify({ "matchId": matchId, "adversary": partnerPlayer, "player": player }));
     localStorage.setItem('battle-field-theme', null)
+    localStorage.setItem('StartMatch', false);
     PopUp.showPopUp('success', 'Conectado');
     window.location.href = '/battlefield';
 });
@@ -62,6 +64,10 @@ hubConnection.on("ConnectionRefused", function () {
 
 hubConnection.on("PlayerReady", function (partnerName) {
     PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
+});
+
+hubConnection.on("StartGame", function () {
+    localStorage.setItem('StartMatch', true)
 });
 
 export default WebSocketHandler;
