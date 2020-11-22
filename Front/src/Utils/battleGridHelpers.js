@@ -67,10 +67,10 @@ const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
     })
   } else {
     log.push("It's a miss");
+    opponent.shipsGrid[row][col].status = "miss";
     grid[row][col].status = "miss";
   }
 
-  // TODO: miss
   // TODO: SUNK DO NAVIO
   // TODO: win!
 
