@@ -303,7 +303,7 @@ class BattleField extends Component {
                 {this.renderShipGrid("player")}
                 {!gameStarted && (
                   <Button onClick={() => this.startBattleShip()} disabled={!positionedAllShips || waitingAdversary}>
-                    {waitingAdversary ? 'Aguardando adversário' : 'INICIAR'}
+                    {waitingAdversary ? 'Aguardando adversário' : 'PRONTO'}
                   </Button>
                 )}
               </div>
