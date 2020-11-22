@@ -75,12 +75,6 @@ class BattleField extends Component {
     })
   }
 
-  updateAttack = positions => {
-    ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })))
-      .then((res) => console.log(res))
-      .catch(() => PopUp.showPopUp('error', 'Falha ao realizar ataque'));
-  }
-
   updateGrids(player, grid, type, opponent) {
     const payload = {
       player,
@@ -131,7 +125,6 @@ class BattleField extends Component {
         grid={this.state[player].movesGrid}
         opponent={this.state[opponent]}
         updateGrids={this.updateGrids}
-        updateAttack={this.updateAttack}
         activePlayer={activePlayer}
         shipsSet={this.state[player].shipsSet}
       />
