@@ -301,9 +301,11 @@ class BattleField extends Component {
             <div className="row">
               <div className="col l6 s12" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {this.renderShipGrid("player")}
-                <Button onClick={() => this.startBattleShip()} disabled={!positionedAllShips || waitingAdversary}>
-                  {waitingAdversary ? 'Aguardando adversário' : 'INICIAR'}
-                </Button>
+                {!gameStarted && (
+                  <Button onClick={() => this.startBattleShip()} disabled={!positionedAllShips || waitingAdversary}>
+                    {waitingAdversary ? 'Aguardando adversário' : 'INICIAR'}
+                  </Button>
+                )}
               </div>
               <div className="col l6 s12">
                 {gameStarted ? this.renderBattleGrid("player") : this.renderShips()}
