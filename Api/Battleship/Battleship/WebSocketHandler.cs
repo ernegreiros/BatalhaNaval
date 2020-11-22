@@ -66,9 +66,14 @@ namespace Battleship
                 });
             }
 
+            ChangePlayerReady(partnerCode, isReady: false);
+            ChangePlayerReady(myCode, isReady: false);
+
             await Clients.Caller.SendAsync("Connected", matchId, player, partnerPlayer);
             await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId, partnerPlayer, player);
         }
+
+
 
         public async Task AskForConnection(string myConnectionId, string partnerCode, string myCode)
         {
@@ -90,8 +95,7 @@ namespace Battleship
         {
             var partnerConnectionId = GetConnectionId(partnerCode);
 
-            var item = connections.Connections.FirstOrDefault(c => c.Code == myCode);
-            item.Ready = true;
+            ChangePlayerReady(myCode, isReady: true);
 
             await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName);
 
@@ -145,6 +149,12 @@ namespace Battleship
         private string GetConnectionId(string code)
         {
             return connections.Connections.FirstOrDefault(c => c.Code == code).ConnectionId;
+        }
+
+        private void ChangePlayerReady(string code, bool isReady)
+        {
+            var playerConnection = connections.Connections.FirstOrDefault(c => c.Code == code);
+            playerConnection.Ready = isReady;
         }
     }
 }
