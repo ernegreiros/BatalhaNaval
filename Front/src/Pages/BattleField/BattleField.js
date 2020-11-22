@@ -307,7 +307,7 @@ class BattleField extends Component {
                   </Button>
                 )}
               </div>
-              <div className="col l6 s12">
+              <div className="col l6 s12" style={gameStarted ? { display: 'flex', flexDirection: 'column', alignItems: 'center'  } : {}}>
                 {gameStarted ? this.renderBattleGrid("player") : this.renderShips()}
               </div>
             </div>
