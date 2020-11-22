@@ -137,7 +137,6 @@ class BattleGrid extends Component {
         <div className="grid" onMouseLeave={this.handleExit}>
           {this.renderSquares()}
         </div>
-        <div className="position">Active Spot: {this.state.activeSpot}</div>
       </div>
     );
   }
