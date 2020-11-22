@@ -73,7 +73,7 @@ class BattleField extends Component {
       this.StopCheckingPlayerReady();
 
       const { player } = this.state;
-      this.setState({ gameStarted: true, player: { ...player, shipsSet: true } });
+      this.setState({ waitingAdversary: false, gameStarted: true, player: { ...player, shipsSet: true } });
       return;
     }
 
@@ -246,6 +246,7 @@ class BattleField extends Component {
 
     ApiClient.RegisterPositions(positions)
       .then(() => {
+        this.setState({ waitingAdversary: true })
         WebSocketHandler.PlayerReady(match.adversary.code, match.player.name, match.player.code);
         this.StartCheckingPlayerReady();
       })
