@@ -70,6 +70,22 @@ namespace BattleshipApi.Match.BLL
         }
 
         /// <summary>
+        /// Update a match and returns your id
+        /// </summary>
+        /// <param name="pMatch">Match object</param>
+        /// <returns>Math id</returns>
+        public void UpdateMatch(DML.Match pMatch)
+        {
+            if (pMatch.ID <= 0)
+                throw new ArgumentOutOfRangeException(paramName: nameof(pMatch.ID), message: "ID cannot be lower ou equal zero");
+
+            if (pMatch == null)
+                throw new ArgumentNullException(paramName: nameof(pMatch), message: "Match is required");
+
+            IDispatcherMatch.UpdateMatch(pMatch);
+        }
+
+        /// <summary>
         /// Search the player's current game (With status started)
         /// </summary>
         /// <param name="pUserName">User name</param>
@@ -120,6 +136,12 @@ namespace BattleshipApi.Match.BLL
                 throw new Exception("Current player id required");
 
             IDispatcherMatch.ChangeCurrentPlayer(pMatchId, pCurrentPlayer);
+        }
+        public DML.Match Get(int ID)
+        {
+            if (ID <= 0)
+                throw new ArgumentOutOfRangeException(paramName: nameof(ID), message: "ID cannot be lower ou equal zero");
+            return IDispatcherMatch.Get(ID);
         }
     }
 }

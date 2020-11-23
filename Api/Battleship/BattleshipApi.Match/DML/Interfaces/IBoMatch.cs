@@ -15,6 +15,13 @@ namespace BattleshipApi.Match.DML.Interfaces
         int CreateMatch(DML.Match pMatch);
 
         /// <summary>
+        /// Update a match and returns your id
+        /// </summary>
+        /// <param name="pMatch">Match object</param>
+        /// <returns>Math id</returns>
+        void UpdateMatch(DML.Match pMatch);
+
+        /// <summary>
         /// Search the player's current game (With status started)
         /// </summary>
         /// <param name="pPlayerID">Player ID</param>

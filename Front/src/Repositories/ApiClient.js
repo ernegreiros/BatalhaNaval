@@ -112,6 +112,12 @@ const ApiClient = {
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },
+  GetCurrentMatch: () => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return fetch(`${urlApi}/api/Match`, { headers })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
+  },
   RegisterPositions: positions => {
     const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
     const payload = JSON.stringify(positions)

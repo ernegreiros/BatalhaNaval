@@ -93,11 +93,24 @@ namespace Battleship
 
         public async Task PlayerReady(string partnerCode, string myName, string myCode)
         {
+            var player = playerObject.FindPlayerByCode(myCode);
+            var currentPlayerMatch = matchObject.CurrentMatch(player.Login);
             var partnerConnectionId = GetConnectionId(partnerCode);
 
             ChangePlayerReady(myCode, isReady: true);
 
             await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName);
+
+            if (player.ID == currentPlayerMatch.Player1)
+            {
+                currentPlayerMatch.Player1Ready = 1;
+            } 
+            else
+            {
+                currentPlayerMatch.Player2Ready = 1;
+            }
+
+            matchObject.UpdateMatch(currentPlayerMatch);
 
             if (AllPlayersReady(partnerCode, myCode))
             {
@@ -155,6 +168,9 @@ namespace Battleship
         {
             var playerConnection = connections.Connections.FirstOrDefault(c => c.Code == code);
             playerConnection.Ready = isReady;
+        }
+        private void ChangeMatchPlayerReady()
+        {
         }
     }
 }

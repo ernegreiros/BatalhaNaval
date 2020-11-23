@@ -24,6 +24,7 @@ class BattleField extends Component {
       activePlayer: "player",
       player: createPlayer(),
       player2: createPlayer(),
+      match: {},
       themes: [],
       themeSelected: theme !== null,
       theme: theme !== null ? theme : null,
@@ -54,6 +55,16 @@ class BattleField extends Component {
 
     if (theme !== null) this.getThemeShips()
 
+    ApiClient.GetCurrentMatch()
+      .then(({ match = {} }) => {
+        const playerInfo = UserService().getPlayerData();
+        this.setState({
+          match,
+          waitingAdversary: playerInfo.id === match.player1 ? match.player1Ready : match.player2Ready,
+          gameStarted: match.player1Ready && match.player2Ready,
+        });
+      })
+      .catch(() => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
   }
 
   StartCheckingPlayerReady = () => {
