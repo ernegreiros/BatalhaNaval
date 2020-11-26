@@ -20,9 +20,11 @@ class BattleField extends Component {
   constructor(props) {
     super(props);
 
+    const playerShips = localStorage.getItem('player-ships')
+
     this.state = {
       activePlayer: "player",
-      player: createPlayer(),
+      player: createPlayer(playerShips ? JSON.parse(playerShips) : null),
       player2: createPlayer(),
       match: {},
       themes: [],
@@ -65,6 +67,12 @@ class BattleField extends Component {
         });
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
+
+    ApiClient.GetPositions()
+      .then(({ battleField}) => {
+        console.log(battleField);
+      })
+      .catch(() => PopUp.showPopUp('error', 'Falha ao obter posições do jogador'))
   }
 
   StartCheckingPlayerReady = () => {
@@ -240,6 +248,8 @@ class BattleField extends Component {
 
   startBattleShip = () => {
     const { ships } = this.state.player;
+    localStorage.setItem('player-ships', JSON.stringify(ships));
+
     const match = JSON.parse(localStorage.getItem('match'));
     const matchId = match.matchId;
 
@@ -265,7 +275,7 @@ class BattleField extends Component {
   }
 
   render() {
-    const { themes, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
+    const { themes, themeShips, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
     const positionedAllShips = player.ships.every(ship => ship.positions.length > 0);
 
     return (
@@ -311,7 +321,7 @@ class BattleField extends Component {
             <img className="battlefield-background" src={theme.imagePath} />
             <div className="row">
               <div className="col l6 s12" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {this.renderShipGrid("player")}
+                {themeShips.length > 0 && this.renderShipGrid("player")}
                 {!gameStarted && (
                   <Button onClick={() => this.startBattleShip()} disabled={!positionedAllShips || waitingAdversary}>
                     {waitingAdversary ? 'Aguardando adversário' : 'PRONTO'}

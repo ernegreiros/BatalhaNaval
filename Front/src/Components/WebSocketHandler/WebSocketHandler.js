@@ -54,6 +54,7 @@ hubConnection.on("Connected", function (matchId, player, partnerPlayer) {
     localStorage.setItem('match', JSON.stringify({ "matchId": matchId, "adversary": partnerPlayer, "player": player }));
     localStorage.setItem('battle-field-theme', null)
     localStorage.setItem('StartMatch', false);
+    localStorage.removeItem('player-ships');
     PopUp.showPopUp('success', 'Conectado');
     window.location.href = '/battlefield';
 });
