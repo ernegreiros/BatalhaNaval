@@ -124,10 +124,10 @@ namespace Battleship
             return connections.Connections.FirstOrDefault(c => c.Code == myCode).Ready && connections.Connections.FirstOrDefault(c => c.Code == partnerCode).Ready;
         }
 
-        public async Task Action(string mycode, string action, string x, string y)
+        public async Task Action(string adversaryCode, string action, object grid)
         {
-            var connectionId = GetConnectionId(mycode);
-            await Clients.Client(connectionId).SendAsync(action, x, y);
+            var connectionId = GetConnectionId(adversaryCode);
+            await Clients.Client(connectionId).SendAsync(action, grid);
         }
 
         private bool BondAlreadyExists(string partnerCode, string myCode)

@@ -44,9 +44,12 @@ class BattleField extends Component {
   }
 
 
-  componentDidMount() {
-    const match = JSON.parse(localStorage.getItem('match'));
-    WebSocketHandler(match.player.login);
+  async componentDidMount() {
+    this.match = JSON.parse(localStorage.getItem('match'));
+
+    this.hubConnection = await WebSocketHandler(this.match.player.login);
+
+    this.addHandlersForBattle();
 
     ApiClient.GetThemes()
       .then(({ themes }) => this.setState({ themes }))
@@ -77,7 +80,7 @@ class BattleField extends Component {
 
   CheckPlayersReady = () => {
     console.log('Checking all players ready...');
-    
+
     let playersReady = localStorage.getItem('StartMatch');
 
     if (playersReady === 'true') {
@@ -89,6 +92,30 @@ class BattleField extends Component {
     }
 
     console.log('All players not ready yet!');
+  }
+
+  addHandlersForBattle() {
+
+    this.removeHandlers();
+
+    this.hubConnection.on("PlayerReady", function (partnerName) {
+      PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
+    });
+
+    this.hubConnection.on("StartGame", function () {
+      localStorage.setItem('StartMatch', true)
+    });
+
+    this.hubConnection.on("TakeShoot", function (grid) {
+      this.updateGrids("player",grid, "movesGrid", grid);
+    });
+
+  }
+
+  removeHandlers() {
+    this.hubConnection.off("PlayerReady");
+    this.hubConnection.off("StartGame");
+    this.hubConnection.off("TakeShoot");
   }
 
   getThemeShips = () => {
@@ -164,6 +191,8 @@ class BattleField extends Component {
         updateGrids={this.updateGrids}
         activePlayer={activePlayer}
         shipsSet={this.state[player].shipsSet}
+        websocketTakeShot={WebSocketHandler.TakeShot}
+        matchInfo = {this.match}
       />
     );
   }
@@ -318,7 +347,7 @@ class BattleField extends Component {
                   </Button>
                 )}
               </div>
-              <div className="col l6 s12" style={gameStarted ? { display: 'flex', flexDirection: 'column', alignItems: 'center'  } : {}}>
+              <div className="col l6 s12" style={gameStarted ? { display: 'flex', flexDirection: 'column', alignItems: 'center' } : {}}>
                 {gameStarted ? this.renderBattleGrid("player") : this.renderShips()}
               </div>
             </div>

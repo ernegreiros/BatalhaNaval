@@ -44,7 +44,7 @@ class BattleGrid extends Component {
       type
     };
     const updatedGrid = hoverUpdate(data);
-    this.props.updateGrids(this.props.player, updatedGrid, "movesGrid");
+    this.props.updateGrids(this.props.player, updatedGrid, "movesGrid", "");
     this.setState({
       activeSpot: `${dictionary[col]}${row}`
     });
@@ -89,8 +89,10 @@ class BattleGrid extends Component {
       const updatedGame = placeMove({ data, hitTarget, enemyDefeated, positionsAttacked });
       if (updatedGame) {
         this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent);
+        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", updatedGame.grid);
       }
     } catch (e) {
+      console.log(e)
       PopUp.showPopUp('error', 'Falha ao realizar ataque');
     }
   }
@@ -137,6 +139,7 @@ class BattleGrid extends Component {
         <div className="grid" onMouseLeave={this.handleExit}>
           {this.renderSquares()}
         </div>
+        <div className="position">Atacando em: {this.state.activeSpot}</div>
       </div>
     );
   }

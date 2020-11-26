@@ -16,6 +16,8 @@ const WebSocketHandler = async (userName) => {
     hubConnection.invoke("RegisterCode", hubConnection.connectionId, userName).catch(function (err) {
         console.log(err.toString());
     });
+
+    return hubConnection;
 }
 
 WebSocketHandler.Connect = (partnerCode, mycode) => {
@@ -32,6 +34,8 @@ WebSocketHandler.AskForConnection = (partnerCode, mycode) => {
         PopUp.showPopUp('error', 'Não foi possivel conectar ao jogador');
         console.log(err.toString());
     });
+
+    return hubConnection;
 }
 
 WebSocketHandler.ConnectionRefused = (partnerCode) => {
@@ -46,28 +50,10 @@ WebSocketHandler.PlayerReady = (partnerCode, myName, myCode) => {
     });
 }
 
-hubConnection.on("AskingForConnection", function (player, myCode) {
-    HelperModal.ShowWantToConnectModal(player, myCode);
-});
-
-hubConnection.on("Connected", function (matchId, player, partnerPlayer) {
-    localStorage.setItem('match', JSON.stringify({ "matchId": matchId, "adversary": partnerPlayer, "player": player }));
-    localStorage.setItem('battle-field-theme', null)
-    localStorage.setItem('StartMatch', false);
-    PopUp.showPopUp('success', 'Conectado');
-    window.location.href = '/battlefield';
-});
-
-hubConnection.on("ConnectionRefused", function () {
-    PopUp.showPopUp('error', 'Pedido de jogo recusado');
-});
-
-hubConnection.on("PlayerReady", function (partnerName) {
-    PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
-});
-
-hubConnection.on("StartGame", function () {
-    localStorage.setItem('StartMatch', true)
-});
+WebSocketHandler.TakeShot = (mycode, action, grid) => {
+    hubConnection.invoke("Action", mycode, action, grid).catch(function (err) {
+        console.log(err.toString());
+    });
+}
 
 export default WebSocketHandler;

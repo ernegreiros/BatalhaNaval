@@ -20,7 +20,8 @@ const Home = ({ history }) => {
         setPlayer({ name: player.name, code: player.code, login: player.login })
         UserService().setPlayerData(player);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         PopUp.showPopUp('error', 'Falha ao obter dados do jogador');
         history.push('/')
       });
