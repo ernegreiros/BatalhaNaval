@@ -69,6 +69,50 @@ namespace BattleshipApi.BattleField.DAL
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(p).ToString());
         }
 
+        public List<DML.BattleField> Get(int playerID)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("DECLARE @PLAYERID INTEGER"); 
+            stringBuilder.AppendLine($"SET @PLAYERID = {playerID}");
+            stringBuilder.AppendLine("SELECT");
+            stringBuilder.AppendLine("  ID,");
+            stringBuilder.AppendLine("  PLAYERID,");
+            stringBuilder.AppendLine("  POSX,");
+            stringBuilder.AppendLine("  POSY");
+            stringBuilder.AppendLine("FROM BattleField WITH(NOLOCK)");
+            stringBuilder.AppendLine("  WHERE PlayerID = @PLAYERID");
+
+            DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                List<DML.BattleField> battleFields = new List<DML.BattleField>();
+
+                DML.BattleField battleField;
+
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    battleField = new DML.BattleField();
+
+                    if (row["ID"] != DBNull.Value)
+                        battleField.Id = Convert.ToInt32(row["ID"]);
+                    if (row["PLAYERID"] != DBNull.Value)
+                        battleField.Player = Convert.ToInt32(row["PLAYERID"]);
+                    if (row["POSX"] != DBNull.Value)
+                        battleField.PositionObject.X = Convert.ToInt32(row["POSX"].ToString());
+                    if (row["POSY"] != DBNull.Value)
+                        battleField.PositionObject.Y = Convert.ToInt32(row["POSY"].ToString());
+
+                    battleFields.Add(battleField);
+                }
+
+                return battleFields;
+            }
+
+            return new List<DML.BattleField>();
+        }
+
         public bool PlayerDefeated(int pMatchId, int pTarget)
         {
             StringBuilder query = new StringBuilder();
