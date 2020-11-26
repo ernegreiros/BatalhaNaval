@@ -249,5 +249,10 @@ namespace BattleshipApi.BattleField.BLL
             }
             return null;
         }
+
+        public List<DML.BattleField> Get(int playerID)
+        {
+            return IDispatcherBattleField.Get(playerID);
+        }
     }
 }

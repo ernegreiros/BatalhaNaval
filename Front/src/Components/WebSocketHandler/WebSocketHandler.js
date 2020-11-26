@@ -55,5 +55,4 @@ WebSocketHandler.TakeShot = (mycode, action, grid) => {
         console.log(err.toString());
     });
 }
-
 export default WebSocketHandler;

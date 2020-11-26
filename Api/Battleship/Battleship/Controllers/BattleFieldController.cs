@@ -37,6 +37,37 @@ namespace Battleship.Controllers
         #endregion
 
         [Authorize(Policy = BoJWT.NormalUserPolicyName)]
+        [HttpGet]
+        public OutGetBattleFieldsVM GetBattleFields()
+        {
+            OutGetBattleFieldsVM outGetBattleFieldsVM = new OutGetBattleFieldsVM();
+
+            try
+            {
+                BattleshipApi.Player.DML.Player player = IBoPlayer.FindPlayerByUserName(User.Claims.GetJWTUserName());
+
+                if (player == null || player.ID <= 0)
+                {
+                    outGetBattleFieldsVM.Message = "Player not found";
+                    outGetBattleFieldsVM.HttpStatus = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+                    outGetBattleFieldsVM.BattleFields = IBoBattleField.Get(player.ID);
+                }
+            }
+            catch (Exception ex)
+            {
+                outGetBattleFieldsVM.HttpStatus = StatusCodes.Status400BadRequest;
+                outGetBattleFieldsVM.Message = $"Error while getting battle fields! {ex.Message}";
+                outGetBattleFieldsVM.BattleFields = null;
+            }
+
+            return outGetBattleFieldsVM;
+        }
+
+
+        [Authorize(Policy = BoJWT.NormalUserPolicyName)]
         [HttpPost("positions")]
         public OutRegisterPositionsVM RegisterPositions(List<InRegisterPositionsVM> pModel)
         {

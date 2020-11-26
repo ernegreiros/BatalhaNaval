@@ -9,6 +9,7 @@ namespace BattleshipApi.BattleField.DML.Interfaces
     /// </summary>
     public interface IBoBattleField
     {
+        List<BattleField> Get(int playerID);
         void RegisterPositions(List<BattleField> pBattleFieldsPositions);
         int AttackPositions(List<BattleField> pBattleFieldsPositions, int? pSpecialPowerId, out bool enemyDefeated);
         void DeffendPositions(List<BattleField> lists, int pSpecialPower);

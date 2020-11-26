@@ -66,11 +66,11 @@ const gridGenerator = () => {
   return grid;
 };
 
-const createPlayer = () => {
+const createPlayer = (ships = null) => {
   return {
     shipsGrid: gridGenerator(),
     movesGrid: gridGenerator(),
-    ships: makeShips(),
+    ships: ships ?? makeShips(),
     currentShip: 0,
     shipsSet: false,
     sunkenShips: 0
