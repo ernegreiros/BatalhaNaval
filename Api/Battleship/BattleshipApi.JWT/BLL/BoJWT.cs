@@ -45,19 +45,17 @@ namespace BattleshipApi.JWT.BLL
         #region Readonly
         private readonly ITokenConfiguration ITokenConfiguration;
         private readonly ISigningConfigurations ISigningConfigurations;
-        private readonly IBoPlayer IBoPlayer;
         #endregion
 
         #region Constructor
-        public BoJWT(ITokenConfiguration iTokenConfiguration, ISigningConfigurations iSigningConfigurations, IBoPlayer iBoPlayer)
+        public BoJWT(ITokenConfiguration iTokenConfiguration, ISigningConfigurations iSigningConfigurations)
         {
             ITokenConfiguration = iTokenConfiguration;
             ISigningConfigurations = iSigningConfigurations;
-            IBoPlayer = iBoPlayer;
         }
 
         #endregion
-        public string WriteToken(AuthenticationData pModel)
+        public string WriteToken(AuthenticationData pModel, bool PasswordMatch)
         {
             pModel.CheckData();
 
@@ -74,7 +72,7 @@ namespace BattleshipApi.JWT.BLL
             }
             else
             {
-                if (IBoPlayer.PasswordMatch(pModel.Login, pModel.Password))
+                if (PasswordMatch)
                     claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, pModel.Login)

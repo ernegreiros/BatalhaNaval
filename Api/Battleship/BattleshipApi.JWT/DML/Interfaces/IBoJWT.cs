@@ -6,6 +6,6 @@ namespace BattleshipApi.JWT.DML.Interfaces
 {
     public interface IBoJWT
     {
-        string WriteToken(AuthenticationData pModel);
+        string WriteToken(AuthenticationData pModel, bool PasswordMatch);
     }
 }

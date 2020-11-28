@@ -63,31 +63,31 @@ namespace Battleship
             services.AddSignalR();
             services.AddSingleton<WebSocketConnections>();
 
-            services.AddTransient<IUnitOfWork>(unit => new UnitOfWork(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUnitOfWork>(unit => new UnitOfWork(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddSingleton<IDispatcherPlayer, DispatcherPlayer>();
-            services.AddSingleton<IBoPlayer, BoPlayer>();
+            services.AddScoped<IDispatcherPlayer, DispatcherPlayer>();
+            services.AddScoped<IBoPlayer, BoPlayer>();
 
-            services.AddSingleton<IDispatcherMatch, DispatcherMatch>();
-            services.AddSingleton<IBoMatch, BoMatch>();
+            services.AddScoped<IDispatcherMatch, DispatcherMatch>();
+            services.AddScoped<IBoMatch, BoMatch>();
 
-            services.AddSingleton<IDispatcherBattleField, DispatcherBattleField>();
-            services.AddSingleton<IBoBattleField, BoBattleField>();
+            services.AddScoped<IDispatcherBattleField, DispatcherBattleField>();
+            services.AddScoped<IBoBattleField, BoBattleField>();
 
-            services.AddSingleton<IDispatcherSpecialPower, DispatcherSpecialPower>();
-            services.AddSingleton<IBoSpecialPower, BoSpecialPower>();
+            services.AddScoped<IDispatcherSpecialPower, DispatcherSpecialPower>();
+            services.AddScoped<IBoSpecialPower, BoSpecialPower>();
 
-            services.AddSingleton<IDispatcherShips, DispatcherShips>();
-            services.AddSingleton<IBoShips, BoShips>();
+            services.AddScoped<IDispatcherShips, DispatcherShips>();
+            services.AddScoped<IBoShips, BoShips>();
 
-            services.AddSingleton<IDispatcherTheme, DispatcherTheme>();
-            services.AddSingleton<IBoTheme, BoTheme>();
+            services.AddScoped<IDispatcherTheme, DispatcherTheme>();
+            services.AddScoped<IBoTheme, BoTheme>();
 
-            services.AddSingleton<IDispatcherMatchSpecialPower, DispatcherMatchSpecialPower>();
-            services.AddSingleton<IBoMatchSpecialPower, BoMatchSpecialPower>();
+            services.AddScoped<IDispatcherMatchSpecialPower, DispatcherMatchSpecialPower>();
+            services.AddScoped<IBoMatchSpecialPower, BoMatchSpecialPower>();
 
-            services.AddSingleton<IBoMatchAttacks, BoMatchAttacks>();
-            services.AddSingleton<IDispatcherMatchAttacks, DispatcherMatchAttacks>();
+            services.AddScoped<IBoMatchAttacks, BoMatchAttacks>();
+            services.AddScoped<IDispatcherMatchAttacks, DispatcherMatchAttacks>();
 
             ISigningConfigurations signingConfigurations = new SigningConfigurations();
             services.AddSingleton<ISigningConfigurations>(signingConfigurations);
