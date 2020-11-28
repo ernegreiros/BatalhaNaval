@@ -13,6 +13,7 @@ using BattleshipApi.JWT.BLL;
 using BattleshipApi.JWT.DML;
 using BattleshipApi.JWT.DML.Interfaces;
 using BattleshipApi.Models;
+using BattleshipApi.Player.DML.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,14 +27,16 @@ namespace Battleship.Controllers
     {
         #region Readonly
         private readonly IBoJWT IBoJWT;
+        private readonly IBoPlayer IBoPlayer;
 
         #endregion
 
         #region Constructor
 
-        public AuthController(IBoJWT iBoJWT)
+        public AuthController(IBoJWT iBoJWT, IBoPlayer iBoPlayer)
         {
             IBoJWT = iBoJWT;
+            IBoPlayer = iBoPlayer;
         }
         #endregion
 
@@ -52,7 +55,7 @@ namespace Battleship.Controllers
                     {
                         Login = pModel.Login,
                         Password = pModel.Password
-                    });
+                    }, IBoPlayer.PasswordMatch(pModel.Login, pModel.Password));
 
                     outAuthorizeVM.HttpStatus = StatusCodes.Status200OK;
                     outAuthorizeVM.Message = $"Authenticated!";
