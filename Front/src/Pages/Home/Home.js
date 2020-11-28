@@ -6,7 +6,7 @@ import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 import Modal from '../../Components/Modal/Modal';
 
-const Home = () => {
+const Home = ({ history }) => {
   const [player, setPlayer] = useState({ name: "", code: "", login: "" });
 
   useEffect(() => {
@@ -16,7 +16,11 @@ const Home = () => {
   async function init() {
     await ApiClient.GetPlayer()
       .then(({ player }) => setPlayer({ name: player.name, code: player.code, login: player.login }))
-      .catch(() => PopUp.showPopUp('error', 'Falha ao obter dados do jogador'));
+      .catch(
+        () => {
+          PopUp.showPopUp('error', 'Falha ao obter dados do jogador');
+          history.push('/')
+        });
   }
 
   return (

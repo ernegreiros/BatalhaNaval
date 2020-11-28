@@ -16,8 +16,8 @@ export default function({ history }) {
 
     ApiClient.Login(loginInfo)
       .then(() => {
-        PopUp.showPopUp('success', 'Login realizado com sucesso! Boa diversão!');
-        history.push('/')
+        //PopUp.showPopUp('success', 'Login realizado com sucesso! Boa diversão!'); //api esta deixando logar sem um user por algum motivo
+        history.push('/Home')
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao realiar login'))
   }
