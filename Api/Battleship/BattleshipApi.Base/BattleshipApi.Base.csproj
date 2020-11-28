@@ -5,8 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="DataBaseHelper">
-      <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ExtensionHelper">
+      <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="DatabaseExtensionHelper">
+      <HintPath>..\Referencies\DatabaseExtensionHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
 	

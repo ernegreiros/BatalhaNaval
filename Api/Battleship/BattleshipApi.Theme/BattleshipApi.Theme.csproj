@@ -13,9 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DataBaseHelper">
-      <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
-    </Reference>
     <Reference Include="ExtensionHelper">
       <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
     </Reference>

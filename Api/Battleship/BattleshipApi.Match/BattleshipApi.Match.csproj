@@ -10,10 +10,4 @@
     <ProjectReference Include="..\BattleshipApi.Player\BattleshipApi.Player.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DataBaseHelper">
-      <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
