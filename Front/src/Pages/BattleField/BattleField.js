@@ -72,7 +72,7 @@ class BattleField extends Component {
       .catch(() => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
 
     ApiClient.GetPositions()
-      .then(({ battleField}) => {
+      .then(({ battleField }) => {
         console.log(battleField);
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao obter posições do jogador'))
@@ -103,19 +103,28 @@ class BattleField extends Component {
   }
 
   addHandlersForBattle() {
+    let global = this;
 
-    this.removeHandlers();
+    global.removeHandlers();
 
-    this.hubConnection.on("PlayerReady", function (partnerName) {
+    global.hubConnection.on("PlayerReady", function (partnerName) {
       PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
     });
 
-    this.hubConnection.on("StartGame", function () {
+    global.hubConnection.on("StartGame", function () {
       localStorage.setItem('StartMatch', true)
     });
 
-    this.hubConnection.on("TakeShoot", function (grid) {
-      this.updateGrids("player",grid, "movesGrid", grid);
+    global.hubConnection.on("TakeShoot", function (x, y, hitTarget) {
+
+      let player = global.state["player"];
+
+      player.shipsGrid[x][y].status = hitTarget ? "hit" : "miss";
+
+      global.setState({
+        ["player"]: player
+      });
+
     });
 
   }
@@ -200,7 +209,7 @@ class BattleField extends Component {
         activePlayer={activePlayer}
         shipsSet={this.state[player].shipsSet}
         websocketTakeShot={WebSocketHandler.TakeShot}
-        matchInfo = {this.match}
+        matchInfo={this.match}
       />
     );
   }

@@ -61,6 +61,7 @@ class InitialForm extends Component {
       localStorage.setItem('match', JSON.stringify({ "matchId": matchId, "adversary": partnerPlayer, "player": player }));
       localStorage.setItem('battle-field-theme', null)
       localStorage.setItem('StartMatch', false);
+      localStorage.setItem('player-ships',null);
       PopUp.showPopUp('success', 'Conectado');
       window.location.href = '/battlefield';
     });
