@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="DatabaseHelper">
+      <HintPath>..\Referencies\DatabaseHelper.dll</HintPath>
+    </Reference>
     <Reference Include="ExtensionHelper">
       <HintPath>..\Referencies\ExtensionHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="DatabaseExtensionHelper">
-      <HintPath>..\Referencies\DatabaseExtensionHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -8,4 +8,10 @@
     <ProjectReference Include="..\BattleshipApi.Base\BattleshipApi.Base.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="DataBaseHelper">
+      <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

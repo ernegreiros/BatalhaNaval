@@ -47,17 +47,19 @@ namespace BattleshipApi.Match.DAL
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DECLARE @ID INT,   ");
             stringBuilder.AppendLine("  @PLAYER1READY INT,");
-            stringBuilder.AppendLine("  @PLAYER2READY INT");
+            stringBuilder.AppendLine("  @PLAYER2READY INT,");
+            stringBuilder.AppendLine("  @STATUS INT");
 
             stringBuilder.AppendLine($"SET @ID = {match.ID}");
             stringBuilder.AppendLine($"SET @PLAYER1READY = '{match.Player1Ready}'");
             stringBuilder.AppendLine($"SET @PLAYER2READY = '{match.Player2Ready}'");
+            stringBuilder.AppendLine($"SET @STATUS = '{Convert.ToInt32(match.Status)}'");
 
             stringBuilder.AppendLine("UPDATE Match");
             stringBuilder.AppendLine("SET");
             stringBuilder.AppendLine("  Player1Ready = @PLAYER1READY,");
-            stringBuilder.AppendLine("  Player2Ready = @PLAYER2READY");
-            stringBuilder.AppendLine("WHERE ID = @ID");
+            stringBuilder.AppendLine("  Player2Ready = @PLAYER2READY,");
+            stringBuilder.AppendLine("  Status = @STATUS");
 
             IUnitOfWork.Executar(stringBuilder.ToString());
         }
