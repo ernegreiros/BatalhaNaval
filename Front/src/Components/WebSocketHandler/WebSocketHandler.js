@@ -44,8 +44,8 @@ WebSocketHandler.ConnectionRefused = (partnerCode) => {
     });
 }
 
-WebSocketHandler.PlayerReady = (partnerCode, myName, myCode) => {
-    hubConnection.invoke("PlayerReady", partnerCode, myName, myCode).catch(function (err) {
+WebSocketHandler.PlayerReady = (partnerCode, myName, myCode, ships) => {
+    hubConnection.invoke("PlayerReady", partnerCode, myName, myCode, ships).catch(function (err) {
         console.log(err.toString());
     });
 }

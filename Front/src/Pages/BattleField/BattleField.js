@@ -22,11 +22,12 @@ class BattleField extends Component {
     super(props);
 
     const playerShips = localStorage.getItem('player-ships')
+    const opponentShips = localStorage.getItem('opponent-ships')
 
     this.state = {
       activePlayer: "player",
       player: createPlayer(playerShips ? JSON.parse(playerShips) : null),
-      player2: createPlayer(),
+      player2: createPlayer(opponentShips ? JSON.parse(opponentShips) : null),
       loadingMatch: false,
       match: {},
       themes: [],
@@ -141,8 +142,9 @@ class BattleField extends Component {
 
     global.removeHandlers();
 
-    global.hubConnection.on("PlayerReady", function (partnerName) {
+    global.hubConnection.on("PlayerReady", function (partnerName, ships) {
       PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
+      localStorage.setItem('opponent-ships', ships);
     });
 
     global.hubConnection.on("StartGame", function (currentPlayerId) {
@@ -324,7 +326,6 @@ class BattleField extends Component {
     const match = JSON.parse(localStorage.getItem('match'));
     const matchId = match.matchId;
 
-    const { player } = this.state;
     const shipsPositions = ships
       .map(ship => ship.positions)
       .reduce((current, next) => [...current, ...next], []);
@@ -339,7 +340,7 @@ class BattleField extends Component {
     ApiClient.RegisterPositions(positions)
       .then(() => {
         this.setState({ waitingAdversary: true })
-        WebSocketHandler.PlayerReady(match.adversary.code, match.player.name, match.player.code);
+        WebSocketHandler.PlayerReady(match.adversary.code, match.player.name, match.player.code, JSON.stringify(ships));
         this.StartCheckingPlayerReady();
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao enviar posições para o servidor'))

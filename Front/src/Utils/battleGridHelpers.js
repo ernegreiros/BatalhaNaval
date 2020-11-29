@@ -65,8 +65,6 @@ const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
 
   log.push("It's a hit!")
 
-  debugger
-
   opponent.shipsGrid[row][col].status = "hit";
 
   opponentShip.positions.forEach(position => {

@@ -92,7 +92,7 @@ namespace Battleship
             await Clients.Client(partnerConnectionId).SendAsync("ConnectionRefused");
         }
 
-        public async Task PlayerReady(string partnerCode, string myName, string myCode)
+        public async Task PlayerReady(string partnerCode, string myName, string myCode, string ships)
         {
             var player = playerObject.FindPlayerByCode(myCode);
             var currentPlayerMatch = matchObject.CurrentMatch(player.Login);
@@ -100,7 +100,7 @@ namespace Battleship
 
             ChangePlayerReady(myCode, isReady: true);
 
-            await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName);
+            await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName, ships);
 
             if (player.ID == currentPlayerMatch.Player1)
             {
