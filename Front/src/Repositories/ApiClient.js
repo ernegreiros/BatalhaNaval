@@ -114,13 +114,25 @@ const ApiClient = {
   },
   GetCurrentMatch: () => {
     const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
-    return fetch(`${urlApi}/api/Match`, { headers })
-      .then(response => ApiClient.CatchError(response))
-      .then(response => response.json())
+    return new Promise((res, rej) => {
+      fetch(`${urlApi}/api/Match`, { headers })
+        .then(response => ApiClient.CatchError(response))
+        .then(async response => {
+          const { match = {} } = await response.json()
+          res({ ...match, player1Ready: match.player1Ready === 1, player2Ready: match.player2Ready === 1 })
+        })
+        .catch(e => rej(e))
+    });
   },
   GetPositions: () => {
     const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
     return fetch(`${urlApi}/api/BattleField`, { headers })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
+  },
+  GetPositionsByPlayerId: (playerId) => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return fetch(`${urlApi}/api/BattleField/${playerId}`, { headers })
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json())
   },

@@ -168,5 +168,38 @@ namespace BattleshipApi.Player.DAL
             IUnitOfWork.Executar(stringBuilder.ToString());
         }
 
+        public DML.Player FindPlayerById(int playerId)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("DECLARE @ID VARCHAR(30)");
+            stringBuilder.AppendLine($"SET @ID = '{playerId}'");
+            stringBuilder.AppendLine("SELECT");
+            stringBuilder.AppendLine("  ID,");
+            stringBuilder.AppendLine("  Name,");
+            stringBuilder.AppendLine("  Login,");
+            stringBuilder.AppendLine("  Code,");
+            stringBuilder.AppendLine("  Money");
+            stringBuilder.AppendLine("FROM USERS WITH(NOLOCK)");
+            stringBuilder.AppendLine("WHERE ID = @ID");
+
+
+            DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+
+                return new DML.Player
+                {
+                    ID = Convert.ToInt32(row["ID"]),
+                    Name = row["Name"].ToString(),
+                    Login = row["Login"].ToString(),
+                    Password = null,
+                    Code = row["Code"].ToString(),
+                    Money = Convert.ToDouble(row["Money"])
+                };
+            }
+            return null;
+        }
     }
 }

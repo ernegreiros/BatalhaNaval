@@ -62,7 +62,8 @@ namespace Battleship
                 matchId = matchObject.CreateMatch(new Match()
                 {
                     Player1 = player.ID,
-                    Player2 = partnerPlayer.ID
+                    Player2 = partnerPlayer.ID,
+                    CurrentPlayer = player.ID
                 });
             }
 
@@ -110,12 +111,17 @@ namespace Battleship
                 currentPlayerMatch.Player2Ready = 1;
             }
 
+            if (AllPlayersReady(partnerCode, myCode))
+            {
+                currentPlayerMatch.Status = BattleshipApi.Match.DML.Enumerados.MatchStatus.AllPlayersReady;
+            }
+
             matchObject.UpdateMatch(currentPlayerMatch);
 
             if (AllPlayersReady(partnerCode, myCode))
             {
-                await Clients.Caller.SendAsync("StartGame");
-                await Clients.Client(partnerConnectionId).SendAsync("StartGame");
+                await Clients.Caller.SendAsync("StartGame", currentPlayerMatch.CurrentPlayer);
+                await Clients.Client(partnerConnectionId).SendAsync("StartGame", currentPlayerMatch.CurrentPlayer);
             }
         }
 

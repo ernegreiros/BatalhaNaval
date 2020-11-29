@@ -11,6 +11,7 @@ import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 import UserService from "../../Services/UserService";
 import WebSocketHandler from "../../Components/WebSocketHandler/WebSocketHandler";
+import {MatchStatus} from "../../Enums/MatchStatus";
 
 const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
 // workaround para evitar rerender do carousel
@@ -26,6 +27,7 @@ class BattleField extends Component {
       activePlayer: "player",
       player: createPlayer(playerShips ? JSON.parse(playerShips) : null),
       player2: createPlayer(),
+      loadingMatch: false,
       match: {},
       themes: [],
       themeSelected: theme !== null,
@@ -47,35 +49,67 @@ class BattleField extends Component {
 
 
   async componentDidMount() {
+    const playersReady = JSON.parse(localStorage.getItem('StartMatch'));
+
     this.match = JSON.parse(localStorage.getItem('match'));
 
     this.hubConnection = await WebSocketHandler(this.match.player.login);
 
     this.addHandlersForBattle();
 
+    this.getCurrentMatch();
+    this.getThemes();
+    if (theme !== null) this.getThemeShips();
+    if (playersReady) {
+      this.getPositions();
+      this.getOpponentData();
+    }
+  }
+
+  getThemes = () => {
     ApiClient.GetThemes()
       .then(({ themes }) => this.setState({ themes }))
       .catch(() => PopUp.showPopUp('error', 'Falha ao carregar temas'))
       .finally(() => this.setState({ loadingTheme: false }))
+  }
 
-    if (theme !== null) this.getThemeShips()
+  getCurrentMatch = () => {
+    this.setState({ loadingMatch: true }, () => {
+      ApiClient.GetCurrentMatch()
+        .then((match = {}) => {
+          const playerInfo = UserService().getPlayerData();
+          const playerReady = playerInfo.id === match.player1 ? match.player1Ready : match.player2Ready;
+          const allPlayersReady = match.status === MatchStatus.AllPlayersReady;
 
-    ApiClient.GetCurrentMatch()
-      .then(({ match = {} }) => {
-        const playerInfo = UserService().getPlayerData();
-        this.setState({
-          match,
-          waitingAdversary: playerInfo.id === match.player1 ? match.player1Ready : match.player2Ready,
-          gameStarted: match.player1Ready && match.player2Ready,
-        });
-      })
-      .catch(() => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
+          this.setState(prevState => ({
+            match,
+            activePlayer: playerInfo.id === match.currentPlayer ? 'player' : 'player2',
+            player: { ...prevState.player, shipsSet: playerReady },
+            allShipsSet: allPlayersReady,
+            waitingAdversary: playerReady,
+            gameStarted: allPlayersReady,
+          }));
+        })
+        .catch((e) => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
+        .finally(() => this.setState({ loadingMatch: false }))
+    })
+  }
 
+  getPositions = () => {
     ApiClient.GetPositions()
-      .then(({ battleField }) => {
-        console.log(battleField);
+      .then(({ battleFields }) => {
+        console.log(battleFields);
       })
       .catch(() => PopUp.showPopUp('error', 'Falha ao obter posições do jogador'))
+  }
+
+  getOpponentData = () => {
+    const opponentId = this.match?.adversary?.id;
+    ApiClient.GetPositionsByPlayerId(opponentId)
+      .then(({ battleFields }) => {
+        console.log(battleFields)
+      })
+      .catch(() => PopUp.showPopUp('error', 'Falha ao obter posições do adversário'))
   }
 
   StartCheckingPlayerReady = () => {
@@ -111,20 +145,19 @@ class BattleField extends Component {
       PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
     });
 
-    global.hubConnection.on("StartGame", function () {
+    global.hubConnection.on("StartGame", function (currentPlayerId) {
+      const playerInfo = UserService().getPlayerData();
+
       localStorage.setItem('StartMatch', true)
+      this.setState({ activePlayer: playerInfo.id === currentPlayerId ? 'player' : 'player2' })
     });
 
     global.hubConnection.on("TakeShoot", function (x, y, hitTarget) {
-
       let player = global.state["player"];
 
       player.shipsGrid[x][y].status = hitTarget ? "hit" : "miss";
 
-      global.setState({
-        ["player"]: player
-      });
-
+      global.setState({ player: player, activePlayer: 'player' });
     });
 
   }
@@ -313,13 +346,14 @@ class BattleField extends Component {
   }
 
   render() {
-    const { themes, themeShips, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
+    const { themes, themeShips, loadingMatch, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
     const positionedAllShips = player.ships.every(ship => ship.positions.length > 0);
 
     return (
       <Fragment>
         <NavBar />
-        {!themeSelected && (
+        {loadingMatch && <div><h1>Carregando dados da partida...</h1></div>}
+        {!loadingMatch && !themeSelected && (
           <div>
             <h2 className="center">Escolha o Tema</h2>
             {!loadingTheme && (
@@ -354,7 +388,7 @@ class BattleField extends Component {
             )}
           </div>
         )}
-        {themeSelected && (
+        {!loadingMatch && themeSelected && (
           <div className="game">
             <img className="battlefield-background" src={theme.imagePath} />
             <div className="row">

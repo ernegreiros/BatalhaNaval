@@ -54,7 +54,6 @@ namespace BattleshipApi.Match.BLL
 
             try
             {
-
                 IDispatcherMatch.BeginTransaction();
                 int matchId = IDispatcherMatch.CreateMatch(pMatch);
                 IBoMatchSpecialPower.RegisterSpecialPowerToMatch(matchId);

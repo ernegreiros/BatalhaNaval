@@ -80,6 +80,7 @@ namespace BattleshipApi.Match.DAL
             stringBuilder.AppendLine("  PLAYER2,");
             stringBuilder.AppendLine("  PLAYER1READY,");
             stringBuilder.AppendLine("  PLAYER2READY,");
+            stringBuilder.AppendLine("  CURRENTPLAYER,");
             stringBuilder.AppendLine("  STATUS");
             stringBuilder.AppendLine("FROM MATCH WITH(NOLOCK)");
             stringBuilder.AppendLine("WHERE PLAYER1 = @ID_JOGADOR OR PLAYER2 = @ID_JOGADOR");
@@ -104,6 +105,9 @@ namespace BattleshipApi.Match.DAL
 
                 if (ds.Tables[0].Rows[0]["PLAYER2READY"] != DBNull.Value)
                     partida.Player2Ready = Convert.ToInt32(ds.Tables[0].Rows[0]["PLAYER2READY"]);
+
+                if (ds.Tables[0].Rows[0]["CURRENTPLAYER"] != DBNull.Value)
+                    partida.CurrentPlayer = Convert.ToInt32(ds.Tables[0].Rows[0]["CURRENTPLAYER"]);
 
                 if (ds.Tables[0].Rows[0]["STATUS"] != DBNull.Value)
                     partida.Status = (MatchStatus)Convert.ToInt32(ds.Tables[0].Rows[0]["STATUS"]);

@@ -54,15 +54,14 @@ class BattleGrid extends Component {
 
   async handleClick(row, col) {
     const { grid, opponent, player, activePlayer } = this.props;
+
     if (!activePlayer) {
       return;
     }
 
-
-    // TODO: colocar de volta a alternação de ataque
-    // if (player !== activePlayer) {
-    //   return PopUp.showPopUp('error', 'Its not your turn!!');
-    // }
+    if (player !== activePlayer) {
+      return PopUp.showPopUp('error', 'Its not your turn!!');
+    }
 
     try {
       const attackResponse = await this.updateAttack([{ row, col }]);
