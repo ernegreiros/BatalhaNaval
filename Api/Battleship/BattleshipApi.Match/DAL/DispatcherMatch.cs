@@ -136,19 +136,22 @@ namespace BattleshipApi.Match.DAL
             stringBuilder.AppendLine("        WHERE X.Attacked = 0 AND X.MatchId = B.MatchId");
             stringBuilder.AppendLine(")");
 
-            stringBuilder.AppendLine($"UPDATE TABLE MATCH SET STATUS = {Convert.ToInt32(MatchStatus.Closed)},");
+            stringBuilder.AppendLine("UPDATE MATCH");
+            stringBuilder.AppendLine("SET");
+            stringBuilder.AppendLine($"STATUS = {Convert.ToInt32(MatchStatus.Closed)},");
             stringBuilder.AppendLine("Winner = @WINNER");
             stringBuilder.AppendLine("WHERE ID = @ID");
 
-            stringBuilder.AppendLine("DECLARE @REWARD FLOAT");
+            stringBuilder.AppendLine("DECLARE @REWARD FLOAT, @SPREWARD FLOAT");
             stringBuilder.AppendLine("SET @REWARD = 300");
-            stringBuilder.AppendLine("SELECT @REWARD = SUM(S.Compensation)");
+            stringBuilder.AppendLine("SET @SPREWARD = 0");
+            stringBuilder.AppendLine("SELECT @SPREWARD = SUM(S.Compensation)");
             stringBuilder.AppendLine("FROM SpecialPowers S WITH(NOLOCK)");
             stringBuilder.AppendLine("INNER JOIN MatchSpecialPowers MS WITH(NOLOCK) ON MS.SpecialPowerId = S.ID");
             stringBuilder.AppendLine("WHERE MS.MatchId = @ID AND USED = 1 AND PLAYERID = @WINNER");
 
             stringBuilder.AppendLine("UPDATE USERS");
-            stringBuilder.AppendLine("SET MONEY = ISNULL(MONEY,0) + @REWARD");
+            stringBuilder.AppendLine("SET MONEY = MONEY + @REWARD + ISNULL(@SPREWARD, 0)");
             stringBuilder.AppendLine("WHERE ID = @WINNER");
 
             IUnitOfWork.Executar(stringBuilder.ToString());
