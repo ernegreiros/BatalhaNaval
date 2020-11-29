@@ -11,7 +11,7 @@ import ApiClient from "../../Repositories/ApiClient";
 import PopUp from "../../Components/PopUp/PopUp";
 import UserService from "../../Services/UserService";
 import WebSocketHandler from "../../Components/WebSocketHandler/WebSocketHandler";
-import {MatchStatus} from "../../Enums/MatchStatus";
+import { MatchStatus } from "../../Enums/MatchStatus";
 import LinkWrapper from "../../Utils/LinkWrapper";
 
 const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
@@ -164,7 +164,7 @@ class BattleField extends Component {
 
       global.setState({
         player: player,
-        activePlayer: 'player',
+        activePlayer: hitTarget ? 'player2' : 'player',
         gameOver: winner !== null,
         winner
       });
@@ -198,7 +198,7 @@ class BattleField extends Component {
     })
   }
 
-  updateGrids(player, grid, type, opponent) {
+  updateGrids(player, grid, type, opponent, hitTarget) {
     const payload = {
       player,
       grid,
@@ -208,8 +208,10 @@ class BattleField extends Component {
     this.gridReducer("UPDATE", payload);
     if (opponent && opponent.sunkenShips === 5) {
       this.gridReducer("GAME_OVER", payload);
-    } else if (opponent) {
+    } else if (opponent && hitTarget) {
       this.gridReducer("HIT", payload);
+    } else if (opponent && !hitTarget) {
+      this.gridReducer("MISS", payload);
     }
   }
 
@@ -232,6 +234,11 @@ class BattleField extends Component {
       });
     }
     if (action === "HIT") {
+      this.setState({
+        [other]: opponent
+      });
+    }
+    if (action === "MISS") {
       this.setState({
         [other]: opponent,
         activePlayer: other
@@ -365,9 +372,11 @@ class BattleField extends Component {
         {loadingMatch && <div><h1>Carregando dados da partida...</h1></div>}
         {gameOver && (
           <div>
-            <h1>Jogo encerrado!</h1>
-            <p>{win ? "Parabéns! Você venceu a partida!" : "Que pena... você perdeu na partida"}</p>
-            <LinkWrapper to="/Home" style={{ color: "white", textDecoration: "underline" }} activeStyle={{}}>
+            <h1 className="center">Jogo encerrado!</h1>
+            {win ? <h3 style={{ marginLeft: "20%" }}><b>Parabéns!</b> Você venceu a partida!</h3> : <h3 style={{ marginLeft: "20%" }}>Que pena... você perdeu a partida</h3>}
+            <br />
+            <LinkWrapper to="/Home" class="waves-effect waves-light btn" style={{ color: "white", marginLeft:"10%", backgroundColor: "rgba(51,51,51,0.08)" }} activeStyle={{}}>
+              <i className="material-icons left">arrow_back</i>
               Voltar para início
             </LinkWrapper>
           </div>

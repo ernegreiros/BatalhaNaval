@@ -45,7 +45,7 @@ class BattleGrid extends Component {
       type
     };
     const updatedGrid = hoverUpdate(data);
-    this.props.updateGrids(this.props.player, updatedGrid, "movesGrid", "");
+    this.props.updateGrids(this.props.player, updatedGrid, "movesGrid", false);
     this.setState({
       activeSpot: `${dictionary[col]}${row}`
     });
@@ -89,7 +89,7 @@ class BattleGrid extends Component {
       const updatedGame = placeMove({ data, hitTarget, enemyDefeated, positionsAttacked });
       if (updatedGame) {
         const playerInfo = UserService().getPlayerData();
-        this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent);
+        this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent, hitTarget);
         this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col, hitTarget, enemyDefeated ? playerInfo.id : null);
       }
     } catch (e) {

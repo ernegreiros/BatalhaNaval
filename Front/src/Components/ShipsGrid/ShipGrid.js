@@ -91,7 +91,7 @@ class ShipGrid extends Component {
 
     if (!allShipsSet) {
       const updatedGrid = hoverUpdate(data);
-      this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid");
+      this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid", false);
     }
 
   }
@@ -111,8 +111,8 @@ class ShipGrid extends Component {
     if (!allShipsSet) {
       const gameUpdate = placeShip(data);
       if (gameUpdate) {
-        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid");
-        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid");
+        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid",false);
+        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid",false);
         this.setState({
           rotated: true
         });
