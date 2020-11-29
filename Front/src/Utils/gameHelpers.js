@@ -15,30 +15,35 @@ const dictionary = {
 const makeShips = () => {
   return [
     {
-      type: 'Carrier',
-      size: 5,
-      positions: []
-    },
-    {
-      type: "Battleship",
-      size: 4,
-      positions: []
+      type: "Destroyer",
+      size: 2,
+      positions: [],
+      vertical: false
     },
     {
       type: "Cruiser",
       size: 3,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
       type: "Submarine",
       size: 3,
-      positions: []
+      positions: [],
+      vertical: false
     },
     {
-      type: "Destroyer",
-      size: 2,
-      positions: []
-    }
+      type: "Battleship",
+      size: 4,
+      positions: [],
+      vertical: false
+    },
+    {
+      type: 'Carrier',
+      size: 5,
+      positions: [],
+      vertical: false
+    },
   ];
 }
 
@@ -61,11 +66,21 @@ const gridGenerator = () => {
   return grid;
 };
 
-const createPlayer = () => {
+const createPlayer = (ships = null) => {
+  const shipsGrid = gridGenerator();
+
+  if (ships) {
+    const shipsPositions = ships
+      .map(ship => ship.positions)
+      .reduce((current, next) => [...current, ...next], []);
+
+    shipsPositions.forEach(({ row, col }) => shipsGrid[row][col].status = "occupied");
+  }
+
   return {
-    shipsGrid: gridGenerator(),
+    shipsGrid,
     movesGrid: gridGenerator(),
-    ships: makeShips(),
+    ships: ships ?? makeShips(),
     currentShip: 0,
     shipsSet: false,
     sunkenShips: 0

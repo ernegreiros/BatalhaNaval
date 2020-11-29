@@ -53,10 +53,10 @@ namespace BattleshipApi.BattleField.DAL
             stringBuilder.AppendLine("SET ATTACKED = 1");
             stringBuilder.AppendLine("FROM Match A");
             /*LEFT JOIN PELAS POSIÇÕES E CONTROLE*/
-            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.MatchId = B.MatchId AND A.MatchContrl = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
-            stringBuilder.AppendLine("WHERE POSX = @POSX AND POSY = @POSY");
-            stringBuilder.AppendLine("AND ATTACKED = 0 AND MATCHID = @MATCHID");
-            stringBuilder.AppendLine("AND PLAYERID <> @PLAYERID");
+            stringBuilder.AppendLine("LEFT JOIN BattleFieldDefended B ON A.ID = B.MatchId AND A.MatchContrl = B.MatchContrl AND POSX = @POSX AND POSY = @POSY AND PLAYERID <> @PLAYERID"); 
+            stringBuilder.AppendLine("WHERE BattleField.POSX = @POSX AND BattleField.POSY = @POSY");
+            stringBuilder.AppendLine("AND ATTACKED = 0 AND BattleField.MATCHID = @MATCHID");
+            stringBuilder.AppendLine("AND BattleField.PLAYERID <> @PLAYERID");
             stringBuilder.AppendLine("AND ISNULL(B.ID,0) = 0"); /*Aonde não tenha posição defendida*/
 
             IUnitOfWork.Executar(stringBuilder.ToString());
@@ -67,6 +67,50 @@ namespace BattleshipApi.BattleField.DAL
         public void DeffendPosition(DML.BattleFieldDefend p)
         {
             IUnitOfWork.Executar(IUnitOfWork.MontaInsertPorAttributo(p).ToString());
+        }
+
+        public List<DML.BattleField> Get(int playerID)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("DECLARE @PLAYERID INTEGER"); 
+            stringBuilder.AppendLine($"SET @PLAYERID = {playerID}");
+            stringBuilder.AppendLine("SELECT");
+            stringBuilder.AppendLine("  ID,");
+            stringBuilder.AppendLine("  PLAYERID,");
+            stringBuilder.AppendLine("  POSX,");
+            stringBuilder.AppendLine("  POSY");
+            stringBuilder.AppendLine("FROM BattleField WITH(NOLOCK)");
+            stringBuilder.AppendLine("  WHERE PlayerID = @PLAYERID");
+
+            DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                List<DML.BattleField> battleFields = new List<DML.BattleField>();
+
+                DML.BattleField battleField;
+
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    battleField = new DML.BattleField();
+
+                    if (row["ID"] != DBNull.Value)
+                        battleField.Id = Convert.ToInt32(row["ID"]);
+                    if (row["PLAYERID"] != DBNull.Value)
+                        battleField.Player = Convert.ToInt32(row["PLAYERID"]);
+                    if (row["POSX"] != DBNull.Value)
+                        battleField.PositionObject.X = Convert.ToInt32(row["POSX"].ToString());
+                    if (row["POSY"] != DBNull.Value)
+                        battleField.PositionObject.Y = Convert.ToInt32(row["POSY"].ToString());
+
+                    battleFields.Add(battleField);
+                }
+
+                return battleFields;
+            }
+
+            return new List<DML.BattleField>();
         }
 
         public bool PlayerDefeated(int pMatchId, int pTarget)
@@ -83,7 +127,7 @@ namespace BattleshipApi.BattleField.DAL
 
             DataSet ds = IUnitOfWork.Consulta(query.ToString());
 
-            return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+            return !(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0);
         }
 
         public void RegisterPosition(DML.BattleField pBattleFieldsPosition)

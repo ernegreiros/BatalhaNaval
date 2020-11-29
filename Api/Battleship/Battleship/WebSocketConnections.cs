@@ -4,11 +4,11 @@ namespace Battleship
 {
     public class WebSocketConnections
     {
-        public Dictionary<string, string> Connections { get; set; }
+        public List<Connection> Connections { get; set; }
         public List<PlayerBinded> PlayersBinded { get; set; }
         public WebSocketConnections()
         {
-            Connections = new Dictionary<string, string>();
+            Connections = new List<Connection>();
             PlayersBinded = new List<PlayerBinded>();
         }
     }
@@ -22,6 +22,20 @@ namespace Battleship
         {
             Code1 = code1;
             Code2 = code2;
+        }
+    }
+
+    public class Connection
+    {
+        public string Code { get; set; }
+        public string ConnectionId { get; set; }
+        public bool Ready { get; set; }
+
+        public Connection(string code, string connectionId, bool ready)
+        {
+            Code = code;
+            ConnectionId = connectionId;
+            Ready = ready;
         }
     }
 }

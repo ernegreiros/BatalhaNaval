@@ -42,17 +42,6 @@ namespace Battleship
             await Clients.Caller.SendAsync("CodeRegistered", player.Code);
         }
 
-        private void AddOrUpdateConnectionId(string code, string connectionId)
-        {
-            if (ConnectionAlreadyExists(code))
-            {
-                connections.Connections[code] = connectionId;
-                return;
-            }
-
-            connections.Connections.Add(code, connectionId);
-        }
-
         public async Task Connect(string myConnectionId, string partnerCode, string myCode)
         {
             var player = playerObject.FindPlayerByCode(myCode);
@@ -61,43 +50,90 @@ namespace Battleship
             if (!BondAlreadyExists(partnerCode, myCode))
                 connections.PlayersBinded.Add(new PlayerBinded(myCode, partnerCode));
 
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
 
-            await Clients.Caller.SendAsync("Connected");
-            await Clients.Client(partnerConnectionId).SendAsync("Connected");
+            var currentMatchPlayer = matchObject.CurrentMatch(player.Login);
+            var currentMatchPartner = matchObject.CurrentMatch(partnerPlayer.Login);
 
-            //matchObject.CreateMatch(new Match()
-            //{
-            //    Player1 = player.ID,
-            //    Player2 = partnerPlayer.ID
-            //});
+            var matchId = currentMatchPartner?.ID;
+
+            if (currentMatchPlayer is null || currentMatchPartner is null || !PlayersAlreadyInSameMatch(currentMatchPlayer, currentMatchPartner))
+            {
+                matchId = matchObject.CreateMatch(new Match()
+                {
+                    Player1 = player.ID,
+                    Player2 = partnerPlayer.ID,
+                    CurrentPlayer = player.ID
+                });
+            }
+
+            ChangePlayerReady(partnerCode, isReady: false);
+            ChangePlayerReady(myCode, isReady: false);
+
+            await Clients.Caller.SendAsync("Connected", matchId, player, partnerPlayer);
+            await Clients.Client(partnerConnectionId).SendAsync("Connected", matchId, partnerPlayer, player);
         }
+
+
 
         public async Task AskForConnection(string myConnectionId, string partnerCode, string myCode)
         {
             var player = playerObject.FindPlayerByCode(myCode);
             var partnerPlayer = playerObject.FindPlayerByCode(partnerCode);
 
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
 
             await Clients.Client(partnerConnectionId).SendAsync("AskingForConnection", player, partnerCode);
         }
 
         public async Task ConnectionRefused(string partnerCode)
         {
-            var partnerConnectionId = connections.Connections.FirstOrDefault(c => c.Key == partnerCode).Value;
+            var partnerConnectionId = GetConnectionId(partnerCode);
             await Clients.Client(partnerConnectionId).SendAsync("ConnectionRefused");
         }
 
-        public async Task Action(string mycode, string action, string x, string y)
+        public async Task PlayerReady(string partnerCode, string myName, string myCode, string ships)
         {
-            var connectionId = connections.Connections.Where(c => c.Key == mycode).FirstOrDefault().Value;
-            await Clients.Client(connectionId).SendAsync(action, x, y);
+            var player = playerObject.FindPlayerByCode(myCode);
+            var currentPlayerMatch = matchObject.CurrentMatch(player.Login);
+            var partnerConnectionId = GetConnectionId(partnerCode);
+
+            ChangePlayerReady(myCode, isReady: true);
+
+            await Clients.Client(partnerConnectionId).SendAsync("PlayerReady", myName, ships);
+
+            if (player.ID == currentPlayerMatch.Player1)
+            {
+                currentPlayerMatch.Player1Ready = 1;
+            } 
+            else
+            {
+                currentPlayerMatch.Player2Ready = 1;
+            }
+
+            if (AllPlayersReady(partnerCode, myCode))
+            {
+                currentPlayerMatch.Status = BattleshipApi.Match.DML.Enumerados.MatchStatus.AllPlayersReady;
+            }
+
+            matchObject.UpdateMatch(currentPlayerMatch);
+
+            if (AllPlayersReady(partnerCode, myCode))
+            {
+                await Clients.Caller.SendAsync("StartGame", currentPlayerMatch.CurrentPlayer);
+                await Clients.Client(partnerConnectionId).SendAsync("StartGame", currentPlayerMatch.CurrentPlayer);
+            }
         }
 
-        private bool ConnectionAlreadyExists(string code)
+        private bool AllPlayersReady(string partnerCode, string myCode)
         {
-            return connections.Connections.Any(x => x.Key == code);
+            return connections.Connections.FirstOrDefault(c => c.Code == myCode).Ready && connections.Connections.FirstOrDefault(c => c.Code == partnerCode).Ready;
+        }
+
+        public async Task Action(string adversaryCode, string action, int x, int y, bool hitTarget, int? winner)
+        {
+            var connectionId = GetConnectionId(adversaryCode);
+            await Clients.Client(connectionId).SendAsync(action, x, y, hitTarget, winner);
         }
 
         private bool BondAlreadyExists(string partnerCode, string myCode)
@@ -106,5 +142,41 @@ namespace Battleship
                                                    || (x.Code2 == myCode && x.Code1 == partnerCode));
         }
 
+        private bool PlayersAlreadyInSameMatch(Match currentMatchPlayer, Match currentMatchPartner)
+        {
+            bool inSameMatch = currentMatchPlayer.ID == currentMatchPartner.ID;
+            return inSameMatch;
+        }
+
+        private bool ConnectionAlreadyExists(string code)
+        {
+            return connections.Connections.Any(x => x.Code == code);
+        }
+
+        private void AddOrUpdateConnectionId(string code, string connectionId)
+        {
+            if (ConnectionAlreadyExists(code))
+            {
+                var item = connections.Connections.FirstOrDefault(c => c.Code == code);
+                item.ConnectionId = connectionId;
+                return;
+            }
+
+            connections.Connections.Add(new Connection(code, connectionId, false));
+        }
+
+        private string GetConnectionId(string code)
+        {
+            return connections.Connections.FirstOrDefault(c => c.Code == code).ConnectionId;
+        }
+
+        private void ChangePlayerReady(string code, bool isReady)
+        {
+            var playerConnection = connections.Connections.FirstOrDefault(c => c.Code == code);
+            playerConnection.Ready = isReady;
+        }
+        private void ChangeMatchPlayerReady()
+        {
+        }
     }
 }

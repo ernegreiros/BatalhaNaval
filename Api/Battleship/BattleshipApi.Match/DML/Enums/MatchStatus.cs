@@ -20,6 +20,12 @@ namespace BattleshipApi.Match.DML.Enumerados
         WaitingBattleField = 1,
 
         /// <summary>
+        /// Waiting the battlefield positions
+        /// </summary>
+        [Description("All Players positioned battlefield"), DefaultValue("2")]
+        AllPlayersReady = 2,
+
+        /// <summary>
         /// Created
         /// </summary>
         [Description("Created"), DefaultValue("2")]

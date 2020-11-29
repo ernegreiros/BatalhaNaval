@@ -54,7 +54,6 @@ namespace BattleshipApi.Match.BLL
 
             try
             {
-
                 IDispatcherMatch.BeginTransaction();
                 int matchId = IDispatcherMatch.CreateMatch(pMatch);
                 IBoMatchSpecialPower.RegisterSpecialPowerToMatch(matchId);
@@ -62,11 +61,27 @@ namespace BattleshipApi.Match.BLL
                 return matchId;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 IDispatcherMatch.Rollback();
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Update a match and returns your id
+        /// </summary>
+        /// <param name="pMatch">Match object</param>
+        /// <returns>Math id</returns>
+        public void UpdateMatch(DML.Match pMatch)
+        {
+            if (pMatch.ID <= 0)
+                throw new ArgumentOutOfRangeException(paramName: nameof(pMatch.ID), message: "ID cannot be lower ou equal zero");
+
+            if (pMatch == null)
+                throw new ArgumentNullException(paramName: nameof(pMatch), message: "Match is required");
+
+            IDispatcherMatch.UpdateMatch(pMatch);
         }
 
         /// <summary>
@@ -120,6 +135,12 @@ namespace BattleshipApi.Match.BLL
                 throw new Exception("Current player id required");
 
             IDispatcherMatch.ChangeCurrentPlayer(pMatchId, pCurrentPlayer);
+        }
+        public DML.Match Get(int ID)
+        {
+            if (ID <= 0)
+                throw new ArgumentOutOfRangeException(paramName: nameof(ID), message: "ID cannot be lower ou equal zero");
+            return IDispatcherMatch.Get(ID);
         }
     }
 }

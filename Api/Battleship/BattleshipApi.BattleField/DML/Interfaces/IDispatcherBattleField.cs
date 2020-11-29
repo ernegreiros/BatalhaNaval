@@ -21,5 +21,7 @@ namespace BattleshipApi.BattleField.DML.Interfaces
         bool PlayerDefeated(int pMatchId, int pTarget);
         void DeffendPosition(BattleFieldDefend p);
         BattleField ShowPosition(BattleFieldDefend p);
+        List<BattleField> Get(int playerID);
+        
     }
 }

@@ -35,10 +35,23 @@ namespace BattleshipApi.Match.DML
         public int Player1 { get; set; }
 
         /// <summary>
+        /// Jogador 1 está preparado
+        /// </summary>
+        [Coluna(pNomeColuna: "Player1Ready", DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
+        public int Player1Ready { get; set; } = 0;
+
+
+        /// <summary>
         /// Jogador 2
         /// </summary>
         [Coluna(pNomeColuna: "Player2", pTipoDadosBanco: DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
         public int Player2 { get; set; }
+
+        /// <summary>
+        /// Jogador 2 está preparado
+        /// </summary>
+        [Coluna(pNomeColuna: "Player2Ready", DataBaseHelper.Enumerados.TipoDadosBanco.Integer)]
+        public int Player2Ready { get; set; } = 0;
 
         /// <summary>
         /// Status da partida

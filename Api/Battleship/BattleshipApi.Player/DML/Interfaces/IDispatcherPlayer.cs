@@ -24,6 +24,7 @@ namespace BattleshipApi.Player.DML.Interfaces
         /// <returns>Player</returns>
         Player FindPlayerByUserName(string pUserName);
         Player FindPlayerByCode(string pUserName);
+        Player FindPlayerById(int playerId);
         void Update(Player oldPlayer);
     }
 }

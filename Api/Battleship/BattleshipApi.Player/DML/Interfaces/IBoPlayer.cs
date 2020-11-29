@@ -41,6 +41,7 @@
         Player FindPlayerByUserName(string pUserName);
 
         Player FindPlayerByCode(string pUserName);
+        Player FindPlayerById(int playerId);
 
         void Update(Player player);
     }

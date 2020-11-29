@@ -85,6 +85,8 @@ const classUpdate = square => {
     classes += "hit";
   } else if (square.status === "sunk") {
     classes += "sunk";
+  } else if (square.status === "miss") {
+    classes += "enemy-miss";
   }
   return classes;
 };

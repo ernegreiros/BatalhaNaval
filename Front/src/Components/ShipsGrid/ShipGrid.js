@@ -8,40 +8,76 @@ class ShipGrid extends Component {
     super(props);
 
     this.state = {
-      rotated: false,
+      ships: props.ships,
+      rotated: true,
       activeSpot: null
     };
 
     this.handleRotate = this.handleRotate.bind(this);
     this.handleHover = this.handleHover.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.rotateByKey = this.rotateByKey.bind(this);
   }
 
-  renderSquares() {
-    const { activePlayer, player, grid, shipsSet, gameOver } = this.props;
-    if (player === activePlayer || gameOver) {
-      return grid.map((row, i) => {
-        return row.map((square, j) => {
-          return (
-            <ShipGridSquare
-              key={`${i}${j}`}
-              i={i}
-              j={j}
-              shipsSet={shipsSet}
-              square={square}
-              handleHover={this.handleHover}
-              handleClick={this.handleClick}
-            />
-          );
-        });
+  rotateByKey(event) {
+    if (event.keyCode === 71 || event.keyCode === 103) {
+      const { grid } = this.props;
+      
+      grid.map((row, i) => {
+        row.map((square, j) => {
+          square.hover = false;
+        })
       });
-    } else {
-      return null;
+      
+      this.handleRotate();
     }
   }
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.rotateByKey, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.rotateByKey, false);
+  }
+
+
+  renderSquares() {
+    const { grid, shipsSet, gameOver } = this.props;
+
+    return grid.map((row, i) => {
+      return row.map((square, j) => {
+        return (
+          <ShipGridSquare
+            key={`${i}${j}`}
+            i={i}
+            j={j}
+            shipsSet={shipsSet}
+            square={square}
+            handleHover={this.handleHover}
+            handleClick={this.handleClick}
+          />
+        );
+      });
+    });
+  }
+
+  handleRotate() {
+    this.setState(prevState => {
+
+      let shipsArray = prevState.ships;
+      shipsArray[this.props.currentShip].vertical = !shipsArray[this.props.currentShip].vertical;
+
+      return {
+        rotated: !prevState.rotated,
+        ships: shipsArray
+      };
+    });
+  }
+
+
   handleHover(row, col, type) {
-    const { grid, ships, currentShip } = this.props;
+    const { grid, ships, currentShip, allShipsSet } = this.props;
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
@@ -52,12 +88,16 @@ class ShipGrid extends Component {
       ships,
       currentShip
     };
-    const updatedGrid = hoverUpdate(data);
-    this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid");
+
+    if (!allShipsSet) {
+      const updatedGrid = hoverUpdate(data);
+      this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid");
+    }
+
   }
 
   handleClick(row, col) {
-    const { grid, ships, currentShip } = this.props;
+    const { grid, ships, currentShip, allShipsSet } = this.props;
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
@@ -67,44 +107,54 @@ class ShipGrid extends Component {
       ships,
       currentShip
     };
-    const gameUpdate = placeShip(data);
-    if (gameUpdate) {
-      this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid");
-      this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid");
+
+    if (!allShipsSet) {
+      const gameUpdate = placeShip(data);
+      if (gameUpdate) {
+        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid");
+        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid");
+        this.setState({
+          rotated: true
+        });
+      }
     }
   }
 
-  handleRotate() {
-    this.setState(prevState => {
-      return {
-        rotated: !prevState.rotated
-      };
-    });
-  }
+  RotateImage = (CloudNaryimagePath) => {
+    let separator = 'upload';
+    let stringArray = CloudNaryimagePath.split(separator);
+    stringArray[1] = `/a_90${stringArray[1]}`;
 
-  renderPlacement() {
-    const { activePlayer, player, ships, currentShip, shipsSet } = this.props;
-    if (player === activePlayer && !shipsSet) {
-      return (
-        <p className="placement-text">
-          Now placing: {ships[currentShip].type} - size:{" "}
-          {ships[currentShip].size}
-        </p>
-      );
-    } else {
-      return null;
-    }
+    return stringArray.join(separator);
   }
 
   render() {
+    const { rotated, ships } = this.state;
+    const { themeShips } = this.props;
+    const positionedShips = ships.filter(ship => ship.positions.length > 0);
+
     return (
       <div className="grid-container">
         <h5 className="grid-title center"> Seu Campo </h5>
-        <div className="grid">{this.renderSquares()}</div>
-        {this.renderPlacement()}
-        <button className="btn-rotate" onClick={this.handleRotate}>
-          Rotate direction
-        </button>
+        <div className="grid" style={{ position: "absolute" }}>{this.renderSquares()}</div>
+        <div className="grid">
+          {positionedShips.map((ship, index) => {
+            const themeShip = themeShips.find(s => s.type === ship.size);
+            const { 0: first, [ship.positions.length - 1]: last } = ship.positions;
+
+            return (
+              <img
+                key={index}
+                style={{
+                  margin: "auto",
+                  ...(!ship.vertical
+                    ? { gridRow: first.row + 1, gridColumn: `${first.col + 1}/${last.col + 2}` }
+                    : { maxWidth: "100%", height: "100%", gridRow: `${first.row + 1}/${last.row + 2}`, gridColumn: `${first.col + 1}/${last.col + 1}` })
+                }}
+                src={ship.vertical ? this.RotateImage(themeShip.imagePath) : themeShip.imagePath} />
+            )
+          })}
+        </div>
       </div>
     );
   }

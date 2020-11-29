@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import HelperModal from '../../Utils/HelperModal';
 import LinkWrapper from '../../Utils/LinkWrapper';
 import Modal from '../Modal/Modal';
 import PopUp from '../PopUp/PopUp';
@@ -33,16 +34,53 @@ class InitialForm extends Component {
     }
 
     WebSocketHandler.AskForConnection(formValues.secondPlayerCode, player.code);
+
+  }
+
+  async componentDidUpdate() {
+    const player = this.props.player;
+
+    if (player.login !== "") {
+      console.log(player.login);
+
+      this.hubConnection = await WebSocketHandler(player.login);
+
+      this.addConnectionHandlers();
+    }
+  }
+
+  addConnectionHandlers() {
+    
+    this.removeHandlers();
+
+    this.hubConnection.on("AskingForConnection", function (player, myCode) {
+      HelperModal.ShowWantToConnectModal(player, myCode);
+    });
+
+    this.hubConnection.on("Connected", function (matchId, player, partnerPlayer) {
+      localStorage.setItem('match', JSON.stringify({ "matchId": matchId, "adversary": partnerPlayer, "player": player }));
+      localStorage.setItem('battle-field-theme', null)
+      localStorage.setItem('StartMatch', false);
+      localStorage.setItem('player-ships', null);
+      localStorage.setItem('opponent-ships', null);
+      PopUp.showPopUp('success', 'Conectado');
+      window.location.href = '/battlefield';
+    });
+
+    this.hubConnection.on("ConnectionRefused", function () {
+      PopUp.showPopUp('error', 'Pedido de jogo recusado');
+    });
+  }
+
+  removeHandlers() {
+    this.hubConnection.off("AskingForConnection");
+    this.hubConnection.off("Connected");
+    this.hubConnection.off("ConnectionRefused");
   }
 
   render() {
     const formValues = { ...this.state };
     const player = this.props.player;
-
-    if (player.login !== "") {
-      console.log(player.login);
-      WebSocketHandler(player.login);
-    }
 
     return (
       <div className="row" >

@@ -41,15 +41,17 @@ namespace BattleshipApi.BattleField.BLL
                 throw new ArgumentNullException(paramName: nameof(pBattleFieldsPositions), "Battlefield positions cannot be null");
             else if (pBattleFieldsPositions.Any())
             {
-                BattleFieldList list = pBattleFieldsPositions as BattleFieldList;
+                BattleFieldList list = new BattleFieldList();
 
-                if (!IBoPlayer.PlayerExists(list.First().Player))
+                list.BattleFields.AddRange(pBattleFieldsPositions);
+
+                if (!IBoPlayer.PlayerExists(list.BattleFields.First().Player))
                     throw new Exception("Player do not exists");
 
-                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.First().Player);
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.BattleFields.First().Player);
                 if (currentMatch == null)
                     throw new Exception("The player does not have any match");
-                else if (currentMatch.ID != list.First().MatchID)
+                else if (currentMatch.ID != list.BattleFields.First().MatchID)
                     throw new Exception("The current match of the player is another");
 
                 list.CheckData();
@@ -57,7 +59,7 @@ namespace BattleshipApi.BattleField.BLL
                 try
                 {
                     IDispatcherBattleField.BeginTransaction();
-                    foreach (DML.BattleField battleField in list)
+                    foreach (DML.BattleField battleField in list.BattleFields)
                     {
                         battleField.Attacked = 0;
                         IDispatcherBattleField.RegisterPosition(battleField);
@@ -81,18 +83,21 @@ namespace BattleshipApi.BattleField.BLL
                 throw new ArgumentNullException(paramName: nameof(pBattleFieldsPositions), "Battlefield positions cannot be null");
             else if (pBattleFieldsPositions.Any())
             {
-                BattleFieldList list = pBattleFieldsPositions as BattleFieldList;
+                BattleFieldList list = new BattleFieldList();
+
+                list.BattleFields.AddRange(pBattleFieldsPositions);
+
                 List<MatchAttacks.DML.MatchAttacks> matchAttacks = new List<MatchAttacks.DML.MatchAttacks>();
 
                 int targetHited = 0;
 
-                if (!IBoPlayer.PlayerExists(list.First().Player))
+                if (!IBoPlayer.PlayerExists(list.BattleFields.First().Player))
                     throw new Exception("Player do not exists");
 
-                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.First().Player);
+                Match.DML.Match currentMatch = IBoMatch.CurrentMatch(list.BattleFields.First().Player);
                 if (currentMatch == null)
                     throw new Exception("The player does not have any match");
-                else if (currentMatch.ID != list.First().MatchID)
+                else if (currentMatch.ID != list.BattleFields.First().MatchID)
                     throw new Exception("The current match of the player is another");
 
                 list.CheckData();
@@ -100,7 +105,7 @@ namespace BattleshipApi.BattleField.BLL
                 try
                 {
                     IDispatcherBattleField.BeginTransaction();
-                    foreach (DML.BattleField battleField in list)
+                    foreach (DML.BattleField battleField in list.BattleFields)
                     {
                         if (targetHited == 1)
                         {
@@ -130,16 +135,16 @@ namespace BattleshipApi.BattleField.BLL
 
                     IBoMatchAttacks.RegisterMatchAttacks(matchAttacks);
                     if (pSpecialPowerId != null)
-                        IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.First().MatchID, list.First().Player, Convert.ToInt32(pSpecialPowerId));
+                        IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.BattleFields.First().MatchID, list.BattleFields.First().Player, Convert.ToInt32(pSpecialPowerId));
 
-                    enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.Player1 == list.First().Player ? currentMatch.Player2 : currentMatch.Player1);
+                    enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.Player1 == list.BattleFields.First().Player ? currentMatch.Player2 : currentMatch.Player1);
                     if (enemyDefeated)
                     {
                         IBoMatch.CloseMatch(currentMatch.ID);
                     }
                     else
                     {
-                        IBoMatch.ChangeCurrentPlayer(currentMatch.ID, currentMatch.Player1 == list.First().Player ? currentMatch.Player2 : currentMatch.Player1);
+                        IBoMatch.ChangeCurrentPlayer(currentMatch.ID, currentMatch.Player1 == list.BattleFields.First().Player ? currentMatch.Player2 : currentMatch.Player1);
                     }
 
                     IDispatcherBattleField.Commit();
@@ -243,6 +248,11 @@ namespace BattleshipApi.BattleField.BLL
                 return retorno;
             }
             return null;
+        }
+
+        public List<DML.BattleField> Get(int playerID)
+        {
+            return IDispatcherBattleField.Get(playerID);
         }
     }
 }

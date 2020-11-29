@@ -15,5 +15,5 @@
       <HintPath>..\Referencies\DataBaseHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+  
 </Project>

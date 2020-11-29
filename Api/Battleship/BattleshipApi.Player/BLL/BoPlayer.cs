@@ -73,6 +73,11 @@ namespace BattleshipApi.Player.BLL
             return IDispatcherPlayer.FindPlayerByUserName(pUserName);
         }
 
+        public DML.Player FindPlayerById(int playerId)
+        {
+            return IDispatcherPlayer.FindPlayerById(playerId);
+        }
+
         public DML.Player FindPlayerByCode(string pCode)
         {
             if (string.IsNullOrEmpty(pCode))

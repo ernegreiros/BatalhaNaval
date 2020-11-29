@@ -112,6 +112,44 @@ const ApiClient = {
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },
+  GetCurrentMatch: () => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return new Promise((res, rej) => {
+      fetch(`${urlApi}/api/Match`, { headers })
+        .then(response => ApiClient.CatchError(response))
+        .then(async response => {
+          const { match = {} } = await response.json()
+          res({ ...match, player1Ready: match.player1Ready === 1, player2Ready: match.player2Ready === 1 })
+        })
+        .catch(e => rej(e))
+    });
+  },
+  GetPositions: () => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return fetch(`${urlApi}/api/BattleField`, { headers })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
+  },
+  GetPositionsByPlayerId: (playerId) => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}` });
+    return fetch(`${urlApi}/api/BattleField/${playerId}`, { headers })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json())
+  },
+  RegisterPositions: positions => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+    const payload = JSON.stringify(positions)
+    return fetch(`${urlApi}/api/BattleField/positions`, { method: 'POST', headers, body: payload })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json());
+  },
+  AttackPositions: positions => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+    const payload = JSON.stringify(positions)
+    return fetch(`${urlApi}/api/BattleField/attack`, { method: 'POST', headers, body: payload })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json());
+  },
   CreateTeam: team => {
     return fetch(`${urlApi}/api/teams/create`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: team })
       .then(response => response.json());

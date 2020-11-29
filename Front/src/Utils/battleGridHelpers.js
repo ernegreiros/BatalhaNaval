@@ -40,40 +40,85 @@ const getOpponentShipIdx = (opponent, row, col) => {
   return idx; 
 }
 
-const placeMove = ({ grid, row, col, rotated, player, opponent }) => {
+const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
+  const {grid, row, col, rotated, player, opponent} = data;
+
   if (grid[row][col].status !== "empty") {
     return null
   }
-  grid[row][col].hover = false;  
+
+  grid[row][col].hover = false;
+
   let log = [];
   log.push(`${player} targeted ${dictionary[col]}${row}`)
-  const idx = getOpponentShipIdx(opponent, row, col);
-  const opponentShip = opponent.ships[idx]; 
-  if (opponent.shipsGrid[row][col].status === "occupied") {
-    opponent.shipsGrid[row][col].status = "hit";
-    grid[row][col].status = "hit";
-    log.push("It's a hit!")
-    opponentShip.positions.forEach(position => {
-      if (position.row === row && position.col === col) {
-        position.hit = true;
-      }
-    })
-    if (isSunk(opponentShip, row, col)) {
-      opponent.sunkenShips++; 
-      opponentShip.positions.forEach(position => {
-        const { row, col } = position;
-        opponent.shipsGrid[row][col].status = "sunk"; 
-        grid[row][col].status = "sunk";
-      }); 
-      log.push(`${player} sank a ${opponentShip.type}!`)
-      if (opponent.sunkenShips === 5) {
-        log.push(`${player} wins!`); 
-      }
-    }
-  } else {
+
+  if (!hitTarget) {
     log.push("It's a miss");
+    opponent.shipsGrid[row][col].status = "miss";
     grid[row][col].status = "miss";
+
+    return {grid, opponent, log}
   }
+
+  const opponentShip = opponent
+    .ships
+    .find(({ positions }) => positions.find(position => position.row === row && position.col === col));
+
+  log.push("It's a hit!")
+
+  opponent.shipsGrid[row][col].status = "hit";
+
+  opponentShip.positions.forEach(position => {
+    if (position.row === row && position.col === col) {
+      position.hit = true;
+    }
+  })
+
+  if (isSunk(opponentShip, row, col)) {
+    opponent.sunkenShips++;
+
+    opponentShip.positions.forEach(position => {
+      const { row, col } = position;
+      opponent.shipsGrid[row][col].status = "sunk";
+      grid[row][col].status = "sunk";
+    });
+
+    log.push(`${player} sank a ${opponentShip.type}!`)
+  }
+
+  if (opponent.sunkenShips === 5) {
+    log.push(`${player} wins!`);
+  }
+
+  // TODO: SUNK DO NAVIO
+  // TODO: win!
+
+  // if (opponent.shipsGrid[row][col].status === "occupied") {
+  //   opponent.shipsGrid[row][col].status = "hit";
+  //   grid[row][col].status = "hit";
+  //   log.push("It's a hit!")
+  //   opponentShip.positions.forEach(position => {
+  //     if (position.row === row && position.col === col) {
+  //       position.hit = true;
+  //     }
+  //   })
+  //   if (isSunk(opponentShip, row, col)) {
+  //     opponent.sunkenShips++;
+  //     opponentShip.positions.forEach(position => {
+  //       const { row, col } = position;
+  //       opponent.shipsGrid[row][col].status = "sunk";
+  //       grid[row][col].status = "sunk";
+  //     });
+  //     log.push(`${player} sank a ${opponentShip.type}!`)
+  //     if (opponent.sunkenShips === 5) {
+  //       log.push(`${player} wins!`);
+  //     }
+  //   }
+  // } else {
+  //   log.push("It's a miss");
+  //   grid[row][col].status = "miss";
+  // }
+
   return {
     grid,
     opponent,

@@ -16,6 +16,8 @@ const WebSocketHandler = async (userName) => {
     hubConnection.invoke("RegisterCode", hubConnection.connectionId, userName).catch(function (err) {
         console.log(err.toString());
     });
+
+    return hubConnection;
 }
 
 WebSocketHandler.Connect = (partnerCode, mycode) => {
@@ -24,6 +26,7 @@ WebSocketHandler.Connect = (partnerCode, mycode) => {
         PopUp.showPopUp('error', 'Não foi possivel conectar ao jogador');
         console.log(err.toString());
     });
+
 }
 
 WebSocketHandler.AskForConnection = (partnerCode, mycode) => {
@@ -31,25 +34,25 @@ WebSocketHandler.AskForConnection = (partnerCode, mycode) => {
         PopUp.showPopUp('error', 'Não foi possivel conectar ao jogador');
         console.log(err.toString());
     });
+
+    return hubConnection;
 }
 
 WebSocketHandler.ConnectionRefused = (partnerCode) => {
-    hubConnection.invoke("ConnectionRefused", partnerCode).catch(function (err) {    
+    hubConnection.invoke("ConnectionRefused", partnerCode).catch(function (err) {
         console.log(err.toString());
     });
 }
 
-hubConnection.on("AskingForConnection", function (player, myCode) {
-    HelperModal.ShowWantToConnectModal(player, myCode);
-});
+WebSocketHandler.PlayerReady = (partnerCode, myName, myCode, ships) => {
+    hubConnection.invoke("PlayerReady", partnerCode, myName, myCode, ships).catch(function (err) {
+        console.log(err.toString());
+    });
+}
 
-hubConnection.on("Connected", function () {
-    PopUp.showPopUp('success', 'Conectado');
-    window.location.href = '/battlefield';
-});
-
-hubConnection.on("ConnectionRefused", function () {
-    PopUp.showPopUp('error', 'Pedido de jogo recusado');
-});
-
+WebSocketHandler.TakeShot = (mycode, action, x, y, hitTarget, enemyDefeated) => {
+    hubConnection.invoke("Action", mycode, action, x, y, hitTarget, enemyDefeated).catch(function (err) {
+        console.log(err.toString());
+    });
+}
 export default WebSocketHandler;
