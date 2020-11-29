@@ -50,8 +50,8 @@ WebSocketHandler.PlayerReady = (partnerCode, myName, myCode, ships) => {
     });
 }
 
-WebSocketHandler.TakeShot = (mycode, action, x, y, hitTarget) => {
-    hubConnection.invoke("Action", mycode, action, x, y, hitTarget).catch(function (err) {
+WebSocketHandler.TakeShot = (mycode, action, x, y, hitTarget, enemyDefeated) => {
+    hubConnection.invoke("Action", mycode, action, x, y, hitTarget, enemyDefeated).catch(function (err) {
         console.log(err.toString());
     });
 }

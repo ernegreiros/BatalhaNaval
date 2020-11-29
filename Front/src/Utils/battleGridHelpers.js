@@ -60,8 +60,9 @@ const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
     return {grid, opponent, log}
   }
 
-  const idx = getOpponentShipIdx(opponent, row, col);
-  const opponentShip = opponent.ships[idx];
+  const opponentShip = opponent
+    .ships
+    .find(({ positions }) => positions.find(position => position.row === row && position.col === col));
 
   log.push("It's a hit!")
 

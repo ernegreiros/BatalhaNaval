@@ -36,6 +36,7 @@ export default function({ history }) {
             <div className="row">
               <div className="input-field">
                 <input
+                  autoFocus
                   placeholder="Login"
                   type="text"
                   required

@@ -67,8 +67,18 @@ const gridGenerator = () => {
 };
 
 const createPlayer = (ships = null) => {
+  const shipsGrid = gridGenerator();
+
+  if (ships) {
+    const shipsPositions = ships
+      .map(ship => ship.positions)
+      .reduce((current, next) => [...current, ...next], []);
+
+    shipsPositions.forEach(({ row, col }) => shipsGrid[row][col].status = "occupied");
+  }
+
   return {
-    shipsGrid: gridGenerator(),
+    shipsGrid,
     movesGrid: gridGenerator(),
     ships: ships ?? makeShips(),
     currentShip: 0,

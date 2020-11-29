@@ -12,6 +12,7 @@ import PopUp from "../../Components/PopUp/PopUp";
 import UserService from "../../Services/UserService";
 import WebSocketHandler from "../../Components/WebSocketHandler/WebSocketHandler";
 import {MatchStatus} from "../../Enums/MatchStatus";
+import LinkWrapper from "../../Utils/LinkWrapper";
 
 const themeFromLocalStorage = localStorage.getItem('battle-field-theme');
 // workaround para evitar rerender do carousel
@@ -38,9 +39,9 @@ class BattleField extends Component {
       settingThemeShip: null,
       allShipsSet: false,
       gameStarted: false,
+      gameOver: false,
       waitingAdversary: false,
       winner: null,
-      gameOver: false,
       logs: [welcomeMessage]
     };
 
@@ -89,6 +90,7 @@ class BattleField extends Component {
             allShipsSet: allPlayersReady,
             waitingAdversary: playerReady,
             gameStarted: allPlayersReady,
+            gameOver: match.status === MatchStatus.Closed
           }));
         })
         .catch((e) => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
@@ -145,6 +147,7 @@ class BattleField extends Component {
     global.hubConnection.on("PlayerReady", function (partnerName, ships) {
       PopUp.showPopUp('success', `${partnerName} terminou de posicionar os navios`);
       localStorage.setItem('opponent-ships', ships);
+      global.setState({ player2: createPlayer(JSON.parse(ships)) });
     });
 
     global.hubConnection.on("StartGame", function (currentPlayerId) {
@@ -154,14 +157,18 @@ class BattleField extends Component {
       this.setState({ activePlayer: playerInfo.id === currentPlayerId ? 'player' : 'player2' })
     });
 
-    global.hubConnection.on("TakeShoot", function (x, y, hitTarget) {
+    global.hubConnection.on("TakeShoot", function (x, y, hitTarget, winner) {
       let player = global.state["player"];
 
       player.shipsGrid[x][y].status = hitTarget ? "hit" : "miss";
 
-      global.setState({ player: player, activePlayer: 'player' });
+      global.setState({
+        player: player,
+        activePlayer: 'player',
+        gameOver: winner !== null,
+        winner
+      });
     });
-
   }
 
   removeHandlers() {
@@ -221,7 +228,7 @@ class BattleField extends Component {
       this.setState({
         gameOver: true,
         activePlayer: null,
-        winner: player
+        winner: UserService().getPlayerData().id
       });
     }
     if (action === "HIT") {
@@ -347,14 +354,25 @@ class BattleField extends Component {
   }
 
   render() {
-    const { themes, themeShips, loadingMatch, loadingTheme, themeSelected, gameStarted, player, waitingAdversary } = this.state;
+    const { themes, themeShips, loadingMatch, loadingTheme, themeSelected, player, waitingAdversary,
+      gameStarted, gameOver, winner } = this.state;
     const positionedAllShips = player.ships.every(ship => ship.positions.length > 0);
+    const win = winner === UserService().getPlayerData().id;
 
     return (
       <Fragment>
         <NavBar />
         {loadingMatch && <div><h1>Carregando dados da partida...</h1></div>}
-        {!loadingMatch && !themeSelected && (
+        {gameOver && (
+          <div>
+            <h1>Jogo encerrado!</h1>
+            <p>{win ? "Parabéns! Você venceu a partida!" : "Que pena... você perdeu na partida"}</p>
+            <LinkWrapper to="/Home" style={{ color: "white", textDecoration: "underline" }} activeStyle={{}}>
+              Voltar para início
+            </LinkWrapper>
+          </div>
+        )}
+        {!gameOver && !loadingMatch && !themeSelected && (
           <div>
             <h2 className="center">Escolha o Tema</h2>
             {!loadingTheme && (
@@ -389,7 +407,7 @@ class BattleField extends Component {
             )}
           </div>
         )}
-        {!loadingMatch && themeSelected && (
+        {!gameOver && !loadingMatch && themeSelected && (
           <div className="game">
             <img className="battlefield-background" src={theme.imagePath} />
             <div className="row">

@@ -3,6 +3,7 @@ import { hoverUpdate, placeMove } from '../../Utils/battleGridHelpers';
 import PopUp from "../PopUp/PopUp";
 import BattleGridSquare from "./BattleGridSquare";
 import ApiClient from "../../Repositories/ApiClient";
+import UserService from "../../Services/UserService";
 
 const dictionary = {
   0: null,
@@ -87,8 +88,9 @@ class BattleGrid extends Component {
 
       const updatedGame = placeMove({ data, hitTarget, enemyDefeated, positionsAttacked });
       if (updatedGame) {
+        const playerInfo = UserService().getPlayerData();
         this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent);
-        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col, hitTarget);
+        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col, hitTarget, enemyDefeated ? playerInfo.id : null);
       }
     } catch (e) {
       console.log(e)
