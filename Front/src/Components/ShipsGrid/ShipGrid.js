@@ -1,10 +1,14 @@
 import React, { Component } from "react";
-import { placeShip, hoverUpdate } from "../../Utils/shipGridHelpers";
+import {Button, Modal, Table} from "react-materialize";
 import ShipGridSquare from "./ShipGridSquare";
 
+import { placeShip, hoverUpdate } from "../../Utils/shipGridHelpers";
 import "../../styles/Grid.css";
 
 import MoedaImage from '../../assets/moeda.png';
+import ApiClient from "../../Repositories/ApiClient";
+import PopUp from "../PopUp/PopUp";
+import SpecialPowerTypes from "../../Enums/SpecialPowerTypes";
 
 class ShipGrid extends Component {
   constructor(props) {
@@ -14,13 +18,27 @@ class ShipGrid extends Component {
       player: JSON.parse(localStorage.getItem('player')),
       ships: props.ships,
       rotated: true,
-      activeSpot: null
+      activeSpot: null,
+      specialPowers: [],
+      choosingPower: false,
     };
 
     this.handleRotate = this.handleRotate.bind(this);
     this.handleHover = this.handleHover.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.rotateByKey = this.rotateByKey.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.rotateByKey, false);
+
+    ApiClient.GetSpecialPowers()
+      .then(specialPowers => this.setState({ specialPowers }))
+      .catch(() => PopUp.showPopUp('error', 'Its not your turn!!'));
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.rotateByKey, false);
   }
 
   rotateByKey(event) {
@@ -36,15 +54,6 @@ class ShipGrid extends Component {
       this.handleRotate();
     }
   }
-
-  componentDidMount() {
-    document.addEventListener("keydown", this.rotateByKey, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.rotateByKey, false);
-  }
-
 
   renderSquares() {
     const { grid, shipsSet, gameOver } = this.props;
@@ -79,7 +88,6 @@ class ShipGrid extends Component {
     });
   }
 
-
   handleHover(row, col, type) {
     const { grid, ships, currentShip, allShipsSet } = this.props;
     const { rotated } = this.state;
@@ -97,7 +105,6 @@ class ShipGrid extends Component {
       const updatedGrid = hoverUpdate(data);
       this.props.updateGrids(this.props.player, updatedGrid, "shipsGrid", false);
     }
-
   }
 
   handleClick(row, col) {
@@ -132,8 +139,13 @@ class ShipGrid extends Component {
     return stringArray.join(separator);
   }
 
+  handleSpecialPower = specialPower => {
+    if (specialPower > this.state.player.money)
+      return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
+  }
+
   render() {
-    const { rotated, ships, player } = this.state;
+    const { rotated, ships, player, choosingPower, specialPowers } = this.state;
     const { themeShips } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
 
@@ -145,7 +157,55 @@ class ShipGrid extends Component {
             <span style={{ fontSize: 30 }}>{player.money}</span>
           </div>
           <h5 className="grid-title center">Seu Campo</h5>
+          <Modal
+            style={{ width: 700 }}
+            fixedFooter={false}
+            actions={[]}
+            header="Selecionar - Poder especial"
+            open={choosingPower}
+            options={{
+              dismissible: true,
+              endingTop: '10%',
+              inDuration: 250,
+              onCloseStart: null,
+              onOpenEnd: () => this.setState({ choosingPower: true }),
+              onCloseEnd: () => this.setState({ choosingPower: false }),
+              opacity: 0.5,
+              outDuration: 250,
+              preventScrolling: true,
+              startingTop: '4%',
+            }}
+            trigger={<Button style={{ position: 'absolute', top: -10, right: 0  }} onClick={this.showPowersModal}>Poderes</Button>}
+          >
+            {choosingPower && (
+              <Table style={{ margin: 20 }}>
+                <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Compensação vitória</th>
+                  <th>Custo</th>
+                  <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {specialPowers.map(specialPower => {
+                  const {id, name,  type, quantifier, compensation, cost} = specialPower;
+
+                  return (
+                    <tr key={id}>
+                      <td>"{name}" - ({type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa"} - {quantifier} campos)</td>
+                      <td>{compensation}</td>
+                      <td>{cost}</td>
+                      <td><Button onClick={() => this.handleSpecialPower(specialPower)}>Usar</Button></td>
+                    </tr>
+                  );
+                })}
+                </tbody>
+              </Table>
+            )}
+          </Modal>
         </div>
+
         <div className="grid" style={{ position: "absolute" }}>{this.renderSquares()}</div>
         <div className="grid">
           {positionedShips.map((ship, index) => {
