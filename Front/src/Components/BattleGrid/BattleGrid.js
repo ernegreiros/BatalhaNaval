@@ -136,7 +136,9 @@ class BattleGrid extends Component {
   render() {
     return (
       <div className="grid-container">
-        <h5 className="grid-title center"> Campo do Adversário </h5>
+        <div className="grid-title-container">
+          <h5 className="grid-title center"> Campo do Adversário </h5>
+        </div>
         <div className="grid" onMouseLeave={this.handleExit}>
           {this.renderSquares()}
         </div>

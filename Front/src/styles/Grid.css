@@ -2,6 +2,11 @@
   margin: 2em;
 }
 
+.grid-title-container {
+  border-bottom: 1px solid rgb(205, 205, 205);
+  margin-bottom: 20px;
+}
+
 .grid {
   display: grid;
   grid-gap: 0px;
@@ -9,7 +14,6 @@
   grid-template-rows: repeat(11, 1fr);
   height: 40em;
   width: 40em;
-  
 }
 
 .grid-square {
@@ -39,9 +43,6 @@
 }
 
 .grid-title {
-  margin-bottom: 20px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgb(205, 205, 205);
 }
 
 .placement-text {

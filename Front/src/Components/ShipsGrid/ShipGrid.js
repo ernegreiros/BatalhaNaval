@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import { placeShip, hoverUpdate } from "../../Utils/shipGridHelpers";
 import ShipGridSquare from "./ShipGridSquare";
+
 import "../../styles/Grid.css";
+
+import MoedaImage from '../../assets/moeda.png';
 
 class ShipGrid extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      player: JSON.parse(localStorage.getItem('player')),
       ships: props.ships,
       rotated: true,
       activeSpot: null
@@ -129,13 +133,19 @@ class ShipGrid extends Component {
   }
 
   render() {
-    const { rotated, ships } = this.state;
+    const { rotated, ships, player } = this.state;
     const { themeShips } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
 
     return (
       <div className="grid-container">
-        <h5 className="grid-title center"> Seu Campo </h5>
+        <div style={{ position: 'relative' }} className="grid-title-container">
+          <div style={{ display: 'flex', position: 'absolute', top: -10, left: 0 }}>
+            <img style={{ display: 'inline', width: 50 }} src={MoedaImage} />
+            <span style={{ fontSize: 30 }}>{player.money}</span>
+          </div>
+          <h5 className="grid-title center">Seu Campo</h5>
+        </div>
         <div className="grid" style={{ position: "absolute" }}>{this.renderSquares()}</div>
         <div className="grid">
           {positionedShips.map((ship, index) => {
