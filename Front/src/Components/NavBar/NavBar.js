@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import UserService from '../../Services/UserService';
 import LinkWrapper from '../../Utils/LinkWrapper';
 
 
@@ -12,6 +13,7 @@ class NavBar extends Component {
                         <LinkWrapper to="/home" className="brand-logo center" activeStyle={{}}>BATALHA NAVAL</LinkWrapper>
                         <ul id="nav-mobile" className="right">
                             <li><LinkWrapper to="/backoffice-login" activeStyle={{}} style={{marginRight:"2%"}}>BackOffice</LinkWrapper></li>
+                            <li onClick={()=>{UserService().saveToken(null)}}><LinkWrapper to="/" activeStyle={{}} style={{marginRight:"2%"}} >Logoff</LinkWrapper></li>
                         </ul>
                     </div>
                 </nav>
