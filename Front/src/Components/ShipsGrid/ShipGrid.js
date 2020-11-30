@@ -141,10 +141,12 @@ class ShipGrid extends Component {
   }
 
   handleSpecialPower = specialPower => {
-    if (specialPower > this.state.player.money)
+    const { player } = this.state;
+
+    if (specialPower.cost > player.money)
       return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
 
-    this.setState({ currentSpecialPower: specialPower, choosingPower: false });
+    this.setState({ currentSpecialPower: specialPower, choosingPower: false, player: { ...player, money: player.money - specialPower.cost  } });
   }
 
   render() {
@@ -178,7 +180,7 @@ class ShipGrid extends Component {
               preventScrolling: true,
               startingTop: '4%',
             }}
-            trigger={<Button disabled={currentSpecialPower} style={{ position: 'absolute', top: -10, right: 0  }}>Poderes</Button>}
+            trigger={<Button disabled={currentSpecialPower} style={{ position: 'absolute', top: -10, right: 0 }}>Poderes</Button>}
           >
             {choosingPower && (
               <Table style={{ margin: 20 }}>
