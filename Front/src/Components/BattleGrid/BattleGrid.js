@@ -61,7 +61,7 @@ class BattleGrid extends Component {
     }
 
     if (player !== activePlayer) {
-      return PopUp.showPopUp('error', 'Its not your turn!!');
+      return PopUp.showPopUp('error', 'Não é seu turno!!');
     }
 
     try {
