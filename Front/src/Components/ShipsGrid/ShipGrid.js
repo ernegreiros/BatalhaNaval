@@ -20,6 +20,7 @@ class ShipGrid extends Component {
       rotated: true,
       activeSpot: null,
       specialPowers: [],
+      currentSpecialPower: null,
       choosingPower: false,
     };
 
@@ -142,10 +143,12 @@ class ShipGrid extends Component {
   handleSpecialPower = specialPower => {
     if (specialPower > this.state.player.money)
       return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
+
+    this.setState({ currentSpecialPower: specialPower, choosingPower: false });
   }
 
   render() {
-    const { rotated, ships, player, choosingPower, specialPowers } = this.state;
+    const { rotated, ships, player, choosingPower, specialPowers, currentSpecialPower } = this.state;
     const { themeShips } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
 
@@ -175,7 +178,7 @@ class ShipGrid extends Component {
               preventScrolling: true,
               startingTop: '4%',
             }}
-            trigger={<Button style={{ position: 'absolute', top: -10, right: 0  }} onClick={this.showPowersModal}>Poderes</Button>}
+            trigger={<Button disabled={currentSpecialPower} style={{ position: 'absolute', top: -10, right: 0  }}>Poderes</Button>}
           >
             {choosingPower && (
               <Table style={{ margin: 20 }}>
@@ -205,6 +208,7 @@ class ShipGrid extends Component {
             )}
           </Modal>
         </div>
+        {currentSpecialPower && <b>Você está utilizando o poder: {currentSpecialPower.name} ({currentSpecialPower.type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa" } - {currentSpecialPower.quantifier} campos)</b>}
 
         <div className="grid" style={{ position: "absolute" }}>{this.renderSquares()}</div>
         <div className="grid">
