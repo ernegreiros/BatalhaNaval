@@ -20,6 +20,7 @@ const ShipGridSquare = ({ square, i, j, handleHover, handleClick, shipsSet }) =>
       onMouseLeave={() => handleHover(i, j, "leave")}
       onClick={() => handleClick(i, j)}
     />
+    
   );
 };
 
