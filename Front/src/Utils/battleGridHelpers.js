@@ -40,7 +40,7 @@ const getOpponentShipIdx = (opponent, row, col) => {
   return idx; 
 }
 
-const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
+const placeMove = ({ data, hitTarget, enemyDefeated, specialPowerPositions }) => {
   const {grid, row, col, rotated, player, opponent} = data;
 
   if (grid[row][col].status !== "empty") {
@@ -72,6 +72,15 @@ const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
     if (position.row === row && position.col === col) {
       position.hit = true;
     }
+  })
+
+  specialPowerPositions.forEach(({ row: sRow,  col: sCol }) => {
+    opponentShip.positions.forEach(position => {
+      if (position.row === sRow && position.col === sCol) {
+        opponent.shipsGrid[row][col].status = "hit";
+        position.hit = true;
+      }
+    })
   })
 
   if (isSunk(opponentShip, row, col)) {

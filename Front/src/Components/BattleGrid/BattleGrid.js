@@ -51,10 +51,10 @@ class BattleGrid extends Component {
     });
   }
 
-  updateAttack = positions => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })))
+  updateAttack = (positions, specialPowerId = null) => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })), specialPowerId)
 
   async handleClick(row, col) {
-    const { grid, opponent, player, activePlayer } = this.props;
+    const { grid, opponent, player, activePlayer, currentSpecialPower } = this.props;
 
     if (!activePlayer) {
       return;
@@ -65,8 +65,12 @@ class BattleGrid extends Component {
     }
 
     try {
-      const attackResponse = await this.updateAttack([{ row, col }]);
+      const specialPowerPositions = currentSpecialPower !== null ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 })) : [];
+      const positionsToAttack = [{ row, col }, ...specialPowerPositions];
+
+      const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);
       const { hitTarget, enemyDefeated, positionsAttacked = [] } = attackResponse;
+
       /*
           enemyDefeated: false
           hitTarget: true
@@ -86,7 +90,7 @@ class BattleGrid extends Component {
 
       // TODO: esse placemove tem que contemplar ataque de varios quadrados!
 
-      const updatedGame = placeMove({ data, hitTarget, enemyDefeated, positionsAttacked });
+      const updatedGame = placeMove({ data, hitTarget, enemyDefeated, specialPowerPositions });
       if (updatedGame) {
         const playerInfo = UserService().getPlayerData();
         this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent, hitTarget);

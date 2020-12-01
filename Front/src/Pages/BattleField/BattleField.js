@@ -253,7 +253,7 @@ class BattleField extends Component {
 
   renderBattleGrid(player) {
     const opponent = "player2";
-    const { activePlayer } = this.state;
+    const { activePlayer, currentSpecialPower } = this.state;
     return (
       <BattleGrid
         player={player}
@@ -264,6 +264,7 @@ class BattleField extends Component {
         shipsSet={this.state[player].shipsSet}
         websocketTakeShot={WebSocketHandler.TakeShot}
         matchInfo={this.match}
+        currentSpecialPower={currentSpecialPower}
       />
     );
   }
