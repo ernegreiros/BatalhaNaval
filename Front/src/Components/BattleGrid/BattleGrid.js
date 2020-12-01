@@ -96,7 +96,7 @@ class BattleGrid extends Component {
       if (updatedGame) {
         const playerInfo = UserService().getPlayerData();
         this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent, hitTarget);
-        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col, hitTarget, enemyDefeated ? playerInfo.id : null);
+        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col,specialPowerPositions, hitTarget, enemyDefeated ? playerInfo.id : null);
       }
     } catch (e) {
       console.log(e)

@@ -158,10 +158,29 @@ class BattleField extends Component {
       this.setState({ activePlayer: playerInfo.id === currentPlayerId ? 'player' : 'player2' })
     });
 
-    global.hubConnection.on("TakeShoot", function (x, y, hitTarget, winner) {
+    global.hubConnection.on("TakeShoot", function (x, y, specialPowerPositions, hitTarget, winner) {
       let player = global.state["player"];
 
       player.shipsGrid[x][y].status = hitTarget ? "hit" : "miss";
+      
+      const playerShip = player
+      .ships
+      .find(({ positions }) => positions.find(position => position.row === x && position.col === y));
+
+      specialPowerPositions.forEach(({ row: sRow,  col: sCol }) => {
+        const hitOpponentShip = playerShip.positions.find(position => position.row === sRow && position.col === sCol)
+    
+        if (hitOpponentShip) {
+          player.shipsGrid[sRow][sCol].status = "hit";
+          playerShip.positions.forEach(position => {
+            if (position.row === sRow && position.col === sCol) {
+              position.hit = true;
+            }
+          });
+        } else {
+          player.shipsGrid[sRow][sCol].status = "miss";
+        }
+      })
 
       global.setState({
         player: player,

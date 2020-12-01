@@ -42,7 +42,7 @@ const Home = ({ history }) => {
       <ParallaxImage imagePath={ShipShootImage} style={{ height: "15em", opacity: ".25" }} />
 
       <div className="row" style={{ marginLeft: "" }}>
-        <h5 className="center">Seja bem-vindo, <b>{player.name}</b>!  Você tem <b>{player.money.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</b> BN Points </h5>
+        <h5 className="center">Seja bem-vindo, <b>{player.name}</b>!  Você tem <b>{player.money.toLocaleString('pt-br', { minimumFractionDigits: 0 })}</b> BN Points </h5>
         <h5 className="center" >Seu Código: <b>{player.code}</b></h5>
       </div>
 
