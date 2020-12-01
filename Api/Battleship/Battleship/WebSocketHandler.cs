@@ -63,7 +63,7 @@ namespace Battleship
                 {
                     Player1 = player.ID,
                     Player2 = partnerPlayer.ID,
-                    CurrentPlayer = player.ID
+                    CurrentPlayer = partnerPlayer.ID 
                 });
             }
 
