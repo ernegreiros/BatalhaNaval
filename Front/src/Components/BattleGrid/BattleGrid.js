@@ -65,7 +65,9 @@ class BattleGrid extends Component {
     }
 
     try {
-      const specialPowerPositions = currentSpecialPower !== null ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 })) : [];
+      const specialPowerPositions = currentSpecialPower !== null
+        ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 }))
+        : [];
       const positionsToAttack = [{ row, col }, ...specialPowerPositions];
 
       const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);

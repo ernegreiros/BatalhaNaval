@@ -382,7 +382,7 @@ class BattleField extends Component {
             <h1 className="center">Jogo encerrado!</h1>
             {win ? <h3 style={{ marginLeft: "20%" }}><b>Parabéns!</b> Você venceu a partida!</h3> : <h3 style={{ marginLeft: "20%" }}>Que pena... você perdeu a partida</h3>}
             <br />
-            <LinkWrapper to="/Home" class="waves-effect waves-light btn" style={{ color: "white", marginLeft:"10%", backgroundColor: "rgba(51,51,51,0.08)" }} activeStyle={{}}>
+            <LinkWrapper to="/Home" className="waves-effect waves-light btn" style={{ color: "white", marginLeft:"10%", backgroundColor: "rgba(51,51,51,0.08)" }} activeStyle={{}}>
               <i className="material-icons left">arrow_back</i>
               Voltar para início
             </LinkWrapper>

@@ -19,15 +19,8 @@ const hoverUpdate = ({ grid, row, col, rotated, type }) => {
   return grid;
 };
 
-const isSunk = (ship, row, col) => {
-  let sunk = true;
-  if (!ship) return false;
-  ship.positions.forEach(position => {
-    if (!(position.hit)) {
-      sunk = false;
-    }
-  });
-  return sunk;
+const isSunk = (ship) => {
+  return !(!ship || ship.positions.find(position => !position.hit));
 }
 
 const getOpponentShipIdx = (opponent, row, col) => {
@@ -57,6 +50,11 @@ const placeMove = ({ data, hitTarget, enemyDefeated, specialPowerPositions }) =>
     opponent.shipsGrid[row][col].status = "miss";
     grid[row][col].status = "miss";
 
+    specialPowerPositions.forEach(({ row: sRow, col: sCol }) => {
+      opponent.shipsGrid[sRow][sCol].status = "miss";
+      grid[sRow][sCol].status = "miss";
+    });
+
     return {grid, opponent, log}
   }
 
@@ -75,15 +73,21 @@ const placeMove = ({ data, hitTarget, enemyDefeated, specialPowerPositions }) =>
   })
 
   specialPowerPositions.forEach(({ row: sRow,  col: sCol }) => {
-    opponentShip.positions.forEach(position => {
-      if (position.row === sRow && position.col === sCol) {
-        opponent.shipsGrid[row][col].status = "hit";
-        position.hit = true;
-      }
-    })
+    const hitOpponentShip = opponentShip.positions.find(position => position.row === sRow && position.col === sCol)
+
+    if (hitOpponentShip) {
+      opponent.shipsGrid[sRow][sCol].status = "hit";
+      opponentShip.positions.forEach(position => {
+        if (position.row === sRow && position.col === sCol) {
+          position.hit = true;
+        }
+      });
+    } else {
+      opponent.shipsGrid[sRow][sCol].status = "miss";
+    }
   })
 
-  if (isSunk(opponentShip, row, col)) {
+  if (isSunk(opponentShip)) {
     opponent.sunkenShips++;
 
     opponentShip.positions.forEach(position => {
