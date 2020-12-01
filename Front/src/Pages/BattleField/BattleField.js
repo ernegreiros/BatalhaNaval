@@ -210,6 +210,7 @@ class BattleField extends Component {
     if (opponent && opponent.sunkenShips === 5) {
       this.gridReducer("GAME_OVER", payload);
     } else if (opponent && hitTarget) {
+      this.setState({ currentSpecialPower: null });
       this.gridReducer("HIT", payload);
     } else if (opponent && !hitTarget) {
       this.gridReducer("MISS", payload);
@@ -247,9 +248,7 @@ class BattleField extends Component {
     }
   }
 
-  handleSpecialPower = (specialPower) => {
-    this.setState({ currentSpecialPower: specialPower })
-  }
+  handleSpecialPower = (specialPower) => this.setState({ currentSpecialPower: specialPower })
 
   renderBattleGrid(player) {
     const opponent = "player2";
@@ -270,7 +269,7 @@ class BattleField extends Component {
   }
 
   renderShipGrid(player) {
-    const { activePlayer, gameOver, themeShips } = this.state;
+    const { activePlayer, gameOver, themeShips, currentSpecialPower } = this.state;
 
     return (
       <ShipGrid
@@ -282,6 +281,7 @@ class BattleField extends Component {
         updateGrids={this.updateGrids}
         updateShips={this.updateShips}
         handlePowerChoose={this.handleSpecialPower}
+        currentSpecialPower={currentSpecialPower}
         shipsSet={this.state[player].shipsSet}
         allShipsSet={this.state.allShipsSet}
         activePlayer={activePlayer}

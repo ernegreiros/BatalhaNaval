@@ -20,7 +20,6 @@ class ShipGrid extends Component {
       rotated: true,
       activeSpot: null,
       specialPowers: [],
-      currentSpecialPower: null,
       choosingPower: false,
     };
 
@@ -146,14 +145,15 @@ class ShipGrid extends Component {
     if (specialPower.cost > player.money)
       return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
 
-    this.setState({ currentSpecialPower: specialPower, choosingPower: false, player: { ...player, money: player.money - specialPower.cost  } });
+    this.setState({ choosingPower: false, player: { ...player, money: player.money - specialPower.cost  } });
     this.props.handlePowerChoose(specialPower);
   }
 
   render() {
-    const { rotated, ships, player, choosingPower, specialPowers, currentSpecialPower } = this.state;
-    const { themeShips } = this.props;
+    const { rotated, ships, player, choosingPower, specialPowers } = this.state;
+    const { themeShips, currentSpecialPower, activePlayer } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
+    const isPlayerTurn = this.props.player === activePlayer;
 
     return (
       <div className="grid-container">
@@ -181,7 +181,7 @@ class ShipGrid extends Component {
               preventScrolling: true,
               startingTop: '4%',
             }}
-            trigger={<Button disabled={currentSpecialPower} style={{ position: 'absolute', top: -10, right: 0 }}>Poderes</Button>}
+            trigger={<Button disabled={!isPlayerTurn || !!currentSpecialPower} style={{ position: 'absolute', top: -10, right: 0 }}>Poderes</Button>}
           >
             {choosingPower && (
               <Table style={{ margin: 20 }}>
