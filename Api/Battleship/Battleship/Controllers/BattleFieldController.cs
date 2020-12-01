@@ -147,11 +147,11 @@ namespace Battleship.Controllers
 
         [HttpPost("attack")]
         [Authorize(Policy = BoJWT.NormalUserPolicyName)]
-        public OutAttackPlayerVM AttackPositions(List<InAttackPlayerVM> pAttackPositions, int? pSpecialPower)
+        public OutAttackPlayerVM AttackPositions(InAttackPositionsVm pModel)
         {
             OutAttackPlayerVM outAttackPlayerVM = new OutAttackPlayerVM();
 
-            if (pAttackPositions.Any())
+            if (pModel.attackPositions.Any())
             {
                 BattleshipApi.Player.DML.Player player = IBoPlayer.FindPlayerByUserName(User.Claims.GetJWTUserName());
 
@@ -171,7 +171,7 @@ namespace Battleship.Controllers
                     }
                     else
                     {
-                        outAttackPlayerVM.HitTarget = IBoBattleField.AttackPositions(pAttackPositions.Select(c => new BattleshipApi.BattleField.DML.BattleField()
+                        outAttackPlayerVM.HitTarget = IBoBattleField.AttackPositions(pModel.attackPositions.Select(c => new BattleshipApi.BattleField.DML.BattleField()
                         {
                             Attacked = 0,
                             MatchID = currentMatch.ID,
@@ -181,7 +181,7 @@ namespace Battleship.Controllers
                                 X = c.PosX,
                                 Y = c.PosY
                             }
-                        }).ToList(), pSpecialPower, out bool enemyDefeated) == 1;
+                        }).ToList(), pModel.specialPower, out bool enemyDefeated) == 1;
                         outAttackPlayerVM.EnemyDefeated = enemyDefeated;
                         outAttackPlayerVM.PositionsAttacked = IBoMatchAttacks.PositionsAttacked(currentMatch.ID, currentMatch.CurrentPlayer == currentMatch.Player1 ? currentMatch.Player2 : currentMatch.Player1);
                     }
