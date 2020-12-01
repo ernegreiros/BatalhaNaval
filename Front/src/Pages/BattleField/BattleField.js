@@ -36,6 +36,7 @@ class BattleField extends Component {
       theme: theme !== null ? theme : null,
       loadingTheme: true,
       themeShips: [],
+      currentSpecialPower: null,
       settingThemeShip: null,
       allShipsSet: false,
       gameStarted: false,
@@ -246,6 +247,10 @@ class BattleField extends Component {
     }
   }
 
+  handleSpecialPower = (specialPower) => {
+    this.setState({ currentSpecialPower: specialPower })
+  }
+
   renderBattleGrid(player) {
     const opponent = "player2";
     const { activePlayer } = this.state;
@@ -275,6 +280,7 @@ class BattleField extends Component {
         themeShips={themeShips}
         updateGrids={this.updateGrids}
         updateShips={this.updateShips}
+        handlePowerChoose={this.handleSpecialPower}
         shipsSet={this.state[player].shipsSet}
         allShipsSet={this.state.allShipsSet}
         activePlayer={activePlayer}

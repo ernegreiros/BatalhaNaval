@@ -147,6 +147,7 @@ class ShipGrid extends Component {
       return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
 
     this.setState({ currentSpecialPower: specialPower, choosingPower: false, player: { ...player, money: player.money - specialPower.cost  } });
+    this.props.handlePowerChoose(specialPower);
   }
 
   render() {
