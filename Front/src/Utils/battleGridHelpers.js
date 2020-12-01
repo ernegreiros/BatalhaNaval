@@ -90,35 +90,6 @@ const placeMove = ({ data, hitTarget, enemyDefeated, positionsAttacked }) => {
     log.push(`${player} wins!`);
   }
 
-  // TODO: SUNK DO NAVIO
-  // TODO: win!
-
-  // if (opponent.shipsGrid[row][col].status === "occupied") {
-  //   opponent.shipsGrid[row][col].status = "hit";
-  //   grid[row][col].status = "hit";
-  //   log.push("It's a hit!")
-  //   opponentShip.positions.forEach(position => {
-  //     if (position.row === row && position.col === col) {
-  //       position.hit = true;
-  //     }
-  //   })
-  //   if (isSunk(opponentShip, row, col)) {
-  //     opponent.sunkenShips++;
-  //     opponentShip.positions.forEach(position => {
-  //       const { row, col } = position;
-  //       opponent.shipsGrid[row][col].status = "sunk";
-  //       grid[row][col].status = "sunk";
-  //     });
-  //     log.push(`${player} sank a ${opponentShip.type}!`)
-  //     if (opponent.sunkenShips === 5) {
-  //       log.push(`${player} wins!`);
-  //     }
-  //   }
-  // } else {
-  //   log.push("It's a miss");
-  //   grid[row][col].status = "miss";
-  // }
-
   return {
     grid,
     opponent,
