@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import HelperModal from '../../Utils/HelperModal';
 import LinkWrapper from '../../Utils/LinkWrapper';
 import Modal from '../Modal/Modal';
@@ -50,7 +50,7 @@ class InitialForm extends Component {
   }
 
   addConnectionHandlers() {
-    
+
     this.removeHandlers();
 
     this.hubConnection.on("AskingForConnection", function (player, myCode) {
@@ -83,32 +83,30 @@ class InitialForm extends Component {
     const player = this.props.player;
 
     return (
-      <div className="row" >
-        <form className="col s12">
-          <div className="row">
-            <h3 className="center">Seja bem-vindo, <b>{player.name}</b>!</h3>
-            <h4 className="center"><b>Seu Código: {player.code}</b></h4>
-          </div>
-          <br />
-          <div className="row">
-            <div className="input-field">
-              <i className="material-icons prefix">contacts</i>
-              <input
-                placeholder="Código Segundo Jogador"
-                name="secondPlayerCode"
-                type="tel"
-                value={formValues.secondPlayerCode}
-                onChange={this.onChange} />
+      <Fragment>
+        <div className="row" style={{ margin: "0 0 0 10%" }}>
+          <form className="col s12">
+            <br />
+            <div className="row">
+              <div className="col l10">
+                <div className="input-field">
+                  <input
+                    placeholder="Código Segundo Jogador"
+                    name="secondPlayerCode"
+                    type="tel"
+                    value={formValues.secondPlayerCode}
+                    onChange={this.onChange} />
+                </div>
+              </div>
+              <div className="col l2">
+                <button onClick={this.onSubmit} className="darkbg btn right" style={{ height: "2.5em", marginTop: "26%", marginRight:"50%" }}>
+                  <i className="material-icons ">play_circle_outline</i>
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="row">
-            <button onClick={this.onSubmit} className="darkbg btn-large right">
-              <i className="material-icons right">play_circle_outline</i>
-              Jogar
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </Fragment>
     );
   }
 
