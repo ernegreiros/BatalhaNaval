@@ -36,13 +36,15 @@ class BattleField extends Component {
       theme: theme !== null ? theme : null,
       loadingTheme: true,
       themeShips: [],
+      currentSpecialPower: null,
       settingThemeShip: null,
       allShipsSet: false,
       gameStarted: false,
       gameOver: false,
       waitingAdversary: false,
       winner: null,
-      logs: [welcomeMessage]
+      logs: [welcomeMessage],
+      currentPlayer:0
     };
 
     this.updateGrids = this.updateGrids.bind(this);
@@ -60,8 +62,11 @@ class BattleField extends Component {
     this.addHandlersForBattle();
 
     this.getCurrentMatch();
+
     this.getThemes();
+    
     if (theme !== null) this.getThemeShips();
+    
     if (playersReady) {
       this.getPositions();
       this.getOpponentData();
@@ -90,7 +95,8 @@ class BattleField extends Component {
             allShipsSet: allPlayersReady,
             waitingAdversary: playerReady,
             gameStarted: allPlayersReady,
-            gameOver: match.status === MatchStatus.Closed
+            gameOver: match.status === MatchStatus.Closed,
+            currentPlayer: match.currentPlayer
           }));
         })
         .catch((e) => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
@@ -157,10 +163,29 @@ class BattleField extends Component {
       this.setState({ activePlayer: playerInfo.id === currentPlayerId ? 'player' : 'player2' })
     });
 
-    global.hubConnection.on("TakeShoot", function (x, y, hitTarget, winner) {
+    global.hubConnection.on("TakeShoot", function (x, y, specialPowerPositions, hitTarget, winner) {
       let player = global.state["player"];
 
       player.shipsGrid[x][y].status = hitTarget ? "hit" : "miss";
+      
+      const playerShip = player
+      .ships
+      .find(({ positions }) => positions.find(position => position.row === x && position.col === y));
+
+      specialPowerPositions.forEach(({ row: sRow,  col: sCol }) => {
+        const hitOpponentShip = playerShip.positions.find(position => position.row === sRow && position.col === sCol)
+    
+        if (hitOpponentShip) {
+          player.shipsGrid[sRow][sCol].status = "hit";
+          playerShip.positions.forEach(position => {
+            if (position.row === sRow && position.col === sCol) {
+              position.hit = true;
+            }
+          });
+        } else {
+          player.shipsGrid[sRow][sCol].status = "miss";
+        }
+      })
 
       global.setState({
         player: player,
@@ -209,6 +234,7 @@ class BattleField extends Component {
     if (opponent && opponent.sunkenShips === 5) {
       this.gridReducer("GAME_OVER", payload);
     } else if (opponent && hitTarget) {
+      this.setState({ currentSpecialPower: null });
       this.gridReducer("HIT", payload);
     } else if (opponent && !hitTarget) {
       this.gridReducer("MISS", payload);
@@ -246,9 +272,11 @@ class BattleField extends Component {
     }
   }
 
+  handleSpecialPower = (specialPower) => this.setState({ currentSpecialPower: specialPower })
+
   renderBattleGrid(player) {
     const opponent = "player2";
-    const { activePlayer } = this.state;
+    const { activePlayer, currentSpecialPower } = this.state;
     return (
       <BattleGrid
         player={player}
@@ -259,12 +287,13 @@ class BattleField extends Component {
         shipsSet={this.state[player].shipsSet}
         websocketTakeShot={WebSocketHandler.TakeShot}
         matchInfo={this.match}
+        currentSpecialPower={currentSpecialPower}
       />
     );
   }
 
   renderShipGrid(player) {
-    const { activePlayer, gameOver, themeShips } = this.state;
+    const { activePlayer, gameOver, themeShips, currentSpecialPower } = this.state;
 
     return (
       <ShipGrid
@@ -275,6 +304,8 @@ class BattleField extends Component {
         themeShips={themeShips}
         updateGrids={this.updateGrids}
         updateShips={this.updateShips}
+        handlePowerChoose={this.handleSpecialPower}
+        currentSpecialPower={currentSpecialPower}
         shipsSet={this.state[player].shipsSet}
         allShipsSet={this.state.allShipsSet}
         activePlayer={activePlayer}
@@ -375,7 +406,7 @@ class BattleField extends Component {
             <h1 className="center">Jogo encerrado!</h1>
             {win ? <h3 style={{ marginLeft: "20%" }}><b>Parabéns!</b> Você venceu a partida!</h3> : <h3 style={{ marginLeft: "20%" }}>Que pena... você perdeu a partida</h3>}
             <br />
-            <LinkWrapper to="/Home" class="waves-effect waves-light btn" style={{ color: "white", marginLeft:"10%", backgroundColor: "rgba(51,51,51,0.08)" }} activeStyle={{}}>
+            <LinkWrapper to="/Home" className="waves-effect waves-light btn" style={{ color: "white", marginLeft:"10%", backgroundColor: "rgba(51,51,51,0.08)" }} activeStyle={{}}>
               <i className="material-icons left">arrow_back</i>
               Voltar para início
             </LinkWrapper>

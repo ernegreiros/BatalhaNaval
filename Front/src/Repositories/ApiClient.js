@@ -143,10 +143,22 @@ const ApiClient = {
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },
-  AttackPositions: positions => {
+  AttackPositions: (positions, specialPowerId = null) => {
+    const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
+
+    const body = { attackPositions: positions }
+    if (specialPowerId !== null) body.specialPower = specialPowerId;
+
+    const payload = JSON.stringify(body)
+
+    return fetch(`${urlApi}/api/BattleField/attack`, { method: 'POST', headers, body: payload })
+      .then(response => ApiClient.CatchError(response))
+      .then(response => response.json());
+  },
+  DefendPositions: (positions, specialPowerId) => {
     const headers = new Headers({ 'Authorization': `Bearer ${UserService().getToken()}`, 'content-type': 'application/json' });
     const payload = JSON.stringify(positions)
-    return fetch(`${urlApi}/api/BattleField/attack`, { method: 'POST', headers, body: payload })
+    return fetch(`${urlApi}/api/BattleField/defense?pSpecialPower=${specialPowerId}`, { method: 'POST', headers, body: payload })
       .then(response => ApiClient.CatchError(response))
       .then(response => response.json());
   },

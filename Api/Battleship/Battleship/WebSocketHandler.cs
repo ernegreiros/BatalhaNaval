@@ -63,7 +63,7 @@ namespace Battleship
                 {
                     Player1 = player.ID,
                     Player2 = partnerPlayer.ID,
-                    CurrentPlayer = player.ID
+                    CurrentPlayer = partnerPlayer.ID 
                 });
             }
 
@@ -130,10 +130,10 @@ namespace Battleship
             return connections.Connections.FirstOrDefault(c => c.Code == myCode).Ready && connections.Connections.FirstOrDefault(c => c.Code == partnerCode).Ready;
         }
 
-        public async Task Action(string adversaryCode, string action, int x, int y, bool hitTarget, int? winner)
+        public async Task Action(string adversaryCode, string action, int x, int y, object specialPowerPositions, bool hitTarget, int? winner)
         {
             var connectionId = GetConnectionId(adversaryCode);
-            await Clients.Client(connectionId).SendAsync(action, x, y, hitTarget, winner);
+            await Clients.Client(connectionId).SendAsync(action, x, y, specialPowerPositions, hitTarget, winner);
         }
 
         private bool BondAlreadyExists(string partnerCode, string myCode)

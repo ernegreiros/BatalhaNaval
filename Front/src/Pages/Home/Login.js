@@ -3,6 +3,7 @@ import NavBar from "../../Components/NavBar/NavBar";
 import LinkWrapper from "../../Utils/LinkWrapper";
 import PopUp from "../../Components/PopUp/PopUp";
 import ApiClient from "../../Repositories/ApiClient";
+import ShipImage from '../../Images/shioshoot.jpeg'
 
 export default function({ history }) {
   const [loginInfo, setLoginInfo] = useState({ login: "", password: "" });
@@ -26,6 +27,7 @@ export default function({ history }) {
     <Fragment>
       <NavBar />
       <br />
+      <img className="battlefield-background" src={ShipImage} />
       <div className="container">
         <div className="row">
           <form className="col s12">

@@ -51,22 +51,28 @@ class BattleGrid extends Component {
     });
   }
 
-  updateAttack = positions => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })))
+  updateAttack = (positions, specialPowerId = null) => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })), specialPowerId)
 
   async handleClick(row, col) {
-    const { grid, opponent, player, activePlayer } = this.props;
+    const { grid, opponent, player, activePlayer, currentSpecialPower } = this.props;
 
     if (!activePlayer) {
       return;
     }
 
     if (player !== activePlayer) {
-      return PopUp.showPopUp('error', 'Its not your turn!!');
+      return PopUp.showPopUp('error', 'Não é seu turno!!');
     }
 
     try {
-      const attackResponse = await this.updateAttack([{ row, col }]);
+      const specialPowerPositions = currentSpecialPower !== null
+        ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 }))
+        : [];
+      const positionsToAttack = [{ row, col }, ...specialPowerPositions];
+
+      const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);
       const { hitTarget, enemyDefeated, positionsAttacked = [] } = attackResponse;
+
       /*
           enemyDefeated: false
           hitTarget: true
@@ -86,11 +92,11 @@ class BattleGrid extends Component {
 
       // TODO: esse placemove tem que contemplar ataque de varios quadrados!
 
-      const updatedGame = placeMove({ data, hitTarget, enemyDefeated, positionsAttacked });
+      const updatedGame = placeMove({ data, hitTarget, enemyDefeated, specialPowerPositions });
       if (updatedGame) {
         const playerInfo = UserService().getPlayerData();
         this.props.updateGrids(this.props.player, updatedGame.grid, "movesGrid", updatedGame.opponent, hitTarget);
-        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col, hitTarget, enemyDefeated ? playerInfo.id : null);
+        this.props.websocketTakeShot(this.props.matchInfo.adversary.code, "TakeShoot", data.row, data.col,specialPowerPositions, hitTarget, enemyDefeated ? playerInfo.id : null);
       }
     } catch (e) {
       console.log(e)
@@ -136,7 +142,9 @@ class BattleGrid extends Component {
   render() {
     return (
       <div className="grid-container">
-        <h5 className="grid-title center"> Campo do Adversário </h5>
+        <div className="grid-title-container">
+          <h5 className="grid-title center"> Campo do Adversário </h5>
+        </div>
         <div className="grid" onMouseLeave={this.handleExit}>
           {this.renderSquares()}
         </div>

@@ -83,7 +83,7 @@ namespace BattleshipApi.Match.DAL
             stringBuilder.AppendLine("  CURRENTPLAYER,");
             stringBuilder.AppendLine("  STATUS");
             stringBuilder.AppendLine("FROM MATCH WITH(NOLOCK)");
-            stringBuilder.AppendLine("WHERE PLAYER1 = @ID_JOGADOR OR PLAYER2 = @ID_JOGADOR");
+            stringBuilder.AppendLine("WHERE (PLAYER1 = @ID_JOGADOR OR PLAYER2 = @ID_JOGADOR)");
             stringBuilder.AppendLine($"AND STATUS <> {Convert.ToInt32(MatchStatus.Closed)}");
 
             DataSet ds = IUnitOfWork.Consulta(stringBuilder.ToString());
