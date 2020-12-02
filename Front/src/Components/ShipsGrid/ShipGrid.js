@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Button, Modal, Table} from "react-materialize";
+import { Button, Modal, Table } from "react-materialize";
 import ShipGridSquare from "./ShipGridSquare";
 
 import { placeShip, hoverUpdate } from "../../Utils/shipGridHelpers";
@@ -44,13 +44,13 @@ class ShipGrid extends Component {
   rotateByKey(event) {
     if (event.keyCode === 71 || event.keyCode === 103) {
       const { grid } = this.props;
-      
+
       grid.map((row, i) => {
         row.map((square, j) => {
           square.hover = false;
         })
       });
-      
+
       this.handleRotate();
     }
   }
@@ -122,8 +122,8 @@ class ShipGrid extends Component {
     if (!allShipsSet) {
       const gameUpdate = placeShip(data);
       if (gameUpdate) {
-        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid",false);
-        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid",false);
+        this.props.updateGrids(this.props.player, gameUpdate.grid, "shipsGrid", false);
+        this.props.updateShips(this.props.player, gameUpdate.ships, "shipsGrid", false);
         this.setState({
           rotated: true
         });
@@ -145,7 +145,7 @@ class ShipGrid extends Component {
     if (specialPower.cost > player.money)
       return PopUp.showPopUp('error', 'Você não possui moedas suficientes para usar o  poder');
 
-    this.setState({ choosingPower: false, player: { ...player, money: player.money - specialPower.cost  } });
+    this.setState({ choosingPower: false, player: { ...player, money: player.money - specialPower.cost } });
     this.props.handlePowerChoose(specialPower);
   }
 
@@ -153,6 +153,7 @@ class ShipGrid extends Component {
     const { rotated, ships, player, choosingPower, specialPowers } = this.state;
     const { themeShips, currentSpecialPower, activePlayer } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
+    const positionedAllShips = ships.every(ship => ship.positions.length > 0);
     const isPlayerTurn = this.props.player === activePlayer;
 
     return (
@@ -186,32 +187,32 @@ class ShipGrid extends Component {
             {choosingPower && (
               <Table style={{ margin: 20 }}>
                 <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Compensação vitória</th>
-                  <th>Custo</th>
-                  <th>Ações</th>
-                </tr>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Compensação vitória</th>
+                    <th>Custo</th>
+                    <th>Ações</th>
+                  </tr>
                 </thead>
                 <tbody>
-                {specialPowers.map(specialPower => {
-                  const {id, name,  type, quantifier, compensation, cost} = specialPower;
+                  {specialPowers.map(specialPower => {
+                    const { id, name, type, quantifier, compensation, cost } = specialPower;
 
-                  return (
-                    <tr key={id}>
-                      <td>"{name}" - ({type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa"} - {quantifier} campos)</td>
-                      <td>{compensation}</td>
-                      <td>{cost}</td>
-                      <td><Button onClick={() => this.handleSpecialPower(specialPower)}>Usar</Button></td>
-                    </tr>
-                  );
-                })}
+                    return (
+                      <tr key={id}>
+                        <td>"{name}" - ({type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa"} - {quantifier} campos)</td>
+                        <td>{compensation}</td>
+                        <td>{cost}</td>
+                        <td><Button onClick={() => this.handleSpecialPower(specialPower)}>Usar</Button></td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </Table>
             )}
           </Modal>
         </div>
-        {currentSpecialPower && <b>Você está utilizando o poder: {currentSpecialPower.name} ({currentSpecialPower.type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa" } - {currentSpecialPower.quantifier} campos)</b>}
+        {currentSpecialPower && <b>Você está utilizando o poder: {currentSpecialPower.name} ({currentSpecialPower.type === SpecialPowerTypes.Attack ? "Ataque" : "Defesa"} - {currentSpecialPower.quantifier} campos)</b>}
 
         <div className="grid" style={{ position: "absolute" }}>{this.renderSquares()}</div>
         <div className="grid">
@@ -232,6 +233,10 @@ class ShipGrid extends Component {
             )
           })}
         </div>
+        {positionedAllShips && (
+          <h4 style={{ marginLeft: "2%" }}><b>{isPlayerTurn ? "É " : "Não é"} Seu Turno!</b></h4>
+        )
+        }
       </div>
     );
   }

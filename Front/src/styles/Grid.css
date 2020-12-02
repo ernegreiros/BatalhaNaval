@@ -67,19 +67,32 @@
 }
 
 .enemy-hit {
-  background-color: rgb(142, 187, 91);
+  background-image: url('/explosion.png');
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  
 }
 
 .enemy-sunk {
-  background-color: #1C6E1C;
+  background-image: url('/explosion.png');
+  width: 100%;
+  height: 100%;
+  background-size: contain;
 }
 
 .enemy-miss {
-  background-color: gray;
+  background-image: url('/splash.png');
+  width: 100%;
+  height: 100%;
+  background-size: contain;
 }
 
 .hit {
-  background-color: yellow;
+  background-image: url('/explosion.png');
+  width: 100%;
+  height: 100%;
+  background-size: contain;
 }
 
 .sunk {

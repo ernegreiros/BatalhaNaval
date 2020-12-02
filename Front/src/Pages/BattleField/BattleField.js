@@ -43,7 +43,8 @@ class BattleField extends Component {
       gameOver: false,
       waitingAdversary: false,
       winner: null,
-      logs: [welcomeMessage]
+      logs: [welcomeMessage],
+      currentPlayer:0
     };
 
     this.updateGrids = this.updateGrids.bind(this);
@@ -61,8 +62,11 @@ class BattleField extends Component {
     this.addHandlersForBattle();
 
     this.getCurrentMatch();
+
     this.getThemes();
+    
     if (theme !== null) this.getThemeShips();
+    
     if (playersReady) {
       this.getPositions();
       this.getOpponentData();
@@ -91,7 +95,8 @@ class BattleField extends Component {
             allShipsSet: allPlayersReady,
             waitingAdversary: playerReady,
             gameStarted: allPlayersReady,
-            gameOver: match.status === MatchStatus.Closed
+            gameOver: match.status === MatchStatus.Closed,
+            currentPlayer: match.currentPlayer
           }));
         })
         .catch((e) => PopUp.showPopUp('error', 'Falha ao carregar dados da partida'))
