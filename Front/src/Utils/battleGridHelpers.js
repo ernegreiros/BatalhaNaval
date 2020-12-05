@@ -12,10 +12,14 @@ const dictionary = {
   10: "J"
 }
 
-const hoverUpdate = ({ grid, row, col, rotated, type }) => {
-  const bool = type === "enter" ? true : false;
-  const position = grid[row][col];
-  position.hover = bool; 
+const hoverUpdate = ({ grid, positions, rotated, type }) => {
+  const bool = type === "enter";
+
+  positions.forEach(({ row, col }) => {
+    const position = grid[row][col];
+    position.hover = bool;
+  })
+
   return grid;
 };
 
@@ -74,6 +78,8 @@ const placeMove = ({ data, hitTarget, enemyDefeated, specialPowerPositions }) =>
 
   specialPowerPositions.forEach(({ row: sRow,  col: sCol }) => {
     const hitOpponentShip = opponentShip.positions.find(position => position.row === sRow && position.col === sCol)
+
+    opponent.shipsGrid[sRow][sCol].hover = false;
 
     if (hitOpponentShip) {
       opponent.shipsGrid[sRow][sCol].status = "hit";
