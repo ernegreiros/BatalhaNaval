@@ -232,13 +232,13 @@ class BattleField extends Component {
     }
 
     this.gridReducer("UPDATE", payload);
-
+      
     if (opponent && opponent.sunkenShips === 5) {
       this.gridReducer("GAME_OVER", payload);
     } else if (opponent && hitTarget) {
       this.setState({ currentSpecialPower: null });
       this.gridReducer("HIT", payload);
-    } else if (opponent && !hitTarget && type !== "shipsGrid") {
+    } else if (opponent && hitTarget === false) {
       this.gridReducer("MISS", payload);
     }
   }
