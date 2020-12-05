@@ -84,7 +84,10 @@ class BattleField extends Component {
     this.setState({ loadingMatch: true }, () => {
       ApiClient.GetCurrentMatch()
         .then((match = {}) => {
+          console.log(match)
           const playerInfo = UserService().getPlayerData();
+          console.log(playerInfo.id)
+          console.log(playerInfo.id === match.currentPlayer ? 'player' : 'player2')
           const playerReady = playerInfo.id === match.player1 ? match.player1Ready : match.player2Ready;
           const allPlayersReady = match.status === MatchStatus.AllPlayersReady;
 
@@ -295,7 +298,7 @@ class BattleField extends Component {
   }
 
   renderShipGrid(player) {
-    const { activePlayer, gameOver, themeShips, currentSpecialPower } = this.state;
+    const { activePlayer, gameOver, themeShips, currentSpecialPower, gameStarted } = this.state;
 
     return (
       <ShipGrid
@@ -312,6 +315,7 @@ class BattleField extends Component {
         allShipsSet={this.state.allShipsSet}
         activePlayer={activePlayer}
         gameOver={gameOver}
+        gameStarted={gameStarted}
       />
     );
   }
@@ -349,7 +353,7 @@ class BattleField extends Component {
 
     if (action === "START_GAME") {
       this.setState({
-        activePlayer: "player",
+        activePlayer: this.state.activePlayer,
         gameStarting: true,
         allShipsSet: true
       });

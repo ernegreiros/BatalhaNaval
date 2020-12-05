@@ -151,7 +151,7 @@ class ShipGrid extends Component {
 
   render() {
     const { rotated, ships, player, choosingPower, specialPowers } = this.state;
-    const { themeShips, currentSpecialPower, activePlayer } = this.props;
+    const { themeShips, currentSpecialPower, activePlayer, gameStarted } = this.props;
     const positionedShips = ships.filter(ship => ship.positions.length > 0);
     const positionedAllShips = ships.every(ship => ship.positions.length > 0);
     const isPlayerTurn = this.props.player === activePlayer;
@@ -233,7 +233,7 @@ class ShipGrid extends Component {
             )
           })}
         </div>
-        {positionedAllShips && (
+        {gameStarted && (
           <h4 style={{ marginLeft: "2%" }}><b>{isPlayerTurn ? "É " : "Não é"} Seu Turno!</b></h4>
         )
         }
