@@ -230,13 +230,15 @@ class BattleField extends Component {
       type,
       opponent
     }
+
     this.gridReducer("UPDATE", payload);
+
     if (opponent && opponent.sunkenShips === 5) {
       this.gridReducer("GAME_OVER", payload);
     } else if (opponent && hitTarget) {
       this.setState({ currentSpecialPower: null });
       this.gridReducer("HIT", payload);
-    } else if (opponent && !hitTarget) {
+    } else if (opponent && !hitTarget && type !== "shipsGrid") {
       this.gridReducer("MISS", payload);
     }
   }
@@ -246,7 +248,7 @@ class BattleField extends Component {
     if (action === "UPDATE") {
       const updatedPlayer = {
         ...this.state[player],
-        [this.state[player][type]]: grid
+        [type]: grid
       };
       this.setState({
         [player]: updatedPlayer

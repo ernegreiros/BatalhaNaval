@@ -35,23 +35,30 @@ class BattleGrid extends Component {
   }
 
   handleHover(row, col, type) {
-    const { grid } = this.props;
+    const { grid, currentSpecialPower } = this.props;
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
+      positions: this.buildAttackPositions(row, col, currentSpecialPower),
       rotated,
-      row,
-      col,
       type
     };
     const updatedGrid = hoverUpdate(data);
-    this.props.updateGrids(this.props.player, updatedGrid, "movesGrid", false);
+    this.props.updateGrids("player2", updatedGrid, "shipsGrid", true);
     this.setState({
       activeSpot: `${dictionary[col]}${row}`
     });
   }
 
   updateAttack = (positions, specialPowerId = null) => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })), specialPowerId)
+
+  buildAttackPositions = (row, col, currentSpecialPower) => {
+    const specialPowerPositions = currentSpecialPower !== null
+      ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 }))
+      : [];
+
+    return [{ row, col }, ...specialPowerPositions];
+  }
 
   async handleClick(row, col) {
     const { grid, opponent, player, activePlayer, currentSpecialPower } = this.props;
@@ -65,9 +72,7 @@ class BattleGrid extends Component {
     }
 
     try {
-      const specialPowerPositions = currentSpecialPower !== null
-        ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 }))
-        : [];
+      const specialPowerPositions = this.buildAttackPositions(row, col, currentSpecialPower);
       const positionsToAttack = [{ row, col }, ...specialPowerPositions];
 
       const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);
