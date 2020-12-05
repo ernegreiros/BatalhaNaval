@@ -39,7 +39,7 @@ class BattleGrid extends Component {
     const { rotated } = this.state;
     const data = {
       grid: grid.slice(),
-      positions: this.buildAttackPositions(row, col, currentSpecialPower),
+      positions: [{ row, col }, ...this.buildAttackPositions(row, col, currentSpecialPower)],
       rotated,
       type
     };
@@ -53,11 +53,9 @@ class BattleGrid extends Component {
   updateAttack = (positions, specialPowerId = null) => ApiClient.AttackPositions(positions.map(({ row, col }) => ({ PosX: col, PosY: row })), specialPowerId)
 
   buildAttackPositions = (row, col, currentSpecialPower) => {
-    const specialPowerPositions = currentSpecialPower !== null
+    return currentSpecialPower !== null
       ? [...Array(currentSpecialPower.quantifier - 1).keys()].map(key => ({ row, col: col + key + 1 }))
       : [];
-
-    return [{ row, col }, ...specialPowerPositions];
   }
 
   async handleClick(row, col) {
@@ -73,7 +71,7 @@ class BattleGrid extends Component {
 
     try {
       const specialPowerPositions = this.buildAttackPositions(row, col, currentSpecialPower);
-      const positionsToAttack = [{ row, col }, ...specialPowerPositions];
+      const positionsToAttack = [{ row, col }, [{ row, col }, ...specialPowerPositions]];
 
       const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);
       const { hitTarget, enemyDefeated, positionsAttacked = [] } = attackResponse;
