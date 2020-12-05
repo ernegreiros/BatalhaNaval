@@ -76,13 +76,6 @@ class BattleGrid extends Component {
       const attackResponse = await this.updateAttack(positionsToAttack, currentSpecialPower?.id);
       const { hitTarget, enemyDefeated, positionsAttacked = [] } = attackResponse;
 
-      /*
-          enemyDefeated: false
-          hitTarget: true
-          message: null
-          positionsAttacked: []
-       */
-
       const { rotated } = this.state;
       const data = {
         player,
