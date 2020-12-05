@@ -142,7 +142,7 @@ namespace BattleshipApi.BattleField.BLL
                     {
                         IBoMatch.CloseMatch(currentMatch.ID);
                     }
-                    else
+                    else if (targetHited == 0)
                     {
                         IBoMatch.ChangeCurrentPlayer(currentMatch.ID, currentMatch.Player1 == list.BattleFields.First().Player ? currentMatch.Player2 : currentMatch.Player1);
                     }
