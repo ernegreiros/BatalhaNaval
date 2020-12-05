@@ -137,7 +137,7 @@ namespace BattleshipApi.BattleField.BLL
                     if (pSpecialPowerId != null)
                         IBoMatchSpecialPower.RegisterUseOfSpecialPower(list.BattleFields.First().MatchID, list.BattleFields.First().Player, Convert.ToInt32(pSpecialPowerId));
 
-                    enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.Player1 == list.BattleFields.First().Player ? currentMatch.Player2 : currentMatch.Player1);
+                    enemyDefeated = PlayerDefeated(currentMatch.ID, currentMatch.CurrentPlayer == currentMatch.Player1 ? currentMatch.Player2 : currentMatch.Player1);
                     if (enemyDefeated)
                     {
                         IBoMatch.CloseMatch(currentMatch.ID);
